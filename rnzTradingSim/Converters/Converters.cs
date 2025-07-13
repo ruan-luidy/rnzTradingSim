@@ -16,6 +16,7 @@ namespace rnzTradingSim
     public static readonly AmountToStringConverter AmountToStringConverter = new();
     public static readonly ProfitLossToColorConverter ProfitLossToColorConverter = new();
     public static readonly Boolean2VisibilityConverter Boolean2VisibilityConverter = new();
+    public static readonly String2VisibilityConverter String2VisibilityConverter = new();
   }
 
   public class CoinflipSideToColorConverter : IValueConverter
@@ -233,6 +234,27 @@ namespace rnzTradingSim
         return visibility == Visibility.Visible;
       }
       return false;
+    }
+  }
+
+  public class String2VisibilityConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      var currentValue = value?.ToString();
+      var targetValue = parameter?.ToString();
+
+      if (string.IsNullOrEmpty(currentValue) || string.IsNullOrEmpty(targetValue))
+        return Visibility.Collapsed;
+
+      return string.Equals(currentValue, targetValue, StringComparison.OrdinalIgnoreCase)
+          ? Visibility.Visible
+          : Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      throw new NotImplementedException();
     }
   }
 }

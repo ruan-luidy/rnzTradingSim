@@ -247,10 +247,16 @@
       <Border Background="{DynamicResource SecondaryRegionBrush}">
         <Grid>
           <!--  Gambling View  -->
-          <views:GamblingView DataContext="{Binding GamblingViewModel}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
+          <views:GamblingView
+            x:Name="GamblingViewContainer"
+            DataContext="{Binding GamblingViewModel}"
+            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
 
           <!--  Home View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
+          <Border
+            x:Name="HomeViewContainer"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -268,11 +274,20 @@
                 FontSize="16"
                 Foreground="{DynamicResource SecondaryTextBrush}"
                 Text="Welcome to RugPlay!" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, StringFormat='Current View: {0}'}" />
             </StackPanel>
           </Border>
 
           <!--  Market View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
+          <Border
+            x:Name="MarketViewContainer"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -294,7 +309,10 @@
           </Border>
 
           <!--  Portfolio View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
+          <Border
+            x:Name="PortfolioViewContainer"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -316,7 +334,10 @@
           </Border>
 
           <!--  Leaderboard View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
+          <Border
+            x:Name="LeaderboardViewContainer"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"

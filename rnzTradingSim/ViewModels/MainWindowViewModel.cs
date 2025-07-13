@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Diagnostics;
 
 namespace rnzTradingSim.ViewModels
 {
@@ -40,6 +41,8 @@ namespace rnzTradingSim.ViewModels
           ProfitLoss += (Balance - oldBalance);
         }
       };
+
+      Debug.WriteLine($"MainWindowViewModel initialized with CurrentView: {CurrentView}");
     }
 
     #endregion
@@ -49,7 +52,12 @@ namespace rnzTradingSim.ViewModels
     [RelayCommand]
     private void Navigate(string viewName)
     {
+      Debug.WriteLine($"Navigate command called with: {viewName}");
       CurrentView = viewName;
+      Debug.WriteLine($"CurrentView changed to: {CurrentView}");
+
+      // Force property change notification
+      OnPropertyChanged(nameof(CurrentView));
     }
 
     #endregion
