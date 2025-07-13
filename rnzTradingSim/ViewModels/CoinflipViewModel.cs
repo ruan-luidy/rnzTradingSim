@@ -81,28 +81,27 @@ namespace rnzTradingSim.ViewModels
       if (IsFlipping || BetAmount > _parentViewModel.Balance || BetAmount <= 0)
         return;
 
-      IsFlipping = true;
-
       try
       {
-        // Reset FinalResult para garantir que a animação funcione
-        FinalResult = "";
-
         // Deduct bet amount from main balance
         _parentViewModel.UpdateBalance(_parentViewModel.Balance - BetAmount);
 
-        // Small delay to ensure UI updates
-        await Task.Delay(50);
-
-        // Generate random result BEFORE the animation
+        // Generate random result
         var random = new Random();
         var result = random.NextDouble() < 0.5 ? "HEADS" : "TAILS";
 
-        // Set the final result that the animation will sync to
+        // Start flipping animation
+        IsFlipping = true;
+
+        // Wait for animation to complete (1.8 seconds)
+        await Task.Delay(1800);
+
+        // Stop animation and set final result
+        IsFlipping = false;
         FinalResult = result;
 
-        // Simulate coin flip animation delay (1.8 seconds to match animation)
-        await Task.Delay(1800);
+        // Small delay to show result
+        await Task.Delay(300);
 
         var won = result == SelectedSide;
 
@@ -124,8 +123,9 @@ namespace rnzTradingSim.ViewModels
           ShowResult($"😞 You Lost!\nResult: {result}\nLost: ${BetAmount:N2}", false);
         }
       }
-      finally
+      catch (Exception ex)
       {
+        System.Diagnostics.Debug.WriteLine($"Error in Flip: {ex.Message}");
         IsFlipping = false;
       }
     }
@@ -137,6 +137,8 @@ namespace rnzTradingSim.ViewModels
     public void ResetSession()
     {
       SessionBalance = 0;
+      // Resetar para HEADS quando resetar a sessão
+      FinalResult = "HEADS";
     }
 
     #endregion

@@ -65,7 +65,7 @@
           BorderThickness="3"
           CornerRadius="15">
           <Grid>
-            <!--  Moeda com animação sincronizada com o resultado  -->
+            <!--  Moeda com animação estilo HandyControl  -->
             <ContentControl
               Width="120"
               Height="120"
@@ -74,246 +74,196 @@
               <ContentControl.Template>
                 <ControlTemplate TargetType="ContentControl">
                   <ControlTemplate.Resources>
-                    <!--  Storyboard para mostrar TAILS  -->
-                    <Storyboard x:Key="StoryboardShowTails">
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
+                    <!--  Animação de Flip alternando entre HEADS e TAILS  -->
+                    <Storyboard x:Key="CoinFlipStoryboard">
+                      <!--  Anima o container principal  -->
+                      <DoubleAnimationUsingKeyFrames
+                        RepeatBehavior="8x"
+                        Storyboard.TargetName="CoinContainer"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.3">
                           <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
+                            <QuadraticEase EasingMode="EaseIn" />
                           </EasingDoubleKeyFrame.EasingFunction>
                         </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
-                          <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
-                          </EasingDoubleKeyFrame.EasingFunction>
-                        </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="Opacity">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1">
-                          <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
-                          </EasingDoubleKeyFrame.EasingFunction>
-                        </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="Opacity">
                         <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0">
                           <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
+                            <QuadraticEase EasingMode="EaseInOut" />
                           </EasingDoubleKeyFrame.EasingFunction>
                         </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                    </Storyboard>
-
-                    <!--  Storyboard para mostrar HEADS  -->
-                    <Storyboard x:Key="StoryboardShowHeads">
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
+                        <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0.3">
                           <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
+                            <QuadraticEase EasingMode="EaseOut" />
                           </EasingDoubleKeyFrame.EasingFunction>
                         </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
                         <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
                           <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
+                            <QuadraticEase EasingMode="EaseOut" />
                           </EasingDoubleKeyFrame.EasingFunction>
                         </EasingDoubleKeyFrame>
                       </DoubleAnimationUsingKeyFrames>
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="Opacity">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0">
-                          <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
-                          </EasingDoubleKeyFrame.EasingFunction>
-                        </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="Opacity">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1">
-                          <EasingDoubleKeyFrame.EasingFunction>
-                            <PowerEase EasingMode="EaseOut" />
-                          </EasingDoubleKeyFrame.EasingFunction>
-                        </EasingDoubleKeyFrame>
-                      </DoubleAnimationUsingKeyFrames>
-                    </Storyboard>
 
-                    <!--  Animações de flip com resultado específico  -->
-                    <Storyboard x:Key="CoinFlipToHeads">
-                      <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Tag">
+                      <!--  Alterna entre HEADS e TAILS durante o flip  -->
+                      <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CoinContainer" Storyboard.TargetProperty="Tag">
                         <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.45" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.75" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.7" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:0.9" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.05" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.0" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.35" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.3" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:1.5" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.65" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="HEADS" />
-                      </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-
-                    <Storyboard x:Key="CoinFlipToTails">
-                      <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Tag">
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.45" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.75" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.9" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.05" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.35" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.5" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.65" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.6" Value="TAILS" />
                       </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                   </ControlTemplate.Resources>
 
-                  <Grid>
-                    <!--  HEADS Element  -->
+                  <Grid
+                    x:Name="CoinContainer"
+                    RenderTransformOrigin="0.5,0.5"
+                    Tag="HEADS">
+                    <Grid.RenderTransform>
+                      <TransformGroup>
+                        <ScaleTransform ScaleX="1" />
+                      </TransformGroup>
+                    </Grid.RenderTransform>
+
+                    <!--  HEADS Element (Dourado)  -->
                     <Border
-                      Name="HeadsElement"
+                      x:Name="HeadsElement"
                       RenderTransformOrigin="0.5,0.5"
-                      SnapsToDevicePixels="true">
+                      SnapsToDevicePixels="True">
                       <Border.RenderTransform>
                         <TransformGroup>
                           <ScaleTransform ScaleX="1" />
                         </TransformGroup>
                       </Border.RenderTransform>
 
+                      <Border.Style>
+                        <Style TargetType="Border">
+                          <Setter Property="Visibility" Value="Visible" />
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=CoinContainer, Path=Tag}" Value="TAILS">
+                              <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </Border.Style>
+
                       <Grid>
                         <Ellipse
-                          Fill="#6366F1"
-                          Stroke="#4F46E5"
+                          Fill="#FFD700"
+                          Stroke="#FFA500"
                           StrokeThickness="6">
                           <Ellipse.Effect>
                             <DropShadowEffect
                               BlurRadius="25"
                               Opacity="0.8"
                               ShadowDepth="4"
-                              Color="#6366F1" />
+                              Color="#FFD700" />
                           </Ellipse.Effect>
                         </Ellipse>
 
                         <Ellipse
                           Margin="10"
                           Fill="Transparent"
-                          Stroke="#8B5CF6"
+                          Stroke="#FFFF00"
                           StrokeThickness="2" />
 
                         <TextBlock
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
-                          FontSize="18"
+                          FontSize="24"
                           FontWeight="Bold"
-                          Foreground="White"
+                          Foreground="#8B4513"
                           Text="H" />
                       </Grid>
                     </Border>
 
-                    <!--  TAILS Element  -->
+                    <!--  TAILS Element (Prata)  -->
                     <Border
-                      Name="TailsElement"
+                      x:Name="TailsElement"
                       RenderTransformOrigin="0.5,0.5"
-                      SnapsToDevicePixels="true">
+                      SnapsToDevicePixels="True">
                       <Border.RenderTransform>
                         <TransformGroup>
-                          <ScaleTransform ScaleX="0" />
+                          <ScaleTransform ScaleX="1" />
                         </TransformGroup>
                       </Border.RenderTransform>
 
+                      <Border.Style>
+                        <Style TargetType="Border">
+                          <Setter Property="Visibility" Value="Collapsed" />
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=CoinContainer, Path=Tag}" Value="TAILS">
+                              <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </Border.Style>
+
                       <Grid>
                         <Ellipse
-                          Fill="#374151"
-                          Stroke="#6B7280"
+                          Fill="#C0C0C0"
+                          Stroke="#808080"
                           StrokeThickness="6">
                           <Ellipse.Effect>
                             <DropShadowEffect
                               BlurRadius="25"
                               Opacity="0.8"
                               ShadowDepth="4"
-                              Color="#374151" />
+                              Color="#C0C0C0" />
                           </Ellipse.Effect>
                         </Ellipse>
 
                         <Ellipse
                           Margin="10"
                           Fill="Transparent"
-                          Stroke="#9CA3AF"
+                          Stroke="#E5E5E5"
                           StrokeThickness="2" />
 
                         <TextBlock
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
-                          FontSize="18"
+                          FontSize="24"
                           FontWeight="Bold"
-                          Foreground="White"
+                          Foreground="#2F4F4F"
                           Text="T" />
                       </Grid>
                     </Border>
                   </Grid>
 
                   <ControlTemplate.Triggers>
-                    <!--  Triggers para animação baseada no resultado  -->
-                    <MultiDataTrigger>
-                      <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsFlipping}" Value="True" />
-                        <Condition Binding="{Binding FinalResult}" Value="HEADS" />
-                      </MultiDataTrigger.Conditions>
-                      <MultiDataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="FlipToHeadsStoryboard" Storyboard="{StaticResource CoinFlipToHeads}" />
-                      </MultiDataTrigger.EnterActions>
-                      <MultiDataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="FlipToHeadsStoryboard" />
-                      </MultiDataTrigger.ExitActions>
-                    </MultiDataTrigger>
+                    <!--  Trigger para iniciar animação de flip quando IsFlipping = True  -->
+                    <DataTrigger Binding="{Binding IsFlipping}" Value="True">
+                      <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="FlipStoryboard" Storyboard="{StaticResource CoinFlipStoryboard}" />
+                      </DataTrigger.EnterActions>
+                      <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="FlipStoryboard" />
+                      </DataTrigger.ExitActions>
+                    </DataTrigger>
 
-                    <MultiDataTrigger>
-                      <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsFlipping}" Value="True" />
-                        <Condition Binding="{Binding FinalResult}" Value="TAILS" />
-                      </MultiDataTrigger.Conditions>
-                      <MultiDataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="FlipToTailsStoryboard" Storyboard="{StaticResource CoinFlipToTails}" />
-                      </MultiDataTrigger.EnterActions>
-                      <MultiDataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="FlipToTailsStoryboard" />
-                      </MultiDataTrigger.ExitActions>
-                    </MultiDataTrigger>
-
-                    <!--  Triggers para definir estado final  -->
-                    <MultiDataTrigger>
-                      <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsFlipping}" Value="False" />
-                        <Condition Binding="{Binding FinalResult}" Value="HEADS" />
-                      </MultiDataTrigger.Conditions>
-                      <Setter Property="Tag" Value="HEADS" />
-                    </MultiDataTrigger>
-
+                    <!--  Trigger para mostrar resultado final quando parar  -->
                     <MultiDataTrigger>
                       <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding IsFlipping}" Value="False" />
                         <Condition Binding="{Binding FinalResult}" Value="TAILS" />
                       </MultiDataTrigger.Conditions>
-                      <Setter Property="Tag" Value="TAILS" />
+                      <Setter TargetName="CoinContainer" Property="Tag" Value="TAILS" />
                     </MultiDataTrigger>
 
-                    <!--  Triggers para alternar entre HEADS e TAILS  -->
-                    <Trigger Property="Tag" Value="TAILS">
-                      <Trigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource StoryboardShowTails}" />
-                      </Trigger.EnterActions>
-                      <Trigger.ExitActions>
-                        <BeginStoryboard Storyboard="{StaticResource StoryboardShowHeads}" />
-                      </Trigger.ExitActions>
-                    </Trigger>
+                    <MultiDataTrigger>
+                      <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsFlipping}" Value="False" />
+                        <Condition Binding="{Binding FinalResult}" Value="HEADS" />
+                      </MultiDataTrigger.Conditions>
+                      <Setter TargetName="CoinContainer" Property="Tag" Value="HEADS" />
+                    </MultiDataTrigger>
                   </ControlTemplate.Triggers>
                 </ControlTemplate>
               </ContentControl.Template>
@@ -378,7 +328,7 @@
                 <TextBlock
                   VerticalAlignment="Center"
                   FontSize="20"
-                  Text="🔵" />
+                  Text="🟡" />
                 <TextBlock
                   Margin="8,0,0,0"
                   VerticalAlignment="Center"
@@ -413,7 +363,7 @@
                 <TextBlock
                   VerticalAlignment="Center"
                   FontSize="20"
-                  Text="⚫" />
+                  Text="⚪" />
                 <TextBlock
                   Margin="8,0,0,0"
                   VerticalAlignment="Center"
