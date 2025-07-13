@@ -6,7 +6,6 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:views="clr-namespace:rnzTradingSim.Views"
   d:DesignHeight="600"
   d:DesignWidth="900"
   mc:Ignorable="d">
@@ -403,19 +402,46 @@
             FontWeight="Bold"
             Text="Bet Amount" />
 
-          <hc:NumericUpDown
+          <TextBox
             Height="50"
+            VerticalContentAlignment="Center"
             FontSize="16"
-            Maximum="10000"
-            Minimum="1"
-            Style="{StaticResource NumericUpDownExtend}"
-            Value="{Binding BetAmount}" />
+            Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged}"
+            TextAlignment="Center">
+            <TextBox.Style>
+              <Style TargetType="TextBox">
+                <Setter Property="Background" Value="{DynamicResource RegionBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="Template">
+                  <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                      <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                      </Border>
+                    </ControlTemplate>
+                  </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                  <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </TextBox.Style>
+          </TextBox>
 
           <TextBlock
             Margin="0,8,0,0"
             FontSize="12"
             Foreground="{DynamicResource SecondaryTextBrush}"
-            Text="{Binding DataContext.Balance, RelativeSource={RelativeSource AncestorType=views:GamblingView}, StringFormat='Max bet: ${0:N0}'}" />
+            Text="{Binding ParentBalance, StringFormat='Max bet: ${0:N0}'}" />
 
           <!--  Quick Bet Buttons  -->
           <Grid Margin="0,15,0,0">

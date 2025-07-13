@@ -25,6 +25,9 @@ namespace rnzTradingSim.ViewModels
     [ObservableProperty]
     private string finalResult = "HEADS"; // Resultado final para sincronizar com a animação
 
+    // Propriedade para acessar o balance do parent
+    public decimal ParentBalance => _parentViewModel.Balance;
+
     #endregion
 
     #region Constructor
@@ -32,6 +35,15 @@ namespace rnzTradingSim.ViewModels
     public CoinflipViewModel(GamblingViewModel parentViewModel)
     {
       _parentViewModel = parentViewModel;
+
+      // Subscribe to parent balance changes to notify our ParentBalance property
+      _parentViewModel.PropertyChanged += (s, e) =>
+      {
+        if (e.PropertyName == nameof(GamblingViewModel.Balance))
+        {
+          OnPropertyChanged(nameof(ParentBalance));
+        }
+      };
     }
 
     #endregion
@@ -47,11 +59,19 @@ namespace rnzTradingSim.ViewModels
     [RelayCommand]
     private void SetBetPercentage(string percentageStr)
     {
-      if (double.TryParse(percentageStr, out double percentage))
+      if (double.TryParse(percentageStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double percentage))
       {
         var mainBalance = _parentViewModel.Balance;
         BetAmount = Math.Round(mainBalance * (decimal)percentage, 2);
         if (BetAmount < 1) BetAmount = 1;
+
+        // Debug para verificar os valores
+        System.Diagnostics.Debug.WriteLine($"Percentage string: '{percentageStr}', parsed: {percentage}");
+        System.Diagnostics.Debug.WriteLine($"Balance: {mainBalance}, Calculation: {mainBalance} * {percentage} = {BetAmount}");
+      }
+      else
+      {
+        System.Diagnostics.Debug.WriteLine($"Failed to parse percentage: '{percentageStr}'");
       }
     }
 
