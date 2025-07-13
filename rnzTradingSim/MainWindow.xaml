@@ -6,26 +6,48 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:views="clr-namespace:rnzTradingSim.Views"
   Title="RugPlay - Trading &amp; Gambling Simulator"
-  Width="1200"
-  Height="800"
+  Width="1400"
+  Height="900"
   Background="{DynamicResource SecondaryRegionBrush}"
   WindowState="Maximized"
   mc:Ignorable="d">
 
   <hc:Window.Resources>
-    <Style x:Key="GambleCardStyle" TargetType="hc:Card">
-      <Setter Property="Background" Value="{DynamicResource RegionBrush}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-      <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="Margin" Value="10" />
-      <Setter Property="Padding" Value="20" />
-      <Setter Property="Effect">
+    <Style x:Key="SidebarButtonStyle" TargetType="Button">
+      <Setter Property="Height" Value="45" />
+      <Setter Property="Margin" Value="5" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="Medium" />
+      <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Padding" Value="15,0" />
+      <Setter Property="Template">
         <Setter.Value>
-          <DropShadowEffect
-            BlurRadius="10"
-            Opacity="0.3"
-            ShadowDepth="2" />
+          <ControlTemplate TargetType="Button">
+            <Border
+              x:Name="border"
+              Padding="{TemplateBinding Padding}"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="8">
+              <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryBrush}" />
+                <Setter Property="Foreground" Value="White" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
         </Setter.Value>
       </Setter>
     </Style>
@@ -36,469 +58,286 @@
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="Margin" Value="5" />
       <Setter Property="Padding" Value="15" />
+      <Setter Property="Effect">
+        <Setter.Value>
+          <DropShadowEffect
+            BlurRadius="8"
+            Opacity="0.2"
+            ShadowDepth="2" />
+        </Setter.Value>
+      </Setter>
     </Style>
   </hc:Window.Resources>
 
   <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="250" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
 
-    <!--  Header  -->
-    <hc:Card
-      Grid.Row="0"
-      Margin="0"
-      Background="{DynamicResource PrimaryBrush}">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
-        <!--  Logo/Title  -->
-        <StackPanel
-          Grid.Column="0"
-          VerticalAlignment="Center"
-          Orientation="Horizontal">
-          <hc:SimplePanel
-            Width="40"
-            Height="40"
-            Margin="20,10"
-            Background="{DynamicResource DangerBrush}">
+    <!--  Sidebar  -->
+    <Border
+      Grid.Column="0"
+      Background="{DynamicResource RegionBrush}"
+      BorderBrush="{DynamicResource BorderBrush}"
+      BorderThickness="0,0,1,0">
+      <StackPanel Margin="15">
+        <!--  Logo/Brand  -->
+        <StackPanel Margin="0,20,0,30" HorizontalAlignment="Center">
+          <Border
+            Width="60"
+            Height="60"
+            Background="{DynamicResource PrimaryBrush}"
+            CornerRadius="30">
             <TextBlock
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
-              FontSize="20"
+              FontSize="30"
               Text="💎" />
-          </hc:SimplePanel>
+          </Border>
           <TextBlock
-            Margin="10,0"
-            VerticalAlignment="Center"
-            FontSize="24"
+            Margin="0,10,0,0"
+            HorizontalAlignment="Center"
+            FontSize="20"
             FontWeight="Bold"
-            Foreground="White"
             Text="RugPlay" />
+          <TextBlock
+            HorizontalAlignment="Center"
+            FontSize="12"
+            Foreground="{DynamicResource SecondaryTextBrush}"
+            Text="Gaming Simulator" />
         </StackPanel>
 
         <!--  User Stats  -->
-        <StackPanel
-          Grid.Column="2"
-          Margin="20,10"
-          VerticalAlignment="Center"
-          Orientation="Horizontal">
-          <hc:Card Style="{StaticResource StatCardStyle}">
-            <StackPanel>
-              <TextBlock
-                FontSize="12"
-                Foreground="{DynamicResource SecondaryTextBrush}"
-                Text="Balance" />
-              <TextBlock
-                FontSize="16"
-                FontWeight="Bold"
-                Foreground="{DynamicResource SuccessBrush}"
-                Text="{Binding Balance, StringFormat='${0:N0} BUSS'}" />
-            </StackPanel>
-          </hc:Card>
+        <hc:Card Style="{StaticResource StatCardStyle}">
+          <StackPanel>
+            <TextBlock
+              HorizontalAlignment="Center"
+              FontSize="12"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Text="Balance" />
+            <TextBlock
+              HorizontalAlignment="Center"
+              FontSize="18"
+              FontWeight="Bold"
+              Foreground="{DynamicResource SuccessBrush}"
+              Text="{Binding Balance, StringFormat='${0:N2}'}" />
+          </StackPanel>
+        </hc:Card>
 
-          <hc:Card Style="{StaticResource StatCardStyle}">
-            <StackPanel>
+        <!--  Navigation  -->
+        <hc:Divider Margin="0,20" />
+        <TextBlock
+          Margin="10,0,0,10"
+          FontSize="12"
+          FontWeight="Bold"
+          Foreground="{DynamicResource SecondaryTextBrush}"
+          Text="NAVIGATION" />
+
+        <StackPanel>
+          <Button
+            Command="{Binding NavigateCommand}"
+            CommandParameter="Home"
+            Style="{StaticResource SidebarButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock FontSize="16" Text="🏠" />
+              <TextBlock Margin="10,0,0,0" Text="Home" />
+            </StackPanel>
+          </Button>
+
+          <Button
+            Command="{Binding NavigateCommand}"
+            CommandParameter="Market"
+            Style="{StaticResource SidebarButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock FontSize="16" Text="📈" />
+              <TextBlock Margin="10,0,0,0" Text="Market" />
+            </StackPanel>
+          </Button>
+
+          <Button
+            Command="{Binding NavigateCommand}"
+            CommandParameter="Gambling"
+            Style="{StaticResource SidebarButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock FontSize="16" Text="🎰" />
+              <TextBlock Margin="10,0,0,0" Text="Gambling" />
+            </StackPanel>
+          </Button>
+
+          <Button
+            Command="{Binding NavigateCommand}"
+            CommandParameter="Portfolio"
+            Style="{StaticResource SidebarButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock FontSize="16" Text="💼" />
+              <TextBlock Margin="10,0,0,0" Text="Portfolio" />
+            </StackPanel>
+          </Button>
+
+          <Button
+            Command="{Binding NavigateCommand}"
+            CommandParameter="Leaderboard"
+            Style="{StaticResource SidebarButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock FontSize="16" Text="🏆" />
+              <TextBlock Margin="10,0,0,0" Text="Leaderboard" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <!--  Quick Stats  -->
+        <hc:Divider Margin="0,30,0,20" />
+        <TextBlock
+          Margin="10,0,0,10"
+          FontSize="12"
+          FontWeight="Bold"
+          Foreground="{DynamicResource SecondaryTextBrush}"
+          Text="QUICK STATS" />
+
+        <StackPanel>
+          <Border
+            Margin="5"
+            Padding="10"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            CornerRadius="5">
+            <Grid>
               <TextBlock
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
                 FontSize="12"
-                Foreground="{DynamicResource SecondaryTextBrush}"
                 Text="Profit/Loss" />
               <TextBlock
-                FontSize="16"
-                FontWeight="Bold"
-                Foreground="{DynamicResource SuccessBrush}"
-                Text="{Binding ProfitLoss, StringFormat='+${0:N0}'}" />
-            </StackPanel>
-          </hc:Card>
-
-          <hc:Card Style="{StaticResource StatCardStyle}">
-            <StackPanel>
-              <TextBlock
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
                 FontSize="12"
-                Foreground="{DynamicResource SecondaryTextBrush}"
+                FontWeight="Bold"
+                Foreground="{Binding ProfitLoss, Converter={x:Static local:Converters.ProfitLossToColorConverter}}"
+                Text="{Binding ProfitLoss, StringFormat='{}{0:+$#,0;-$#,0;$0}'}" />
+            </Grid>
+          </Border>
+
+          <Border
+            Margin="5"
+            Padding="10"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            CornerRadius="5">
+            <Grid>
+              <TextBlock
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="12"
                 Text="Rank" />
               <TextBlock
-                FontSize="16"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontSize="12"
                 FontWeight="Bold"
                 Foreground="{DynamicResource WarningBrush}"
                 Text="{Binding Rank, StringFormat='#{0}'}" />
+            </Grid>
+          </Border>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <!--  Main Content Area  -->
+    <Grid Grid.Column="1">
+      <!--  Content Container  -->
+      <Border Background="{DynamicResource SecondaryRegionBrush}">
+        <Grid>
+          <!--  Gambling View  -->
+          <views:GamblingView DataContext="{Binding GamblingViewModel}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
+
+          <!--  Home View (Placeholder)  -->
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="48"
+                Text="🏠" />
+              <TextBlock
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                FontSize="32"
+                FontWeight="Bold"
+                Text="Home" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="Welcome to RugPlay!" />
             </StackPanel>
-          </hc:Card>
-        </StackPanel>
-      </Grid>
-    </hc:Card>
+          </Border>
 
-    <!--  Main Content  -->
-    <Grid Grid.Row="1" Margin="20">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="1*" />
-        <ColumnDefinition Width="1*" />
-        <ColumnDefinition Width="1*" />
-      </Grid.ColumnDefinitions>
-
-      <!--  Coinflip Game  -->
-      <hc:Card Grid.Column="0" Style="{StaticResource GambleCardStyle}">
-        <StackPanel>
-          <Grid Margin="0,0,0,20">
-            <TextBlock
-              HorizontalAlignment="Left"
-              FontSize="24"
-              FontWeight="Bold"
-              Text="🪙 Coinflip" />
-            <hc:Tag
-              HorizontalAlignment="Right"
-              Background="{DynamicResource DangerBrush}"
-              Content="HOT" />
-          </Grid>
-
-          <!--  Coin Animation Area  -->
-          <hc:SimplePanel
-            Height="200"
-            Margin="0,0,0,20"
-            Background="{DynamicResource SecondaryRegionBrush}">
-            <Ellipse
-              Width="120"
-              Height="120"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Fill="{DynamicResource WarningBrush}"
-              Stroke="{DynamicResource BorderBrush}"
-              StrokeThickness="3">
-              <Ellipse.Effect>
-                <DropShadowEffect
-                  BlurRadius="20"
-                  Opacity="0.6"
-                  ShadowDepth="0"
-                  Color="Gold" />
-              </Ellipse.Effect>
-            </Ellipse>
-            <TextBlock
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              FontSize="60"
-              Text="💰" />
-          </hc:SimplePanel>
-
-          <!--  Bet Amount  -->
-          <StackPanel Margin="0,0,0,15">
-            <TextBlock
-              Margin="0,0,0,5"
-              FontWeight="Bold"
-              Text="Bet Amount" />
-            <hc:NumericUpDown
-              Maximum="5000"
-              Minimum="10"
-              Style="{StaticResource NumericUpDownExtend}"
-              Value="{Binding CoinflipBetAmount}" />
-          </StackPanel>
-
-          <!--  Side Selection  -->
-          <StackPanel Margin="0,0,0,20">
-            <TextBlock
-              Margin="0,0,0,5"
-              FontWeight="Bold"
-              Text="Choose Side" />
-            <hc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
-              <Button
-                Width="100"
-                Height="40"
-                Background="{Binding SelectedCoinflipSide, Converter={x:Static local:Converters.CoinflipSideToColorConverter}, ConverterParameter=HEADS}"
-                Command="{Binding SelectCoinflipSideCommand}"
-                CommandParameter="HEADS"
-                Content="HEADS"
+          <!--  Market View (Placeholder)  -->
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="48"
+                Text="📈" />
+              <TextBlock
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                FontSize="32"
                 FontWeight="Bold"
-                Foreground="White" />
-              <Button
-                Width="100"
-                Height="40"
-                Background="{Binding SelectedCoinflipSide, Converter={x:Static local:Converters.CoinflipSideToColorConverter}, ConverterParameter=TAILS}"
-                Command="{Binding SelectCoinflipSideCommand}"
-                CommandParameter="TAILS"
-                Content="TAILS"
+                Text="Market" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+
+          <!--  Portfolio View (Placeholder)  -->
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="48"
+                Text="💼" />
+              <TextBlock
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                FontSize="32"
                 FontWeight="Bold"
-                Foreground="White" />
-            </hc:UniformSpacingPanel>
-          </StackPanel>
-
-          <!--  Flip Button  -->
-          <Button
-            Height="50"
-            Background="{DynamicResource PrimaryBrush}"
-            Command="{Binding FlipCoinCommand}"
-            Content="{Binding IsFlipping, Converter={x:Static local:Converters.FlipButtonTextConverter}}"
-            FontSize="16"
-            FontWeight="Bold"
-            Foreground="White"
-            IsEnabled="{Binding IsFlipping, Converter={x:Static local:Converters.InverseBooleanConverter}}"
-            Style="{StaticResource ButtonPrimary}" />
-
-          <!--  Recent Results  -->
-          <hc:Divider Margin="0,20" />
-          <TextBlock
-            Margin="0,0,0,10"
-            FontWeight="Bold"
-            Text="Recent Results" />
-          <ItemsControl ItemsSource="{Binding CoinflipHistory}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <hc:Tag
-                  Margin="2"
-                  Background="{Binding Converter={x:Static local:Converters.CoinflipResultToColorConverter}}"
-                  Content="{Binding}" />
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </StackPanel>
-      </hc:Card>
-
-      <!--  Slots Game  -->
-      <hc:Card Grid.Column="1" Style="{StaticResource GambleCardStyle}">
-        <StackPanel>
-          <Grid Margin="0,0,0,20">
-            <TextBlock
-              HorizontalAlignment="Left"
-              FontSize="24"
-              FontWeight="Bold"
-              Text="🎰 Slots" />
-            <hc:Tag
-              HorizontalAlignment="Right"
-              Background="{DynamicResource InfoBrush}"
-              Content="NEW" />
-          </Grid>
-
-          <!--  Slot Machine  -->
-          <hc:SimplePanel
-            Height="200"
-            Margin="0,0,0,20"
-            Background="{DynamicResource SecondaryRegionBrush}">
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-              </Grid.ColumnDefinitions>
-
-              <!--  Slot Reels  -->
-              <Border
-                Grid.Column="0"
-                Margin="5"
-                Background="{DynamicResource RegionBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="2"
-                CornerRadius="10">
-                <TextBlock
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  FontSize="40"
-                  Text="{Binding SlotReels[0]}" />
-              </Border>
-
-              <Border
-                Grid.Column="1"
-                Margin="5"
-                Background="{DynamicResource RegionBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="2"
-                CornerRadius="10">
-                <TextBlock
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  FontSize="40"
-                  Text="{Binding SlotReels[1]}" />
-              </Border>
-
-              <Border
-                Grid.Column="2"
-                Margin="5"
-                Background="{DynamicResource RegionBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="2"
-                CornerRadius="10">
-                <TextBlock
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  FontSize="40"
-                  Text="{Binding SlotReels[2]}" />
-              </Border>
-            </Grid>
-          </hc:SimplePanel>
-
-          <!--  Bet Amount  -->
-          <StackPanel Margin="0,0,0,15">
-            <TextBlock
-              Margin="0,0,0,5"
-              FontWeight="Bold"
-              Text="Bet Amount" />
-            <hc:NumericUpDown
-              Maximum="2500"
-              Minimum="5"
-              Style="{StaticResource NumericUpDownExtend}"
-              Value="{Binding SlotsBetAmount}" />
-          </StackPanel>
-
-          <!--  Spin Button  -->
-          <Button
-            Height="50"
-            Background="{DynamicResource DangerBrush}"
-            Command="{Binding SpinSlotsCommand}"
-            Content="{Binding IsSpinning, Converter={x:Static local:Converters.SpinButtonTextConverter}}"
-            FontSize="16"
-            FontWeight="Bold"
-            Foreground="White"
-            IsEnabled="{Binding IsSpinning, Converter={x:Static local:Converters.InverseBooleanConverter}}"
-            Style="{StaticResource ButtonDanger}" />
-
-          <!--  Paytable  -->
-          <hc:Divider Margin="0,20" />
-          <TextBlock
-            Margin="0,0,0,10"
-            FontWeight="Bold"
-            Text="Paytable" />
-          <StackPanel>
-            <Grid Margin="0,2">
-              <TextBlock HorizontalAlignment="Left" Text="🍒🍒🍒" />
+                Text="Portfolio" />
               <TextBlock
-                HorizontalAlignment="Right"
-                Foreground="{DynamicResource SuccessBrush}"
-                Text="50x" />
-            </Grid>
-            <Grid Margin="0,2">
-              <TextBlock HorizontalAlignment="Left" Text="🍋🍋🍋" />
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+
+          <!--  Leaderboard View (Placeholder)  -->
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
-                HorizontalAlignment="Right"
-                Foreground="{DynamicResource SuccessBrush}"
-                Text="25x" />
-            </Grid>
-            <Grid Margin="0,2">
-              <TextBlock HorizontalAlignment="Left" Text="⭐⭐⭐" />
+                HorizontalAlignment="Center"
+                FontSize="48"
+                Text="🏆" />
               <TextBlock
-                HorizontalAlignment="Right"
-                Foreground="{DynamicResource WarningBrush}"
-                Text="100x" />
-            </Grid>
-          </StackPanel>
-        </StackPanel>
-      </hc:Card>
-
-      <!--  Stats & Activity  -->
-      <hc:Card Grid.Column="2" Style="{StaticResource GambleCardStyle}">
-        <StackPanel>
-          <TextBlock
-            Margin="0,0,0,20"
-            FontSize="24"
-            FontWeight="Bold"
-            Text="📊 Gaming Stats" />
-
-          <!--  Quick Stats  -->
-          <hc:SimpleStackPanel Margin="0,0,0,20">
-            <hc:Card Padding="15" Background="{DynamicResource SuccessBrush}">
-              <StackPanel>
-                <TextBlock
-                  FontSize="12"
-                  Foreground="White"
-                  Opacity="0.8"
-                  Text="Total Winnings" />
-                <TextBlock
-                  FontSize="20"
-                  FontWeight="Bold"
-                  Foreground="White"
-                  Text="{Binding TotalWinnings, StringFormat='${0:N0}'}" />
-              </StackPanel>
-            </hc:Card>
-
-            <hc:Card Padding="15" Background="{DynamicResource DangerBrush}">
-              <StackPanel>
-                <TextBlock
-                  FontSize="12"
-                  Foreground="White"
-                  Opacity="0.8"
-                  Text="Total Losses" />
-                <TextBlock
-                  FontSize="20"
-                  FontWeight="Bold"
-                  Foreground="White"
-                  Text="{Binding TotalLosses, StringFormat='${0:N0}'}" />
-              </StackPanel>
-            </hc:Card>
-
-            <hc:Card Padding="15" Background="{DynamicResource InfoBrush}">
-              <StackPanel>
-                <TextBlock
-                  FontSize="12"
-                  Foreground="White"
-                  Opacity="0.8"
-                  Text="Games Played" />
-                <TextBlock
-                  FontSize="20"
-                  FontWeight="Bold"
-                  Foreground="White"
-                  Text="{Binding GamesPlayed}" />
-              </StackPanel>
-            </hc:Card>
-          </hc:SimpleStackPanel>
-
-          <!--  Recent Activity  -->
-          <hc:Divider Margin="0,10" />
-          <TextBlock
-            Margin="0,10,0,15"
-            FontWeight="Bold"
-            Text="Recent Activity" />
-
-          <ScrollViewer Height="200" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding RecentActivities}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <Border
-                    Margin="0,0,0,5"
-                    Padding="10"
-                    Background="{DynamicResource SecondaryRegionBrush}"
-                    CornerRadius="5">
-                    <Grid>
-                      <StackPanel HorizontalAlignment="Left">
-                        <TextBlock FontSize="12" Text="{Binding Game}" />
-                        <TextBlock
-                          FontSize="10"
-                          Foreground="{DynamicResource SecondaryTextBrush}"
-                          Text="{Binding TimeAgo}" />
-                      </StackPanel>
-                      <TextBlock
-                        HorizontalAlignment="Right"
-                        FontWeight="Bold"
-                        Foreground="{Binding IsWin, Converter={x:Static local:Converters.WinLossToColorConverter}}"
-                        Text="{Binding Amount, Converter={x:Static local:Converters.AmountToStringConverter}}" />
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
-
-          <!--  Quick Actions  -->
-          <hc:Divider Margin="0,15" />
-          <hc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
-            <Button
-              Width="100"
-              Command="{Binding ShowLeaderboardCommand}"
-              Content="Leaderboard"
-              Style="{StaticResource ButtonDefault}" />
-            <Button
-              Width="100"
-              Command="{Binding ShowHistoryCommand}"
-              Content="History"
-              Style="{StaticResource ButtonDefault}" />
-          </hc:UniformSpacingPanel>
-        </StackPanel>
-      </hc:Card>
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                FontSize="32"
+                FontWeight="Bold"
+                Text="Leaderboard" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
     </Grid>
   </Grid>
 </hc:Window>

@@ -1,0 +1,254 @@
+﻿<UserControl
+  x:Class="rnzTradingSim.Views.Games.SlotsControl"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:local="clr-namespace:rnzTradingSim"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  d:DesignHeight="600"
+  d:DesignWidth="400"
+  mc:Ignorable="d">
+
+  <Grid>
+    <StackPanel Margin="20">
+      <!--  Game Description  -->
+      <TextBlock
+        Margin="0,0,0,15"
+        HorizontalAlignment="Center"
+        FontSize="14"
+        Foreground="{DynamicResource SecondaryTextBrush}"
+        Text="Match 3 symbols for big wins!"
+        TextWrapping="Wrap" />
+
+      <!--  Balance Display  -->
+      <hc:Card
+        Margin="0,0,0,20"
+        Padding="15"
+        Background="{DynamicResource SecondaryRegionBrush}">
+        <StackPanel HorizontalAlignment="Center">
+          <TextBlock
+            HorizontalAlignment="Center"
+            FontSize="12"
+            Foreground="{DynamicResource SecondaryTextBrush}"
+            Text="Balance" />
+          <TextBlock
+            HorizontalAlignment="Center"
+            FontSize="24"
+            FontWeight="Bold"
+            Foreground="{DynamicResource SuccessBrush}"
+            Text="{Binding Balance, StringFormat='${0:N2}'}" />
+        </StackPanel>
+      </hc:Card>
+
+      <!--  Slot Machine  -->
+      <Border
+        Height="180"
+        Margin="0,0,0,20"
+        Background="{DynamicResource RegionBrush}"
+        BorderBrush="{DynamicResource PrimaryBrush}"
+        BorderThickness="2"
+        CornerRadius="15">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <!--  Slot Reels  -->
+          <Border
+            Grid.Column="0"
+            Margin="8"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            BorderBrush="{DynamicResource WarningBrush}"
+            BorderThickness="2"
+            CornerRadius="10">
+            <TextBlock
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              FontSize="45"
+              Text="{Binding Reels[0]}" />
+          </Border>
+
+          <Border
+            Grid.Column="1"
+            Margin="8"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            BorderBrush="{DynamicResource WarningBrush}"
+            BorderThickness="2"
+            CornerRadius="10">
+            <TextBlock
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              FontSize="45"
+              Text="{Binding Reels[1]}" />
+          </Border>
+
+          <Border
+            Grid.Column="2"
+            Margin="8"
+            Background="{DynamicResource SecondaryRegionBrush}"
+            BorderBrush="{DynamicResource WarningBrush}"
+            BorderThickness="2"
+            CornerRadius="10">
+            <TextBlock
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              FontSize="45"
+              Text="{Binding Reels[2]}" />
+          </Border>
+
+          <!--  Loading overlay when spinning  -->
+          <Border
+            Grid.ColumnSpan="3"
+            Background="{DynamicResource RegionBrush}"
+            CornerRadius="15"
+            Opacity="0.9"
+            Visibility="{Binding IsSpinning, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <hc:LoadingCircle
+                Width="60"
+                Height="60"
+                IsRunning="{Binding IsSpinning}" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="14"
+                FontWeight="Bold"
+                Text="SPINNING..." />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+
+      <!--  Bet Amount  -->
+      <StackPanel Margin="0,0,0,20">
+        <TextBlock
+          Margin="0,0,0,10"
+          HorizontalAlignment="Center"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="Bet Amount" />
+
+        <hc:NumericUpDown
+          Height="45"
+          Maximum="5000"
+          Minimum="1"
+          Style="{StaticResource NumericUpDownExtend}"
+          Value="{Binding BetAmount}" />
+
+        <!--  Quick Bet Buttons  -->
+        <hc:UniformSpacingPanel
+          Margin="0,10,0,0"
+          Orientation="Horizontal"
+          Spacing="10">
+          <Button
+            Width="60"
+            Height="30"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="0.25"
+            Content="25%"
+            FontSize="11"
+            Style="{StaticResource ButtonDefault}" />
+          <Button
+            Width="60"
+            Height="30"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="0.50"
+            Content="50%"
+            FontSize="11"
+            Style="{StaticResource ButtonDefault}" />
+          <Button
+            Width="60"
+            Height="30"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="0.75"
+            Content="75%"
+            FontSize="11"
+            Style="{StaticResource ButtonDefault}" />
+          <Button
+            Width="60"
+            Height="30"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="1.0"
+            Content="Max"
+            FontSize="11"
+            Style="{StaticResource ButtonDefault}" />
+        </hc:UniformSpacingPanel>
+      </StackPanel>
+
+      <!--  Spin Button  -->
+      <Button
+        Height="55"
+        Background="{DynamicResource DangerBrush}"
+        Command="{Binding SpinCommand}"
+        Content="{Binding IsSpinning, Converter={x:Static local:Converters.SpinButtonTextConverter}}"
+        FontSize="16"
+        FontWeight="Bold"
+        Foreground="White"
+        IsEnabled="{Binding IsSpinning, Converter={x:Static local:Converters.InverseBooleanConverter}}"
+        Style="{StaticResource ButtonDanger}" />
+
+      <!--  Paytable  -->
+      <hc:Divider Margin="0,20,0,15" />
+      <TextBlock
+        Margin="0,0,0,10"
+        HorizontalAlignment="Center"
+        FontSize="14"
+        FontWeight="Bold"
+        Text="Paytable" />
+
+      <StackPanel>
+        <Grid Margin="0,3">
+          <TextBlock
+            HorizontalAlignment="Left"
+            FontSize="14"
+            Text="💎💎💎" />
+          <TextBlock
+            HorizontalAlignment="Right"
+            FontSize="14"
+            FontWeight="Bold"
+            Foreground="{DynamicResource WarningBrush}"
+            Text="100x" />
+        </Grid>
+        <Grid Margin="0,3">
+          <TextBlock
+            HorizontalAlignment="Left"
+            FontSize="14"
+            Text="⭐⭐⭐" />
+          <TextBlock
+            HorizontalAlignment="Right"
+            FontSize="14"
+            FontWeight="Bold"
+            Foreground="{DynamicResource SuccessBrush}"
+            Text="50x" />
+        </Grid>
+        <Grid Margin="0,3">
+          <TextBlock
+            HorizontalAlignment="Left"
+            FontSize="14"
+            Text="🔔🔔🔔" />
+          <TextBlock
+            HorizontalAlignment="Right"
+            FontSize="14"
+            FontWeight="Bold"
+            Foreground="{DynamicResource SuccessBrush}"
+            Text="25x" />
+        </Grid>
+        <Grid Margin="0,3">
+          <TextBlock
+            HorizontalAlignment="Left"
+            FontSize="14"
+            Text="🍒🍒🍒" />
+          <TextBlock
+            HorizontalAlignment="Right"
+            FontSize="14"
+            FontWeight="Bold"
+            Foreground="{DynamicResource SuccessBrush}"
+            Text="5x" />
+        </Grid>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

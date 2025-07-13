@@ -1,0 +1,342 @@
+﻿<UserControl
+  x:Class="rnzTradingSim.Views.GamblingView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:games="clr-namespace:rnzTradingSim.Views.Games"
+  xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:local="clr-namespace:rnzTradingSim"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  d:DesignHeight="800"
+  d:DesignWidth="1200"
+  mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <Style x:Key="GameTabStyle" TargetType="Button">
+      <Setter Property="Height" Value="45" />
+      <Setter Property="MinWidth" Value="120" />
+      <Setter Property="Margin" Value="5,0" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border
+              x:Name="border"
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+              CornerRadius="8">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryBrush}" />
+                <Setter TargetName="border" Property="Opacity" Value="0.8" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{DynamicResource DarkPrimaryBrush}" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+          <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </UserControl.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <!--  Header com título e tabs dos jogos  -->
+    <StackPanel Grid.Row="0" Margin="30,20,30,0">
+      <!--  Título  -->
+      <TextBlock
+        Margin="0,0,0,20"
+        HorizontalAlignment="Center"
+        FontSize="32"
+        FontWeight="Bold"
+        Text="Gambling" />
+
+      <!--  Game Tabs  -->
+      <hc:UniformSpacingPanel
+        HorizontalAlignment="Center"
+        Orientation="Horizontal"
+        Spacing="10">
+        <ItemsControl ItemsSource="{Binding GameTabs}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Button
+                Command="{Binding DataContext.SelectGameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding Name}"
+                Style="{StaticResource GameTabStyle}">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Text="{Binding Icon}" />
+                  <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Name}" />
+                </StackPanel>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </hc:UniformSpacingPanel>
+    </StackPanel>
+
+    <!--  Main Content Area  -->
+    <Grid Grid.Row="1" Margin="20">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="1.2*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <!--  Game Content  -->
+      <hc:Card
+        Grid.Column="0"
+        Margin="10"
+        Padding="0"
+        Background="{DynamicResource RegionBrush}"
+        BorderBrush="{DynamicResource BorderBrush}"
+        BorderThickness="1">
+        <hc:Card.Effect>
+          <DropShadowEffect
+            BlurRadius="15"
+            Opacity="0.3"
+            ShadowDepth="3" />
+        </hc:Card.Effect>
+
+        <Grid>
+          <!--  Coinflip Game  -->
+          <games:CoinflipControl
+            x:Name="CoinflipGame"
+            DataContext="{Binding CoinflipViewModel}"
+            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Coinflip}" />
+
+          <!--  Slots Game  -->
+          <games:SlotsControl
+            x:Name="SlotsGame"
+            DataContext="{Binding SlotsViewModel}"
+            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Slots}" />
+
+          <!--  Mines Game (Placeholder)  -->
+          <Border
+            Background="{DynamicResource SecondaryRegionBrush}"
+            CornerRadius="10"
+            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Mines}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="48"
+                Text="💣" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="24"
+                FontWeight="Bold"
+                Text="Mines" />
+              <TextBlock
+                Margin="0,5,0,0"
+                HorizontalAlignment="Center"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+
+          <!--  Dice Game (Placeholder)  -->
+          <Border
+            Background="{DynamicResource SecondaryRegionBrush}"
+            CornerRadius="10"
+            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Dice}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="48"
+                Text="🎲" />
+              <TextBlock
+                Margin="0,10,0,0"
+                HorizontalAlignment="Center"
+                FontSize="24"
+                FontWeight="Bold"
+                Text="Dice" />
+              <TextBlock
+                Margin="0,5,0,0"
+                HorizontalAlignment="Center"
+                FontSize="14"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </hc:Card>
+
+      <!--  Stats Sidebar  -->
+      <hc:Card
+        Grid.Column="1"
+        Margin="10"
+        Padding="20"
+        Background="{DynamicResource RegionBrush}"
+        BorderBrush="{DynamicResource BorderBrush}"
+        BorderThickness="1">
+        <hc:Card.Effect>
+          <DropShadowEffect
+            BlurRadius="15"
+            Opacity="0.3"
+            ShadowDepth="3" />
+        </hc:Card.Effect>
+
+        <StackPanel>
+          <!--  Stats Title  -->
+          <TextBlock
+            Margin="0,0,0,20"
+            HorizontalAlignment="Center"
+            FontSize="24"
+            FontWeight="Bold"
+            Text="📊 Gaming Stats" />
+
+          <!--  Quick Stats Cards  -->
+          <hc:SimpleStackPanel Margin="0,0,0,20">
+            <!--  Total Winnings  -->
+            <hc:Card Padding="15" Background="{DynamicResource SuccessBrush}">
+              <Grid>
+                <StackPanel HorizontalAlignment="Left">
+                  <TextBlock
+                    FontSize="12"
+                    Foreground="White"
+                    Opacity="0.9"
+                    Text="Total Winnings" />
+                  <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding TotalWinnings, StringFormat='${0:N0}'}" />
+                </StackPanel>
+                <TextBlock
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  FontSize="30"
+                  Foreground="White"
+                  Opacity="0.3"
+                  Text="💰" />
+              </Grid>
+            </hc:Card>
+
+            <!--  Total Losses  -->
+            <hc:Card Padding="15" Background="{DynamicResource DangerBrush}">
+              <Grid>
+                <StackPanel HorizontalAlignment="Left">
+                  <TextBlock
+                    FontSize="12"
+                    Foreground="White"
+                    Opacity="0.9"
+                    Text="Total Losses" />
+                  <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding TotalLosses, StringFormat='${0:N0}'}" />
+                </StackPanel>
+                <TextBlock
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  FontSize="30"
+                  Foreground="White"
+                  Opacity="0.3"
+                  Text="💸" />
+              </Grid>
+            </hc:Card>
+
+            <!--  Games Played  -->
+            <hc:Card Padding="15" Background="{DynamicResource InfoBrush}">
+              <Grid>
+                <StackPanel HorizontalAlignment="Left">
+                  <TextBlock
+                    FontSize="12"
+                    Foreground="White"
+                    Opacity="0.9"
+                    Text="Games Played" />
+                  <TextBlock
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding GamesPlayed}" />
+                </StackPanel>
+                <TextBlock
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Center"
+                  FontSize="30"
+                  Foreground="White"
+                  Opacity="0.3"
+                  Text="🎮" />
+              </Grid>
+            </hc:Card>
+          </hc:SimpleStackPanel>
+
+          <!--  Recent Activity  -->
+          <hc:Divider Margin="0,10" />
+          <TextBlock
+            Margin="0,15,0,15"
+            HorizontalAlignment="Center"
+            FontSize="16"
+            FontWeight="Bold"
+            Text="Recent Activity" />
+
+          <ScrollViewer Height="280" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding RecentActivities}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border
+                    Margin="0,0,0,8"
+                    Padding="12"
+                    Background="{DynamicResource SecondaryRegionBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <Grid>
+                      <StackPanel HorizontalAlignment="Left">
+                        <TextBlock
+                          FontSize="13"
+                          FontWeight="Medium"
+                          Text="{Binding Game}" />
+                        <TextBlock
+                          FontSize="11"
+                          Foreground="{DynamicResource SecondaryTextBrush}"
+                          Text="{Binding TimeAgo}" />
+                      </StackPanel>
+                      <TextBlock
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Foreground="{Binding IsWin, Converter={x:Static local:Converters.WinLossToColorConverter}}"
+                        Text="{Binding Amount, Converter={x:Static local:Converters.AmountToStringConverter}}" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </StackPanel>
+      </hc:Card>
+    </Grid>
+  </Grid>
+</UserControl>
