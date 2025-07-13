@@ -134,29 +134,33 @@
                   <ScaleTransform ScaleX="1" ScaleY="1" />
                 </TransformGroup>
               </TextBlock.RenderTransform>
-              <TextBlock.Triggers>
-                <DataTrigger Binding="{Binding IsSpinning}" Value="True">
-                  <DataTrigger.EnterActions>
-                    <BeginStoryboard x:Name="Reel1Storyboard">
-                      <Storyboard RepeatBehavior="Forever">
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
-                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
-                        </DoubleAnimationUsingKeyFrames>
-                      </Storyboard>
-                    </BeginStoryboard>
-                  </DataTrigger.EnterActions>
-                  <DataTrigger.ExitActions>
-                    <StopStoryboard BeginStoryboardName="Reel1Storyboard" />
-                  </DataTrigger.ExitActions>
-                </DataTrigger>
-              </TextBlock.Triggers>
+              <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSpinning}" Value="True">
+                      <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="Reel1Storyboard">
+                          <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
+                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
+                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </DataTrigger.EnterActions>
+                      <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="Reel1Storyboard" />
+                      </DataTrigger.ExitActions>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
             </TextBlock>
           </Border>
 
@@ -180,29 +184,33 @@
                   <ScaleTransform ScaleX="1" ScaleY="1" />
                 </TransformGroup>
               </TextBlock.RenderTransform>
-              <TextBlock.Triggers>
-                <DataTrigger Binding="{Binding IsSpinning}" Value="True">
-                  <DataTrigger.EnterActions>
-                    <BeginStoryboard x:Name="Reel2Storyboard">
-                      <Storyboard BeginTime="0:0:0.03" RepeatBehavior="Forever">
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
-                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
-                        </DoubleAnimationUsingKeyFrames>
-                      </Storyboard>
-                    </BeginStoryboard>
-                  </DataTrigger.EnterActions>
-                  <DataTrigger.ExitActions>
-                    <StopStoryboard BeginStoryboardName="Reel2Storyboard" />
-                  </DataTrigger.ExitActions>
-                </DataTrigger>
-              </TextBlock.Triggers>
+              <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSpinning}" Value="True">
+                      <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="Reel2Storyboard">
+                          <Storyboard BeginTime="0:0:0.03" RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
+                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
+                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </DataTrigger.EnterActions>
+                      <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="Reel2Storyboard" />
+                      </DataTrigger.ExitActions>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
             </TextBlock>
           </Border>
 
@@ -226,29 +234,33 @@
                   <ScaleTransform ScaleX="1" ScaleY="1" />
                 </TransformGroup>
               </TextBlock.RenderTransform>
-              <TextBlock.Triggers>
-                <DataTrigger Binding="{Binding IsSpinning}" Value="True">
-                  <DataTrigger.EnterActions>
-                    <BeginStoryboard x:Name="Reel3Storyboard">
-                      <Storyboard BeginTime="0:0:0.06" RepeatBehavior="Forever">
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                        </DoubleAnimationUsingKeyFrames>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
-                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
-                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
-                        </DoubleAnimationUsingKeyFrames>
-                      </Storyboard>
-                    </BeginStoryboard>
-                  </DataTrigger.EnterActions>
-                  <DataTrigger.ExitActions>
-                    <StopStoryboard BeginStoryboardName="Reel3Storyboard" />
-                  </DataTrigger.ExitActions>
-                </DataTrigger>
-              </TextBlock.Triggers>
+              <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsSpinning}" Value="True">
+                      <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="Reel3Storyboard">
+                          <Storyboard BeginTime="0:0:0.06" RepeatBehavior="Forever">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
+                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
+                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
+                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </DataTrigger.EnterActions>
+                      <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="Reel3Storyboard" />
+                      </DataTrigger.ExitActions>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </TextBlock.Style>
             </TextBlock>
           </Border>
 
