@@ -129,19 +129,19 @@
           <games:CoinflipControl
             x:Name="CoinflipGame"
             DataContext="{Binding CoinflipViewModel}"
-            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Coinflip}" />
+            Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Coinflip}" />
 
           <!--  Slots Game  -->
           <games:SlotsControl
             x:Name="SlotsGame"
             DataContext="{Binding SlotsViewModel}"
-            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Slots}" />
+            Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Slots}" />
 
           <!--  Mines Game (Placeholder)  -->
           <Border
             Background="{DynamicResource SecondaryRegionBrush}"
             CornerRadius="10"
-            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Mines}">
+            Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Mines}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -166,7 +166,7 @@
           <Border
             Background="{DynamicResource SecondaryRegionBrush}"
             CornerRadius="10"
-            Visibility="{Binding SelectedGame, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Dice}">
+            Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Dice}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"

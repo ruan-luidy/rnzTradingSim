@@ -247,10 +247,10 @@
       <Border Background="{DynamicResource SecondaryRegionBrush}">
         <Grid>
           <!--  Gambling View  -->
-          <views:GamblingView DataContext="{Binding GamblingViewModel}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
+          <views:GamblingView DataContext="{Binding GamblingViewModel}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
 
           <!--  Home View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -272,7 +272,7 @@
           </Border>
 
           <!--  Market View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -294,7 +294,7 @@
           </Border>
 
           <!--  Portfolio View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
@@ -316,7 +316,7 @@
           </Border>
 
           <!--  Leaderboard View (Placeholder)  -->
-          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding CurrentView, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
+          <Border Background="{DynamicResource SecondaryRegionBrush}" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
               <TextBlock
                 HorizontalAlignment="Center"
