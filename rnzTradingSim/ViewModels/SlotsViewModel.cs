@@ -12,7 +12,7 @@ namespace rnzTradingSim.ViewModels
     #region Properties
 
     [ObservableProperty]
-    private decimal balance;
+    private decimal sessionBalance = 0; // Ganhos/perdas da sessão atual
 
     [ObservableProperty]
     private decimal betAmount = 50;
@@ -30,7 +30,6 @@ namespace rnzTradingSim.ViewModels
     public SlotsViewModel(GamblingViewModel parentViewModel)
     {
       _parentViewModel = parentViewModel;
-      Balance = parentViewModel.Balance;
     }
 
     #endregion
@@ -42,7 +41,8 @@ namespace rnzTradingSim.ViewModels
     {
       if (double.TryParse(percentageStr, out double percentage))
       {
-        BetAmount = Math.Round(Balance * (decimal)percentage, 2);
+        var mainBalance = _parentViewModel.Balance;
+        BetAmount = Math.Round(mainBalance * (decimal)percentage, 2);
         if (BetAmount < 1) BetAmount = 1;
       }
     }
@@ -50,16 +50,15 @@ namespace rnzTradingSim.ViewModels
     [RelayCommand]
     private async Task Spin()
     {
-      if (IsSpinning || BetAmount > Balance || BetAmount <= 0)
+      if (IsSpinning || BetAmount > _parentViewModel.Balance || BetAmount <= 0)
         return;
 
       IsSpinning = true;
 
       try
       {
-        // Deduct bet amount
-        Balance -= BetAmount;
-        _parentViewModel.UpdateBalance(Balance);
+        // Deduct bet amount from main balance
+        _parentViewModel.UpdateBalance(_parentViewModel.Balance - BetAmount);
 
         // Simulate spinning animation
         var random = new Random();
@@ -84,16 +83,17 @@ namespace rnzTradingSim.ViewModels
         if (multiplier > 0)
         {
           var winAmount = BetAmount * multiplier;
-          Balance += winAmount;
-          _parentViewModel.UpdateBalance(Balance);
+          _parentViewModel.UpdateBalance(_parentViewModel.Balance + winAmount);
 
           var profit = winAmount - BetAmount;
+          SessionBalance += profit; // Update session balance
           _parentViewModel.AddActivity("Slots", true, profit);
 
           ShowResult($"🎰 JACKPOT! 🎰\n{string.Join(" ", finalReels)}\n{multiplier}x Multiplier!\nWon: ${profit:N2}", true);
         }
         else
         {
+          SessionBalance -= BetAmount; // Update session balance
           _parentViewModel.AddActivity("Slots", false, -BetAmount);
           ShowResult($"No luck this time!\n{string.Join(" ", finalReels)}\nLost: ${BetAmount:N2}", false);
         }
@@ -102,6 +102,15 @@ namespace rnzTradingSim.ViewModels
       {
         IsSpinning = false;
       }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public void ResetSession()
+    {
+      SessionBalance = 0;
     }
 
     #endregion

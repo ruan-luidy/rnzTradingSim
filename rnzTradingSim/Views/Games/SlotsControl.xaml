@@ -78,7 +78,7 @@
         Text="Match 3 symbols for big wins!"
         TextWrapping="Wrap" />
 
-      <!--  Balance Display  -->
+      <!--  Session Balance Display  -->
       <hc:Card
         Margin="0,0,0,20"
         Padding="15"
@@ -88,13 +88,13 @@
             HorizontalAlignment="Center"
             FontSize="12"
             Foreground="{DynamicResource SecondaryTextBrush}"
-            Text="Balance" />
+            Text="Session P&amp;L" />
           <TextBlock
             HorizontalAlignment="Center"
             FontSize="24"
             FontWeight="Bold"
-            Foreground="{DynamicResource SuccessBrush}"
-            Text="{Binding Balance, StringFormat='${0:N2}'}" />
+            Foreground="{Binding SessionBalance, Converter={x:Static local:Converters.ProfitLossToColorConverter}}"
+            Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
         </StackPanel>
       </hc:Card>
 

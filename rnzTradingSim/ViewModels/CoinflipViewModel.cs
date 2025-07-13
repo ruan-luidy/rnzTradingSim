@@ -11,7 +11,7 @@ namespace rnzTradingSim.ViewModels
     #region Properties
 
     [ObservableProperty]
-    private decimal balance;
+    private decimal sessionBalance = 0; // Ganhos/perdas da sessão atual
 
     [ObservableProperty]
     private decimal betAmount = 100;
@@ -29,7 +29,6 @@ namespace rnzTradingSim.ViewModels
     public CoinflipViewModel(GamblingViewModel parentViewModel)
     {
       _parentViewModel = parentViewModel;
-      Balance = parentViewModel.Balance;
     }
 
     #endregion
@@ -47,7 +46,8 @@ namespace rnzTradingSim.ViewModels
     {
       if (double.TryParse(percentageStr, out double percentage))
       {
-        BetAmount = Math.Round(Balance * (decimal)percentage, 2);
+        var mainBalance = _parentViewModel.Balance;
+        BetAmount = Math.Round(mainBalance * (decimal)percentage, 2);
         if (BetAmount < 1) BetAmount = 1;
       }
     }
@@ -55,16 +55,15 @@ namespace rnzTradingSim.ViewModels
     [RelayCommand]
     private async Task Flip()
     {
-      if (IsFlipping || BetAmount > Balance || BetAmount <= 0)
+      if (IsFlipping || BetAmount > _parentViewModel.Balance || BetAmount <= 0)
         return;
 
       IsFlipping = true;
 
       try
       {
-        // Deduct bet amount
-        Balance -= BetAmount;
-        _parentViewModel.UpdateBalance(Balance);
+        // Deduct bet amount from main balance
+        _parentViewModel.UpdateBalance(_parentViewModel.Balance - BetAmount);
 
         // Simulate coin flip animation delay (1.8 seconds to match animation)
         await Task.Delay(1800);
@@ -77,16 +76,17 @@ namespace rnzTradingSim.ViewModels
         if (won)
         {
           var winAmount = BetAmount * 1.95m; // 95% return (5% house edge)
-          Balance += winAmount;
-          _parentViewModel.UpdateBalance(Balance);
+          _parentViewModel.UpdateBalance(_parentViewModel.Balance + winAmount);
 
           var profit = winAmount - BetAmount;
+          SessionBalance += profit; // Update session balance
           _parentViewModel.AddActivity("Coinflip", true, profit);
 
           ShowResult($"🎉 YOU WON!\nResult: {result}\nWon: ${profit:N2}", true);
         }
         else
         {
+          SessionBalance -= BetAmount; // Update session balance
           _parentViewModel.AddActivity("Coinflip", false, -BetAmount);
           ShowResult($"😞 You Lost!\nResult: {result}\nLost: ${BetAmount:N2}", false);
         }
@@ -95,6 +95,15 @@ namespace rnzTradingSim.ViewModels
       {
         IsFlipping = false;
       }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public void ResetSession()
+    {
+      SessionBalance = 0;
     }
 
     #endregion

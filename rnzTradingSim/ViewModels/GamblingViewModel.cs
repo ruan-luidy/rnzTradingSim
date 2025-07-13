@@ -62,6 +62,19 @@ namespace rnzTradingSim.ViewModels
     [RelayCommand]
     private void SelectGame(string gameName)
     {
+      // Reset session when changing games
+      if (SelectedGame != gameName)
+      {
+        if (SelectedGame == "Coinflip")
+        {
+          CoinflipViewModel.ResetSession();
+        }
+        else if (SelectedGame == "Slots")
+        {
+          SlotsViewModel.ResetSession();
+        }
+      }
+
       SelectedGame = gameName;
 
       // Update tab selection
@@ -78,10 +91,6 @@ namespace rnzTradingSim.ViewModels
     public void UpdateBalance(decimal newBalance)
     {
       Balance = newBalance;
-
-      // Update child ViewModels
-      CoinflipViewModel.Balance = newBalance;
-      SlotsViewModel.Balance = newBalance;
     }
 
     public void AddActivity(string game, bool isWin, decimal amount)

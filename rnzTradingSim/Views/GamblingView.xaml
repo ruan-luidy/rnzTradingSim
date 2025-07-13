@@ -104,14 +104,8 @@
 
     <!--  Main Content Area  -->
     <Grid Grid.Row="1" Margin="20">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="1.2*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-
       <!--  Game Content  -->
       <hc:Card
-        Grid.Column="0"
         Margin="10"
         Padding="0"
         Background="{DynamicResource RegionBrush}"
@@ -189,154 +183,7 @@
         </Grid>
       </hc:Card>
 
-      <!--  Stats Sidebar  -->
-      <hc:Card
-        Grid.Column="1"
-        Margin="10"
-        Padding="20"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="1">
-        <hc:Card.Effect>
-          <DropShadowEffect
-            BlurRadius="15"
-            Opacity="0.3"
-            ShadowDepth="3" />
-        </hc:Card.Effect>
 
-        <StackPanel>
-          <!--  Stats Title  -->
-          <TextBlock
-            Margin="0,0,0,20"
-            HorizontalAlignment="Center"
-            FontSize="24"
-            FontWeight="Bold"
-            Text="📊 Gaming Stats" />
-
-          <!--  Quick Stats Cards  -->
-          <hc:SimpleStackPanel Margin="0,0,0,20">
-            <!--  Total Winnings  -->
-            <hc:Card Padding="15" Background="{DynamicResource SuccessBrush}">
-              <Grid>
-                <StackPanel HorizontalAlignment="Left">
-                  <TextBlock
-                    FontSize="12"
-                    Foreground="White"
-                    Opacity="0.9"
-                    Text="Total Winnings" />
-                  <TextBlock
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Text="{Binding TotalWinnings, StringFormat='${0:N0}'}" />
-                </StackPanel>
-                <TextBlock
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Center"
-                  FontSize="30"
-                  Foreground="White"
-                  Opacity="0.3"
-                  Text="💰" />
-              </Grid>
-            </hc:Card>
-
-            <!--  Total Losses  -->
-            <hc:Card Padding="15" Background="{DynamicResource DangerBrush}">
-              <Grid>
-                <StackPanel HorizontalAlignment="Left">
-                  <TextBlock
-                    FontSize="12"
-                    Foreground="White"
-                    Opacity="0.9"
-                    Text="Total Losses" />
-                  <TextBlock
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Text="{Binding TotalLosses, StringFormat='${0:N0}'}" />
-                </StackPanel>
-                <TextBlock
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Center"
-                  FontSize="30"
-                  Foreground="White"
-                  Opacity="0.3"
-                  Text="💸" />
-              </Grid>
-            </hc:Card>
-
-            <!--  Games Played  -->
-            <hc:Card Padding="15" Background="{DynamicResource InfoBrush}">
-              <Grid>
-                <StackPanel HorizontalAlignment="Left">
-                  <TextBlock
-                    FontSize="12"
-                    Foreground="White"
-                    Opacity="0.9"
-                    Text="Games Played" />
-                  <TextBlock
-                    FontSize="20"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Text="{Binding GamesPlayed}" />
-                </StackPanel>
-                <TextBlock
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Center"
-                  FontSize="30"
-                  Foreground="White"
-                  Opacity="0.3"
-                  Text="🎮" />
-              </Grid>
-            </hc:Card>
-          </hc:SimpleStackPanel>
-
-          <!--  Recent Activity  -->
-          <hc:Divider Margin="0,10" />
-          <TextBlock
-            Margin="0,15,0,15"
-            HorizontalAlignment="Center"
-            FontSize="16"
-            FontWeight="Bold"
-            Text="Recent Activity" />
-
-          <ScrollViewer Height="280" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding RecentActivities}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <Border
-                    Margin="0,0,0,8"
-                    Padding="12"
-                    Background="{DynamicResource SecondaryRegionBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                    <Grid>
-                      <StackPanel HorizontalAlignment="Left">
-                        <TextBlock
-                          FontSize="13"
-                          FontWeight="Medium"
-                          Text="{Binding Game}" />
-                        <TextBlock
-                          FontSize="11"
-                          Foreground="{DynamicResource SecondaryTextBrush}"
-                          Text="{Binding TimeAgo}" />
-                      </StackPanel>
-                      <TextBlock
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Foreground="{Binding IsWin, Converter={x:Static local:Converters.WinLossToColorConverter}}"
-                        Text="{Binding Amount, Converter={x:Static local:Converters.AmountToStringConverter}}" />
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
-        </StackPanel>
-      </hc:Card>
     </Grid>
   </Grid>
 </UserControl>
