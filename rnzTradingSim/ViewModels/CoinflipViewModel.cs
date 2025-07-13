@@ -66,8 +66,8 @@ namespace rnzTradingSim.ViewModels
         Balance -= BetAmount;
         _parentViewModel.UpdateBalance(Balance);
 
-        // Simulate coin flip animation delay
-        await Task.Delay(2000);
+        // Simulate coin flip animation delay (1.8 seconds to match animation)
+        await Task.Delay(1800);
 
         // Generate random result
         var random = new Random();

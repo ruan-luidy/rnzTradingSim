@@ -10,51 +10,6 @@
   d:DesignWidth="400"
   mc:Ignorable="d">
 
-  <UserControl.Resources>
-    <Storyboard x:Key="CoinFlipStoryboard">
-      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CoinTransform" Storyboard.TargetProperty="Angle">
-        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="180">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <QuadraticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="360">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <QuadraticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-        <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="540">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <QuadraticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-        <EasingDoubleKeyFrame KeyTime="0:0:2" Value="720">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <QuadraticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-      </DoubleAnimationUsingKeyFrames>
-      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CoinScaleTransform" Storyboard.TargetProperty="ScaleX">
-        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="0.8" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0.1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.75" Value="0.8" />
-        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:1.25" Value="0.8" />
-        <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="0.1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:1.75" Value="0.8" />
-        <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1" />
-      </DoubleAnimationUsingKeyFrames>
-    </Storyboard>
-  </UserControl.Resources>
-
-  <UserControl.Triggers>
-    <EventTrigger RoutedEvent="UserControl.Loaded">
-      <BeginStoryboard x:Name="CoinFlipBeginStoryboard" Storyboard="{StaticResource CoinFlipStoryboard}" />
-    </EventTrigger>
-  </UserControl.Triggers>
-
   <Grid>
     <StackPanel Margin="20">
       <!--  Game Description  -->
@@ -95,57 +50,210 @@
         BorderThickness="2"
         CornerRadius="15">
         <Grid>
-          <Ellipse
-            Width="120"
-            Height="120"
+          <!--  Container da moeda  -->
+          <Grid
+            Width="130"
+            Height="130"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Fill="{DynamicResource WarningBrush}"
-            Stroke="{DynamicResource PrimaryBrush}"
-            StrokeThickness="3">
-            <Ellipse.Effect>
-              <DropShadowEffect
-                BlurRadius="20"
-                Opacity="0.6"
-                ShadowDepth="0"
-                Color="Gold" />
-            </Ellipse.Effect>
-          </Ellipse>
-
-          <TextBlock
-            x:Name="CoinEmoji"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="60"
-            RenderTransformOrigin="0.5,0.5"
-            Text="🪙">
-            <TextBlock.RenderTransform>
+            RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
               <TransformGroup>
-                <RotateTransform x:Name="CoinTransform" Angle="0" />
-                <ScaleTransform x:Name="CoinScaleTransform" ScaleX="1" ScaleY="1" />
+                <RotateTransform Angle="0" />
+                <TranslateTransform X="0" Y="0" />
+                <ScaleTransform ScaleX="1" ScaleY="1" />
               </TransformGroup>
-            </TextBlock.RenderTransform>
-            <TextBlock.Style>
-              <Style TargetType="TextBlock">
+            </Grid.RenderTransform>
+
+            <!--  HEADS Side (Dourado)  -->
+            <Grid>
+              <Ellipse
+                Fill="#FFD700"
+                Stroke="#FFA500"
+                StrokeThickness="4">
+                <Ellipse.Effect>
+                  <DropShadowEffect
+                    BlurRadius="20"
+                    Opacity="0.7"
+                    ShadowDepth="3"
+                    Color="Orange" />
+                </Ellipse.Effect>
+              </Ellipse>
+
+              <Ellipse
+                Margin="10"
+                Fill="Transparent"
+                Stroke="#CC8400"
+                StrokeThickness="2" />
+
+              <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="#8B4513"
+                Text="HEADS">
+                <TextBlock.Style>
+                  <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding IsFlipping}" Value="True">
+                        <DataTrigger.EnterActions>
+                          <BeginStoryboard>
+                            <Storyboard>
+                              <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.075" Value="0" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.225" Value="1" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.375" Value="0" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.525" Value="1" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.675" Value="0" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.825" Value="1" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.975" Value="0" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:1.125" Value="1" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:1.275" Value="0" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:1.425" Value="1" />
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:1.8" Value="1" />
+                              </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                          </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </TextBlock.Style>
+              </TextBlock>
+            </Grid>
+
+            <!--  TAILS Side (Prateado) - sobreposição  -->
+            <Grid Opacity="0">
+              <Ellipse
+                Fill="#C0C0C0"
+                Stroke="#808080"
+                StrokeThickness="4">
+                <Ellipse.Effect>
+                  <DropShadowEffect
+                    BlurRadius="20"
+                    Opacity="0.7"
+                    ShadowDepth="3"
+                    Color="Gray" />
+                </Ellipse.Effect>
+              </Ellipse>
+
+              <Ellipse
+                Margin="10"
+                Fill="Transparent"
+                Stroke="#606060"
+                StrokeThickness="2" />
+
+              <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="#404040"
+                Text="TAILS" />
+
+              <Grid.Style>
+                <Style TargetType="Grid">
+                  <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsFlipping}" Value="True">
+                      <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                          <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.075" Value="1" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.225" Value="0" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.375" Value="1" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.525" Value="0" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.675" Value="1" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.825" Value="0" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:0.975" Value="1" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:1.125" Value="0" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:1.275" Value="1" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:1.425" Value="0" />
+                              <DiscreteDoubleKeyFrame KeyTime="0:0:1.8" Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </DataTrigger.EnterActions>
+                    </DataTrigger>
+                  </Style.Triggers>
+                </Style>
+              </Grid.Style>
+            </Grid>
+
+            <!--  Animações do container principal  -->
+            <Grid.Style>
+              <Style TargetType="Grid">
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding IsFlipping}" Value="True">
                     <DataTrigger.EnterActions>
-                      <BeginStoryboard Storyboard="{StaticResource CoinFlipStoryboard}" />
+                      <BeginStoryboard>
+                        <Storyboard>
+                          <!--  Rotação da moeda inteira  -->
+                          <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)">
+                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="1080">
+                              <EasingDoubleKeyFrame.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut" />
+                              </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                          </DoubleAnimationUsingKeyFrames>
+
+                          <!--  Movimento vertical  -->
+                          <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)">
+                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-40">
+                              <EasingDoubleKeyFrame.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut" />
+                              </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="-25" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="0">
+                              <EasingDoubleKeyFrame.EasingFunction>
+                                <BounceEase EasingMode="EaseOut" />
+                              </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                          </DoubleAnimationUsingKeyFrames>
+
+                          <!--  Flip para mostrar os dois lados  -->
+                          <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(ScaleTransform.ScaleX)">
+                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.45" Value="0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="-0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.75" Value="0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="-0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.05" Value="0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="-0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.35" Value="0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="-0.1" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.65" Value="0.5" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="1">
+                              <EasingDoubleKeyFrame.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut" />
+                              </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                          </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                      </BeginStoryboard>
                     </DataTrigger.EnterActions>
                   </DataTrigger>
                 </Style.Triggers>
               </Style>
-            </TextBlock.Style>
-          </TextBlock>
+            </Grid.Style>
+          </Grid>
 
           <!--  Loading indicator when flipping  -->
           <hc:LoadingCircle
-            Width="140"
-            Height="140"
+            Width="160"
+            Height="160"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsRunning="{Binding IsFlipping}"
-            Opacity="0.3"
+            Opacity="0.2"
             Visibility="{Binding IsFlipping, Converter={StaticResource Boolean2VisibilityConverter}}" />
         </Grid>
       </Border>
@@ -166,7 +274,7 @@
             Background="{Binding SelectedSide, Converter={x:Static local:Converters.CoinflipSideToColorConverter}, ConverterParameter=HEADS}"
             Command="{Binding SelectSideCommand}"
             CommandParameter="HEADS"
-            Content="🔴 HEADS"
+            Content="🟡 HEADS"
             FontSize="14"
             FontWeight="Bold"
             Foreground="White"
