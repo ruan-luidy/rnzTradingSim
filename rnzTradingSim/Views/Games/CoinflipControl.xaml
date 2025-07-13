@@ -142,14 +142,17 @@
                     <Storyboard x:Key="CoinFlipToHeads">
                       <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Tag">
                         <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.0" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.45" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.75" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.9" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.05" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.4" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.6" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.35" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.5" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.65" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="HEADS" />
                       </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
@@ -157,14 +160,17 @@
                     <Storyboard x:Key="CoinFlipToTails">
                       <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Tag">
                         <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.0" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.15" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.45" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.75" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0.9" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.05" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.4" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.6" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.35" Value="TAILS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.5" Value="HEADS" />
+                        <DiscreteObjectKeyFrame KeyTime="0:0:1.65" Value="TAILS" />
                         <DiscreteObjectKeyFrame KeyTime="0:0:1.8" Value="TAILS" />
                       </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
@@ -262,8 +268,11 @@
                         <Condition Binding="{Binding FinalResult}" Value="HEADS" />
                       </MultiDataTrigger.Conditions>
                       <MultiDataTrigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource CoinFlipToHeads}" />
+                        <BeginStoryboard x:Name="FlipToHeadsStoryboard" Storyboard="{StaticResource CoinFlipToHeads}" />
                       </MultiDataTrigger.EnterActions>
+                      <MultiDataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="FlipToHeadsStoryboard" />
+                      </MultiDataTrigger.ExitActions>
                     </MultiDataTrigger>
 
                     <MultiDataTrigger>
@@ -272,8 +281,28 @@
                         <Condition Binding="{Binding FinalResult}" Value="TAILS" />
                       </MultiDataTrigger.Conditions>
                       <MultiDataTrigger.EnterActions>
-                        <BeginStoryboard Storyboard="{StaticResource CoinFlipToTails}" />
+                        <BeginStoryboard x:Name="FlipToTailsStoryboard" Storyboard="{StaticResource CoinFlipToTails}" />
                       </MultiDataTrigger.EnterActions>
+                      <MultiDataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="FlipToTailsStoryboard" />
+                      </MultiDataTrigger.ExitActions>
+                    </MultiDataTrigger>
+
+                    <!--  Triggers para definir estado final  -->
+                    <MultiDataTrigger>
+                      <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsFlipping}" Value="False" />
+                        <Condition Binding="{Binding FinalResult}" Value="HEADS" />
+                      </MultiDataTrigger.Conditions>
+                      <Setter Property="Tag" Value="HEADS" />
+                    </MultiDataTrigger>
+
+                    <MultiDataTrigger>
+                      <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsFlipping}" Value="False" />
+                        <Condition Binding="{Binding FinalResult}" Value="TAILS" />
+                      </MultiDataTrigger.Conditions>
+                      <Setter Property="Tag" Value="TAILS" />
                     </MultiDataTrigger>
 
                     <!--  Triggers para alternar entre HEADS e TAILS  -->

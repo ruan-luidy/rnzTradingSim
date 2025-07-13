@@ -85,8 +85,14 @@ namespace rnzTradingSim.ViewModels
 
       try
       {
+        // Reset FinalResult para garantir que a animação funcione
+        FinalResult = "";
+
         // Deduct bet amount from main balance
         _parentViewModel.UpdateBalance(_parentViewModel.Balance - BetAmount);
+
+        // Small delay to ensure UI updates
+        await Task.Delay(50);
 
         // Generate random result BEFORE the animation
         var random = new Random();
