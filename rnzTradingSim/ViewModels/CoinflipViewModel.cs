@@ -22,6 +22,9 @@ namespace rnzTradingSim.ViewModels
     [ObservableProperty]
     private bool isFlipping = false;
 
+    [ObservableProperty]
+    private string finalResult = "HEADS"; // Resultado final para sincronizar com a animação
+
     #endregion
 
     #region Constructor
@@ -65,12 +68,16 @@ namespace rnzTradingSim.ViewModels
         // Deduct bet amount from main balance
         _parentViewModel.UpdateBalance(_parentViewModel.Balance - BetAmount);
 
+        // Generate random result BEFORE the animation
+        var random = new Random();
+        var result = random.NextDouble() < 0.5 ? "HEADS" : "TAILS";
+
+        // Set the final result that the animation will sync to
+        FinalResult = result;
+
         // Simulate coin flip animation delay (1.8 seconds to match animation)
         await Task.Delay(1800);
 
-        // Generate random result
-        var random = new Random();
-        var result = random.NextDouble() < 0.5 ? "HEADS" : "TAILS";
         var won = result == SelectedSide;
 
         if (won)
