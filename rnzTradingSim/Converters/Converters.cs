@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -14,6 +15,7 @@ namespace rnzTradingSim
     public static readonly WinLossToColorConverter WinLossToColorConverter = new();
     public static readonly AmountToStringConverter AmountToStringConverter = new();
     public static readonly ProfitLossToColorConverter ProfitLossToColorConverter = new();
+    public static readonly Boolean2VisibilityConverter Boolean2VisibilityConverter = new();
   }
 
   public class CoinflipSideToColorConverter : IValueConverter
@@ -210,6 +212,27 @@ namespace rnzTradingSim
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
       throw new NotImplementedException();
+    }
+  }
+
+  public class Boolean2VisibilityConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      if (value is bool boolValue)
+      {
+        return boolValue ? Visibility.Visible : Visibility.Collapsed;
+      }
+      return Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      if (value is Visibility visibility)
+      {
+        return visibility == Visibility.Visible;
+      }
+      return false;
     }
   }
 }

@@ -11,6 +11,10 @@
         <hc:Theme Skin="Dark" />
       </ResourceDictionary.MergedDictionaries>
 
+      <!--  Converters necessários  -->
+      <hc:String2VisibilityConverter x:Key="String2VisibilityConverter" />
+      <local:Boolean2VisibilityConverter x:Key="Boolean2VisibilityConverter" />
+
       <!--  Cores personalizadas para o RugPlay  -->
       <SolidColorBrush x:Key="RugPlayPrimaryBrush" Color="#6366F1" />
       <SolidColorBrush x:Key="RugPlaySecondaryBrush" Color="#8B5CF6" />
