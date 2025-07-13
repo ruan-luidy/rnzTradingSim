@@ -86,21 +86,23 @@ namespace rnzTradingSim.ViewModels
         // Deduct bet amount from main balance
         _parentViewModel.UpdateBalance(_parentViewModel.Balance - BetAmount);
 
-        // Generate random result
+        // Generate random result FIRST
         var random = new Random();
         var result = random.NextDouble() < 0.5 ? "HEADS" : "TAILS";
+
+        // Set the final result BEFORE starting animation
+        FinalResult = result;
 
         // Start flipping animation
         IsFlipping = true;
 
-        // Wait for animation to complete (1.8 seconds)
-        await Task.Delay(1800);
+        // Wait for animation to complete (1.4 seconds)
+        await Task.Delay(1400);
 
-        // Stop animation and set final result
+        // Stop animation - this will trigger the final result display
         IsFlipping = false;
-        FinalResult = result;
 
-        // Small delay to show result
+        // Small delay to show result clearly
         await Task.Delay(300);
 
         var won = result == SelectedSide;
