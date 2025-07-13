@@ -10,6 +10,51 @@
   d:DesignWidth="400"
   mc:Ignorable="d">
 
+  <UserControl.Resources>
+    <Storyboard x:Key="CoinFlipStoryboard">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CoinTransform" Storyboard.TargetProperty="Angle">
+        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="180">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="360">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="540">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:2" Value="720">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CoinScaleTransform" Storyboard.TargetProperty="ScaleX">
+        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.25" Value="0.8" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0.1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.75" Value="0.8" />
+        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:1.25" Value="0.8" />
+        <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="0.1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:1.75" Value="0.8" />
+        <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1" />
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+  </UserControl.Resources>
+
+  <UserControl.Triggers>
+    <EventTrigger RoutedEvent="UserControl.Loaded">
+      <BeginStoryboard x:Name="CoinFlipBeginStoryboard" Storyboard="{StaticResource CoinFlipStoryboard}" />
+    </EventTrigger>
+  </UserControl.Triggers>
+
   <Grid>
     <StackPanel Margin="20">
       <!--  Game Description  -->
@@ -68,10 +113,30 @@
           </Ellipse>
 
           <TextBlock
+            x:Name="CoinEmoji"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             FontSize="60"
-            Text="🪙" />
+            RenderTransformOrigin="0.5,0.5"
+            Text="🪙">
+            <TextBlock.RenderTransform>
+              <TransformGroup>
+                <RotateTransform x:Name="CoinTransform" Angle="0" />
+                <ScaleTransform x:Name="CoinScaleTransform" ScaleX="1" ScaleY="1" />
+              </TransformGroup>
+            </TextBlock.RenderTransform>
+            <TextBlock.Style>
+              <Style TargetType="TextBlock">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding IsFlipping}" Value="True">
+                    <DataTrigger.EnterActions>
+                      <BeginStoryboard Storyboard="{StaticResource CoinFlipStoryboard}" />
+                    </DataTrigger.EnterActions>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </TextBlock.Style>
+          </TextBlock>
 
           <!--  Loading indicator when flipping  -->
           <hc:LoadingCircle
@@ -80,6 +145,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             IsRunning="{Binding IsFlipping}"
+            Opacity="0.3"
             Visibility="{Binding IsFlipping, Converter={StaticResource Boolean2VisibilityConverter}}" />
         </Grid>
       </Border>

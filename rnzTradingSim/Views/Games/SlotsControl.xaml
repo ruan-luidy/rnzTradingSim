@@ -10,6 +10,63 @@
   d:DesignWidth="400"
   mc:Ignorable="d">
 
+  <UserControl.Resources>
+    <Storyboard x:Key="SlotSpinStoryboard" RepeatBehavior="Forever">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="-30">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <QuadraticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BounceEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="1.2" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.8" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <ElasticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <Storyboard x:Key="WinCelebrationStoryboard">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <ElasticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <ElasticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <ElasticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <ElasticEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+  </UserControl.Resources>
+
   <Grid>
     <StackPanel Margin="20">
       <!--  Game Description  -->
@@ -65,10 +122,42 @@
             BorderThickness="2"
             CornerRadius="10">
             <TextBlock
+              x:Name="Reel1"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
               FontSize="45"
-              Text="{Binding Reels[0]}" />
+              RenderTransformOrigin="0.5,0.5"
+              Text="{Binding Reels[0]}">
+              <TextBlock.RenderTransform>
+                <TransformGroup>
+                  <TranslateTransform Y="0" />
+                  <ScaleTransform ScaleX="1" ScaleY="1" />
+                </TransformGroup>
+              </TextBlock.RenderTransform>
+              <TextBlock.Triggers>
+                <DataTrigger Binding="{Binding IsSpinning}" Value="True">
+                  <DataTrigger.EnterActions>
+                    <BeginStoryboard x:Name="Reel1Storyboard">
+                      <Storyboard RepeatBehavior="Forever">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
+                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
+                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
+                        </DoubleAnimationUsingKeyFrames>
+                      </Storyboard>
+                    </BeginStoryboard>
+                  </DataTrigger.EnterActions>
+                  <DataTrigger.ExitActions>
+                    <StopStoryboard BeginStoryboardName="Reel1Storyboard" />
+                  </DataTrigger.ExitActions>
+                </DataTrigger>
+              </TextBlock.Triggers>
+            </TextBlock>
           </Border>
 
           <Border
@@ -79,10 +168,42 @@
             BorderThickness="2"
             CornerRadius="10">
             <TextBlock
+              x:Name="Reel2"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
               FontSize="45"
-              Text="{Binding Reels[1]}" />
+              RenderTransformOrigin="0.5,0.5"
+              Text="{Binding Reels[1]}">
+              <TextBlock.RenderTransform>
+                <TransformGroup>
+                  <TranslateTransform Y="0" />
+                  <ScaleTransform ScaleX="1" ScaleY="1" />
+                </TransformGroup>
+              </TextBlock.RenderTransform>
+              <TextBlock.Triggers>
+                <DataTrigger Binding="{Binding IsSpinning}" Value="True">
+                  <DataTrigger.EnterActions>
+                    <BeginStoryboard x:Name="Reel2Storyboard">
+                      <Storyboard BeginTime="0:0:0.03" RepeatBehavior="Forever">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
+                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
+                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
+                        </DoubleAnimationUsingKeyFrames>
+                      </Storyboard>
+                    </BeginStoryboard>
+                  </DataTrigger.EnterActions>
+                  <DataTrigger.ExitActions>
+                    <StopStoryboard BeginStoryboardName="Reel2Storyboard" />
+                  </DataTrigger.ExitActions>
+                </DataTrigger>
+              </TextBlock.Triggers>
+            </TextBlock>
           </Border>
 
           <Border
@@ -93,10 +214,42 @@
             BorderThickness="2"
             CornerRadius="10">
             <TextBlock
+              x:Name="Reel3"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
               FontSize="45"
-              Text="{Binding Reels[2]}" />
+              RenderTransformOrigin="0.5,0.5"
+              Text="{Binding Reels[2]}">
+              <TextBlock.RenderTransform>
+                <TransformGroup>
+                  <TranslateTransform Y="0" />
+                  <ScaleTransform ScaleX="1" ScaleY="1" />
+                </TransformGroup>
+              </TextBlock.RenderTransform>
+              <TextBlock.Triggers>
+                <DataTrigger Binding="{Binding IsSpinning}" Value="True">
+                  <DataTrigger.EnterActions>
+                    <BeginStoryboard x:Name="Reel3Storyboard">
+                      <Storyboard BeginTime="0:0:0.06" RepeatBehavior="Forever">
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
+                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
+                          <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
+                          <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
+                        </DoubleAnimationUsingKeyFrames>
+                      </Storyboard>
+                    </BeginStoryboard>
+                  </DataTrigger.EnterActions>
+                  <DataTrigger.ExitActions>
+                    <StopStoryboard BeginStoryboardName="Reel3Storyboard" />
+                  </DataTrigger.ExitActions>
+                </DataTrigger>
+              </TextBlock.Triggers>
+            </TextBlock>
           </Border>
 
           <!--  Loading overlay when spinning  -->
@@ -188,7 +341,42 @@
         FontWeight="Bold"
         Foreground="White"
         IsEnabled="{Binding IsSpinning, Converter={x:Static local:Converters.InverseBooleanConverter}}"
-        Style="{StaticResource ButtonDanger}" />
+        RenderTransformOrigin="0.5,0.5"
+        Style="{StaticResource ButtonDanger}">
+        <Button.RenderTransform>
+          <ScaleTransform ScaleX="1" ScaleY="1" />
+        </Button.RenderTransform>
+        <Button.Triggers>
+          <EventTrigger RoutedEvent="Button.PreviewMouseDown">
+            <BeginStoryboard>
+              <Storyboard>
+                <DoubleAnimation
+                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                  To="0.95"
+                  Duration="0:0:0.1" />
+                <DoubleAnimation
+                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                  To="0.95"
+                  Duration="0:0:0.1" />
+              </Storyboard>
+            </BeginStoryboard>
+          </EventTrigger>
+          <EventTrigger RoutedEvent="Button.PreviewMouseUp">
+            <BeginStoryboard>
+              <Storyboard>
+                <DoubleAnimation
+                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                  To="1"
+                  Duration="0:0:0.1" />
+                <DoubleAnimation
+                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                  To="1"
+                  Duration="0:0:0.1" />
+              </Storyboard>
+            </BeginStoryboard>
+          </EventTrigger>
+        </Button.Triggers>
+      </Button>
 
       <!--  Paytable  -->
       <hc:Divider Margin="0,20,0,15" />
