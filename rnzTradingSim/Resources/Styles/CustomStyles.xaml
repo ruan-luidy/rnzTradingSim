@@ -8,9 +8,9 @@
     <Setter Property="Background" Value="#2a2a2a" />
     <Setter Property="BorderBrush" Value="#404040" />
     <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Width" Value="50" />
-    <Setter Property="Height" Value="50" />
-    <Setter Property="Margin" Value="2" />
+    <Setter Property="Width" Value="70" />
+    <Setter Property="Height" Value="70" />
+    <Setter Property="Margin" Value="3" />
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="Template">
       <Setter.Value>
@@ -113,7 +113,7 @@
                 <TextBlock
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
-                  FontSize="20"
+                  FontSize="24"
                   FontWeight="Bold"
                   Foreground="White"
                   Text="{Binding Path=Tag.RevealedContent, RelativeSource={RelativeSource TemplatedParent}}" />

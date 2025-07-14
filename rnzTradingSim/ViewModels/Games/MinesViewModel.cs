@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using rnzTradingSim.Models;
 using rnzTradingSim.Services;
+using System.Globalization;
 
 namespace rnzTradingSim.ViewModels.Games
 {
@@ -77,11 +78,15 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void StartGame()
     {
-      if (!CanStartGame || BetAmount > PlayerBalance)
+      if (!CanStartGame || BetAmount > PlayerBalance || BetAmount <= 0)
       {
         if (BetAmount > PlayerBalance)
         {
           GameStatusDescription = "Insufficient balance!";
+        }
+        else if (BetAmount <= 0)
+        {
+          GameStatusDescription = "Invalid bet amount!";
         }
         return;
       }
@@ -213,7 +218,7 @@ namespace rnzTradingSim.ViewModels.Games
       var percent = int.Parse(percentage);
       BetAmount = Math.Round(PlayerBalance * percent / 100, 2);
 
-      if (BetAmount < 1) BetAmount = 1;
+      if (BetAmount < 0.01m) BetAmount = 0.01m;
       if (BetAmount > 100000) BetAmount = 100000;
 
       CalculatePotentialWin();
@@ -221,10 +226,25 @@ namespace rnzTradingSim.ViewModels.Games
 
     partial void OnBetAmountChanged(decimal value)
     {
+      // Validate bet amount
+      if (value < 0)
+      {
+        BetAmount = 0.01m;
+        return;
+      }
+
       if (value > PlayerBalance)
       {
         BetAmount = PlayerBalance;
+        return;
       }
+
+      if (value > 100000)
+      {
+        BetAmount = 100000;
+        return;
+      }
+
       CalculatePotentialWin();
     }
 
