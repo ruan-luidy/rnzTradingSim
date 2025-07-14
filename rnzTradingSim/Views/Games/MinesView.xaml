@@ -275,10 +275,7 @@
             BorderThickness="1"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="25"
-            FontSize="14"
-            Foreground="White">
-            <TextBlock Text="25%" />
-          </Button>
+            Content="25%" />
 
           <Button
             Grid.Column="1"
@@ -291,10 +288,7 @@
             BorderThickness="1"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="50"
-            FontSize="14"
-            Foreground="White">
-            <TextBlock Text="50%" />
-          </Button>
+            Content="50%" />
 
           <Button
             Grid.Column="2"
@@ -307,10 +301,10 @@
             BorderThickness="1"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="75"
-            FontSize="14"
-            Foreground="White">
-            <TextBlock Text="75%" />
-          </Button>
+            Content="75%"
+            Foreground="White" />
+
+
 
           <Button
             Grid.Column="3"
@@ -323,10 +317,9 @@
             BorderThickness="1"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="100"
-            FontSize="14"
-            Foreground="White">
-            <TextBlock Text="Max" />
-          </Button>
+            Content="Max"
+            Foreground="White" />
+
         </Grid>
 
         <!--  Action Buttons  -->

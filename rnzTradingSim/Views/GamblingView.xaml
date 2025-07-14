@@ -32,39 +32,38 @@
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 
         <Button
+          Width="70"
           Margin="0,0,10,0"
-          Padding="20,10"
           hc:BorderElement.CornerRadius="8"
           Background="#2a2a2a"
           BorderThickness="0"
           Content="Coinflip"
-          Foreground="#8b8b8b" />
+          FontWeight="Bold" />
 
         <Button
+          Width="70"
           Margin="0,0,10,0"
-          Padding="20,10"
           hc:BorderElement.CornerRadius="8"
           Background="#2a2a2a"
           BorderThickness="0"
           Content="Slots"
-          Foreground="#8b8b8b" />
+          FontWeight="Bold" />
 
         <Button
+          Width="70"
           Margin="0,0,10,0"
-          Padding="20,10"
           hc:BorderElement.CornerRadius="8"
           Background="#dc3545"
           BorderThickness="0"
           Content="Mines"
-          Foreground="White" />
+          FontWeight="Bold" />
 
         <Button
-          Padding="20,10"
+          Width="70"
           hc:BorderElement.CornerRadius="8"
-          Background="#2a2a2a"
           BorderThickness="0"
           Content="Dice"
-          Foreground="#8b8b8b" />
+          FontWeight="Bold" />
 
       </StackPanel>
     </Border>
