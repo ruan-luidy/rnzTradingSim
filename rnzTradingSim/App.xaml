@@ -13,6 +13,7 @@
         <hc:Theme Skin="Dark" />
         <!--  Custom Styles  -->
         <ResourceDictionary Source="Resources/Styles/CustomStyles.xaml" />
+        <ResourceDictionary Source="/Resources/Styles/Geometries.xaml" />
       </ResourceDictionary.MergedDictionaries>
 
       <!--  Global Converters  -->

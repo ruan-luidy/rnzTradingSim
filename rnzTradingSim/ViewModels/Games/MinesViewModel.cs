@@ -78,19 +78,26 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void StartGame()
     {
-      if (!CanStartGame || BetAmount > PlayerBalance || BetAmount <= 0)
+      // Validações mais específicas
+      if (IsGameActive)
       {
-        if (BetAmount > PlayerBalance)
-        {
-          GameStatusDescription = "Insufficient balance!";
-        }
-        else if (BetAmount <= 0)
-        {
-          GameStatusDescription = "Invalid bet amount!";
-        }
+        GameStatusDescription = "Game already in progress!";
         return;
       }
 
+      if (BetAmount <= 0)
+      {
+        GameStatusDescription = "Enter a valid bet amount!";
+        return;
+      }
+
+      if (BetAmount > PlayerBalance)
+      {
+        GameStatusDescription = "Insufficient balance!";
+        return;
+      }
+
+      // Inicia o jogo
       IsGameActive = true;
       CanStartGame = false;
       CanCollectWinnings = false;
@@ -226,13 +233,33 @@ namespace rnzTradingSim.ViewModels.Games
 
     partial void OnBetAmountChanged(decimal value)
     {
+      // Remove validação que resetava valores negativos
+      // Apenas garante que seja positivo
       if (value < 0)
       {
-        BetAmount = Math.Abs(value);
+        BetAmount = 0.01m;
         return;
       }
 
+      // Atualiza o potencial win sempre que o bet amount muda
       CalculatePotentialWin();
+
+      // Atualiza a descrição do status se necessário
+      if (!IsGameActive)
+      {
+        if (value > PlayerBalance)
+        {
+          GameStatusDescription = "Insufficient balance!";
+        }
+        else if (value <= 0)
+        {
+          GameStatusDescription = "Enter a valid bet amount!";
+        }
+        else
+        {
+          GameStatusDescription = "Configure your bet";
+        }
+      }
     }
 
     [RelayCommand]
@@ -240,13 +267,18 @@ namespace rnzTradingSim.ViewModels.Games
     {
       if (IsGameActive) return;
 
-      if (decimal.TryParse(newValue, out decimal amount))
+      if (decimal.TryParse(newValue, NumberStyles.Any, CultureInfo.CurrentCulture, out decimal amount))
       {
-        // Aplicar limites sem resetar
+        // Aplicar limites mínimos
         if (amount < 0.01m) amount = 0.01m;
-        if (amount > Math.Min(PlayerBalance, 100000)) amount = Math.Min(PlayerBalance, 100000);
+        if (amount > 100000) amount = 100000;
 
         BetAmount = amount;
+      }
+      else
+      {
+        // Se não conseguir converter, mantém valor anterior ou define mínimo
+        if (BetAmount <= 0) BetAmount = 0.01m;
       }
     }
 
