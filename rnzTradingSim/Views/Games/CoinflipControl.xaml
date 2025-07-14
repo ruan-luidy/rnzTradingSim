@@ -10,6 +10,102 @@
   d:DesignWidth="850"
   mc:Ignorable="d">
 
+  <UserControl.Resources>
+    <!--  Storyboard para quando está flipando (animação contínua)  -->
+    <Storyboard x:Key="StoryboardFlipping" RepeatBehavior="Forever">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!--  Storyboard para mostrar HEADS  -->
+    <Storyboard x:Key="StoryboardShowHeads">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BackEase Amplitude="0.3" EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BackEase Amplitude="0.3" EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="Opacity">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="Opacity">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!--  Storyboard para mostrar TAILS  -->
+    <Storyboard x:Key="StoryboardShowTails">
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BackEase Amplitude="0.3" EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <BackEase Amplitude="0.3" EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="HeadsElement" Storyboard.TargetProperty="Opacity">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+      <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TailsElement" Storyboard.TargetProperty="Opacity">
+        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
+          <EasingDoubleKeyFrame.EasingFunction>
+            <PowerEase EasingMode="EaseOut" />
+          </EasingDoubleKeyFrame.EasingFunction>
+        </EasingDoubleKeyFrame>
+      </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+  </UserControl.Resources>
+
+
+
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="1*" />
@@ -27,33 +123,49 @@
           Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
       </StackPanel>
 
+      <!--  Container da moeda  -->
       <Grid
         Width="150"
         Height="150"
         HorizontalAlignment="Center">
-        <!--  Coin Animation  -->
-        <Ellipse
-          x:Name="CoinEllipse"
-          Width="100"
-          Height="100"
-          HorizontalAlignment="Center"
-          VerticalAlignment="Center"
-          Fill="Gold"
-          RenderTransformOrigin="0.5,0.5"
-          Stroke="DarkGoldenrod"
-          StrokeThickness="3">
-          <Ellipse.RenderTransform>
-            <ScaleTransform x:Name="CoinScale" ScaleX="1" />
-          </Ellipse.RenderTransform>
-        </Ellipse>
 
-        <!--  Coin Text  -->
-        <TextBlock
-          HorizontalAlignment="Center"
-          VerticalAlignment="Center"
-          FontSize="24"
-          FontWeight="Bold"
-          Text="{Binding FinalResult}" />
+        <hc:SimplePanel Width="120" Height="120">
+          <!--  HEADS side (Azul)  -->
+          <Border
+            Name="HeadsElement"
+            Width="100"
+            Height="100"
+            Background="RoyalBlue"
+            BorderBrush="DarkBlue"
+            BorderThickness="3"
+            CornerRadius="50"
+            RenderTransformOrigin="0.5,0.5"
+            SnapsToDevicePixels="True">
+            <Border.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform ScaleX="1" />
+              </TransformGroup>
+            </Border.RenderTransform>
+          </Border>
+
+          <!--  TAILS side (Vermelho)  -->
+          <Border
+            Name="TailsElement"
+            Width="100"
+            Height="100"
+            Background="Crimson"
+            BorderBrush="DarkRed"
+            BorderThickness="3"
+            CornerRadius="50"
+            RenderTransformOrigin="0.5,0.5"
+            SnapsToDevicePixels="True">
+            <Border.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform ScaleX="0" />
+              </TransformGroup>
+            </Border.RenderTransform>
+          </Border>
+        </hc:SimplePanel>
       </Grid>
     </StackPanel>
 
@@ -79,6 +191,7 @@
           <Button
             Grid.Column="0"
             Margin="0,0,5,0"
+            Background="{Binding SelectedSide, Converter={x:Static local:Converters.CoinflipSideToColorConverter}, ConverterParameter=HEADS}"
             Command="{Binding SelectSideCommand}"
             CommandParameter="HEADS"
             Content="HEADS"
@@ -87,6 +200,7 @@
           <Button
             Grid.Column="1"
             Margin="5,0,0,0"
+            Background="{Binding SelectedSide, Converter={x:Static local:Converters.CoinflipSideToColorConverter}, ConverterParameter=TAILS}"
             Command="{Binding SelectSideCommand}"
             CommandParameter="TAILS"
             Content="TAILS"
