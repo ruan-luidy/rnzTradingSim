@@ -8,119 +8,144 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:views="clr-namespace:rnzTradingSim.Views"
   Title="RNZ Trading Simulator"
-  Width="1200"
+  Width="1400"
   Height="800"
+  Background="{DynamicResource RegionBrush}"
   Style="{StaticResource WindowWin10}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
 
   <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="250" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
 
-    <!--  Header  -->
+    <!--  Left Sidebar  -->
     <Border
-      Grid.Row="0"
-      Padding="20,15"
-      Background="{DynamicResource RegionBrush}"
+      Grid.Column="0"
+      Background="#1a1a1a"
       BorderBrush="{DynamicResource BorderBrush}"
-      BorderThickness="0,0,0,1">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+      BorderThickness="0,0,1,0">
+      <ScrollViewer>
+        <StackPanel>
 
-        <StackPanel Grid.Column="0" Orientation="Horizontal">
-          <TextBlock
-            VerticalAlignment="Center"
-            Style="{StaticResource TextBlockTitleBold}"
-            Text="RNZ Trading Simulator" />
-          <Border
-            Margin="15,0,0,0"
-            Padding="8,3"
-            Background="{DynamicResource DangerBrush}"
-            CornerRadius="10">
-            <TextBlock
-              FontSize="10"
-              Foreground="White"
-              Style="{StaticResource TextBlockDefault}"
-              Text="BETA" />
-          </Border>
-        </StackPanel>
-
-        <StackPanel Grid.Column="1" Orientation="Horizontal">
-          <Border
-            Margin="0,0,10,0"
-            Padding="12,6"
-            Background="{DynamicResource SuccessBrush}"
-            CornerRadius="15">
+          <!--  Logo/Brand  -->
+          <Border Padding="20,25,20,20">
             <StackPanel Orientation="Horizontal">
+              <Border
+                Width="8"
+                Height="8"
+                Margin="0,0,8,0"
+                Background="{DynamicResource PrimaryBrush}"
+                CornerRadius="4" />
               <TextBlock
                 Foreground="White"
-                Style="{StaticResource TextBlockDefaultBold}"
-                Text="Saldo: " />
-              <TextBlock
-                Foreground="White"
-                Style="{StaticResource TextBlockDefaultBold}"
-                Text="R$ 1.000,00" />
+                Style="{StaticResource TextBlockTitleBold}"
+                Text="Rugplay" />
             </StackPanel>
           </Border>
 
-          <Button
-            Padding="15,8"
-            Content="Perfil"
-            Style="{StaticResource ButtonPrimary}" />
-        </StackPanel>
-      </Grid>
-    </Border>
-
-    <!--  Main Content  -->
-    <Grid Grid.Row="1">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="250" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-
-      <!--  Navigation Sidebar  -->
-      <Border
-        Grid.Column="0"
-        Background="{DynamicResource SecondaryRegionBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="0,0,1,0">
-        <ScrollViewer>
-          <StackPanel Margin="15">
-
-            <!--  Navigation Menu  -->
-            <TextBlock
-              Margin="0,0,0,15"
-              Style="{StaticResource TextBlockSubTitleBold}"
-              Text="NAVEGACAO" />
+          <!--  Navigation Menu  -->
+          <StackPanel Margin="15,0">
 
             <Button
-              Margin="0,0,0,5"
+              Margin="0,0,0,3"
               Padding="15,12"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Left"
-              Content="Inicio"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Home"
+              Foreground="#8b8b8b"
               Style="{StaticResource ButtonDefault}" />
 
             <Button
-              Margin="0,0,0,5"
+              Margin="0,0,0,3"
               Padding="15,12"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Left"
-              Content="Jogos"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Market"
+              Foreground="#8b8b8b"
+              Style="{StaticResource ButtonDefault}" />
+
+            <Button
+              Margin="0,0,0,3"
+              Padding="15,12"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Left"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Hopium"
+              Foreground="#8b8b8b"
+              Style="{StaticResource ButtonDefault}" />
+
+            <Button
+              Margin="0,0,0,3"
+              Padding="15,12"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Left"
+              Background="#2a2a2a"
+              BorderThickness="0"
+              Content="Gambling"
+              Foreground="White"
               Style="{StaticResource ButtonPrimary}" />
 
             <Button
-              Margin="0,0,0,5"
+              Margin="0,0,0,3"
               Padding="15,12"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Left"
-              Content="Ranking"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Leaderboard"
+              Foreground="#8b8b8b"
+              Style="{StaticResource ButtonDefault}" />
+
+            <Button
+              Margin="0,0,0,3"
+              Padding="15,12"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Left"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Portfolio"
+              Foreground="#8b8b8b"
+              Style="{StaticResource ButtonDefault}" />
+
+            <Button
+              Margin="0,0,0,3"
+              Padding="15,12"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Left"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Treemap"
+              Foreground="#8b8b8b"
+              Style="{StaticResource ButtonDefault}" />
+
+            <Button
+              Margin="0,0,0,3"
+              Padding="15,12"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Left"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Create coin"
+              Foreground="#8b8b8b"
+              Style="{StaticResource ButtonDefault}" />
+
+            <Button
+              Margin="0,0,0,3"
+              Padding="15,12"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Left"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="Notifications"
+              Foreground="#8b8b8b"
               Style="{StaticResource ButtonDefault}" />
 
             <Button
@@ -128,96 +153,176 @@
               Padding="15,12"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Left"
-              Content="Perfil"
+              Background="Transparent"
+              BorderThickness="0"
+              Content="About"
+              Foreground="#8b8b8b"
               Style="{StaticResource ButtonDefault}" />
-
-            <!--  Games Menu  -->
-            <TextBlock
-              Margin="0,0,0,15"
-              Style="{StaticResource TextBlockSubTitleBold}"
-              Text="JOGOS" />
-
-            <Button
-              Margin="0,0,0,5"
-              Padding="15,12"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Content="Mines"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,5"
-              Padding="15,12"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Content="Coinflip"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,5"
-              Padding="15,12"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Content="Dice"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,25"
-              Padding="15,12"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Content="Slots"
-              Style="{StaticResource ButtonDefault}" />
-
-            <!--  Quick Stats  -->
-            <TextBlock
-              Margin="0,0,0,15"
-              Style="{StaticResource TextBlockSubTitleBold}"
-              Text="ESTATISTICAS" />
-
-            <Border
-              Margin="0,0,0,10"
-              Padding="15"
-              Background="{DynamicResource RegionBrush}"
-              CornerRadius="8">
-              <StackPanel>
-                <TextBlock
-                  Margin="0,0,0,5"
-                  Style="{StaticResource TextBlockDefaultBold}"
-                  Text="Jogos Hoje" />
-                <TextBlock
-                  Foreground="{DynamicResource PrimaryBrush}"
-                  Style="{StaticResource TextBlockLarge}"
-                  Text="23" />
-              </StackPanel>
-            </Border>
-
-            <Border
-              Margin="0,0,0,10"
-              Padding="15"
-              Background="{DynamicResource RegionBrush}"
-              CornerRadius="8">
-              <StackPanel>
-                <TextBlock
-                  Margin="0,0,0,5"
-                  Style="{StaticResource TextBlockDefaultBold}"
-                  Text="Lucro/Prejuizo" />
-                <TextBlock
-                  Foreground="{DynamicResource SuccessBrush}"
-                  Style="{StaticResource TextBlockLarge}"
-                  Text="+R$ 245,50" />
-              </StackPanel>
-            </Border>
 
           </StackPanel>
-        </ScrollViewer>
-      </Border>
 
-      <!--  Content Area  -->
-      <Grid Grid.Column="1">
-        <views:GamblingView />
-      </Grid>
+          <!--  Live Trades Section  -->
+          <StackPanel Margin="15,0">
+            <Grid Margin="0,0,0,15">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBlock
+                Grid.Column="0"
+                Foreground="#8b8b8b"
+                Style="{StaticResource TextBlockDefaultBold}"
+                Text="Live Trades" />
+              <TextBlock
+                Grid.Column="1"
+                Foreground="{DynamicResource PrimaryBrush}"
+                Style="{StaticResource TextBlockDefault}"
+                Text="View All" />
+            </Grid>
 
+            <!--  Trade Items  -->
+            <StackPanel>
+              <Border Margin="0,0,0,3" Padding="0,8">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <Border
+                    Grid.Column="0"
+                    Width="6"
+                    Height="6"
+                    Margin="0,0,8,0"
+                    Background="{DynamicResource SuccessBrush}"
+                    CornerRadius="3" />
+                  <TextBlock
+                    Grid.Column="1"
+                    Foreground="#8b8b8b"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="$1.22K +036k by @right_c" />
+                </Grid>
+              </Border>
+
+              <Border Margin="0,0,0,3" Padding="0,8">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Border
+                    Grid.Column="0"
+                    Width="6"
+                    Height="6"
+                    Margin="0,0,8,0"
+                    Background="{DynamicResource DangerBrush}"
+                    CornerRadius="3" />
+                  <TextBlock
+                    Grid.Column="1"
+                    Foreground="#8b8b8b"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="$12.53K -WILLBEHERE by (" />
+                </Grid>
+              </Border>
+
+              <Border Margin="0,0,0,3" Padding="0,8">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Border
+                    Grid.Column="0"
+                    Width="6"
+                    Height="6"
+                    Margin="0,0,8,0"
+                    Background="{DynamicResource SuccessBrush}"
+                    CornerRadius="3" />
+                  <TextBlock
+                    Grid.Column="1"
+                    Foreground="#8b8b8b"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="$1.06K +FRKO by @eight" />
+                </Grid>
+              </Border>
+            </StackPanel>
+          </StackPanel>
+
+          <!--  Portfolio Section  -->
+          <StackPanel Margin="15,30,15,0">
+            <TextBlock
+              Margin="0,0,0,15"
+              Foreground="#8b8b8b"
+              Style="{StaticResource TextBlockDefaultBold}"
+              Text="Portfolio" />
+
+            <Border
+              Padding="15"
+              Background="#2a2a2a"
+              CornerRadius="8">
+              <StackPanel>
+                <Grid Margin="0,0,0,10">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                    Grid.Column="0"
+                    Foreground="#8b8b8b"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="Total Value" />
+                  <TextBlock
+                    Grid.Column="1"
+                    Foreground="White"
+                    Style="{StaticResource TextBlockDefaultBold}"
+                    Text="$1,800.00" />
+                </Grid>
+
+                <Grid Margin="0,0,0,5">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                    Grid.Column="0"
+                    Foreground="#8b8b8b"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="Cash:" />
+                  <TextBlock
+                    Grid.Column="1"
+                    Foreground="White"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="$1,800.00" />
+                </Grid>
+
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                    Grid.Column="0"
+                    Foreground="#8b8b8b"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="Coins:" />
+                  <TextBlock
+                    Grid.Column="1"
+                    Foreground="White"
+                    Style="{StaticResource TextBlockDefault}"
+                    Text="$0.00" />
+                </Grid>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+
+    <!--  Main Content Area  -->
+    <Grid Grid.Column="1" Background="#0f0f0f">
+      <views:GamblingView />
     </Grid>
+
   </Grid>
 </hc:Window>

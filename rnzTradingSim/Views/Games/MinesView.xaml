@@ -6,435 +6,427 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim.Views.Games"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  d:DesignHeight="400"
-  d:DesignWidth="890"
+  d:DesignHeight="600"
+  d:DesignWidth="1070"
   mc:Ignorable="d">
 
-  <Grid Margin="30">
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="300" />
-      <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="250" />
-    </Grid.ColumnDefinitions>
+  <Border
+    Padding="30"
+    Background="#1a1a1a"
+    CornerRadius="12">
 
-    <!--  Left Panel - Game Controls  -->
-    <StackPanel Grid.Column="0" Margin="0,0,20,0">
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="380" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="300" />
+      </Grid.ColumnDefinitions>
 
-      <!--  Game Title  -->
-      <TextBlock
-        Margin="0,0,0,20"
-        Style="{StaticResource TextBlockTitleBold}"
-        Text="MINES" />
+      <!--  Left Panel - Game Info  -->
+      <StackPanel Grid.Column="0">
 
-      <!--  Bet Amount  -->
-      <TextBlock
-        Margin="0,0,0,8"
-        Style="{StaticResource TextBlockDefaultBold}"
-        Text="VALOR DA APOSTA" />
-      <hc:NumericUpDown
-        Margin="0,0,0,20"
-        DecimalPlaces="2"
-        Maximum="1000"
-        Minimum="1"
-        Value="10.00" />
+        <!--  Game Title and Description  -->
+        <TextBlock
+          Margin="0,0,0,10"
+          Foreground="White"
+          Style="{StaticResource TextBlockTitleBold}"
+          Text="Mines" />
 
-      <!--  Number of Mines  -->
-      <TextBlock
-        Margin="0,0,0,8"
-        Style="{StaticResource TextBlockDefaultBold}"
-        Text="NUMERO DE MINAS" />
-      <Slider
-        Margin="0,0,0,5"
-        IsSnapToTickEnabled="True"
-        Maximum="24"
-        Minimum="1"
-        TickFrequency="1"
-        Value="3" />
-      <TextBlock
-        Margin="0,0,0,20"
-        HorizontalAlignment="Center"
-        Style="{StaticResource TextBlockDefault}"
-        Text="3 minas" />
+        <TextBlock
+          Margin="0,0,0,30"
+          Foreground="#8b8b8b"
+          Style="{StaticResource TextBlockDefault}"
+          Text="Navigate through the minefield and cash out before hitting a mine!"
+          TextWrapping="Wrap" />
 
-      <!--  Multiplier Display  -->
-      <Border
-        Margin="0,0,0,20"
-        Padding="15"
-        Background="{DynamicResource RegionBrush}"
-        CornerRadius="8">
-        <StackPanel>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="MULTIPLICADOR ATUAL" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            Foreground="{DynamicResource SuccessBrush}"
-            Style="{StaticResource TextBlockLargeBold}"
-            Text="1.00x" />
-        </StackPanel>
-      </Border>
+        <!--  Balance Display  -->
+        <Border
+          Margin="0,0,0,30"
+          Padding="20"
+          Background="#2a2a2a"
+          CornerRadius="8">
+          <StackPanel HorizontalAlignment="Center">
+            <TextBlock
+              Margin="0,0,0,8"
+              HorizontalAlignment="Center"
+              Foreground="#8b8b8b"
+              Style="{StaticResource TextBlockDefault}"
+              Text="Balance" />
+            <TextBlock
+              HorizontalAlignment="Center"
+              Foreground="White"
+              Style="{StaticResource TextBlockLargeBold}"
+              Text="$1.80K" />
+          </StackPanel>
+        </Border>
 
-      <!--  Potential Win  -->
-      <Border
-        Margin="0,0,0,20"
-        Padding="15"
-        Background="{DynamicResource SuccessBrush}"
-        CornerRadius="8">
-        <StackPanel>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Foreground="White"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="GANHO POTENCIAL" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            Foreground="White"
-            Style="{StaticResource TextBlockLargeBold}"
-            Text="R$ 10,00" />
-        </StackPanel>
-      </Border>
+      </StackPanel>
 
-      <!--  Action Buttons  -->
-      <Button
-        Margin="0,0,0,10"
-        Padding="0,12"
-        HorizontalAlignment="Stretch"
-        Content="COMECAR JOGO"
-        Style="{StaticResource ButtonSuccess}" />
-
-      <Button
-        Padding="0,12"
-        HorizontalAlignment="Stretch"
-        Content="COLETAR GANHOS"
-        IsEnabled="False"
-        Style="{StaticResource ButtonWarning}" />
-
-    </StackPanel>
-
-    <!--  Center Panel - Game Grid  -->
-    <Border
-      Grid.Column="1"
-      Margin="0,0,20,0"
-      Padding="20"
-      Background="{DynamicResource RegionBrush}"
-      CornerRadius="12">
-      <Grid>
+      <!--  Center Panel - Game Grid  -->
+      <Grid Grid.Column="1" Margin="30,0">
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--  Grid Header  -->
-        <TextBlock
-          Grid.Row="0"
-          Margin="0,0,0,20"
-          HorizontalAlignment="Center"
-          Style="{StaticResource TextBlockSubTitleBold}"
-          Text="CAMPO DE JOGO" />
+        <!--  Mine Grid Container  -->
+        <Border
+          Padding="20"
+          Background="#2a2a2a"
+          CornerRadius="12">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <!--  Mine Grid  -->
-        <Grid Name="MineGrid" Grid.Row="1">
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-          </Grid.RowDefinitions>
+            <!--  Mine Buttons (5x5 grid)  -->
+            <Button
+              Grid.Row="0"
+              Grid.Column="0"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="0"
+              Grid.Column="1"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="0"
+              Grid.Column="2"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="0"
+              Grid.Column="3"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="0"
+              Grid.Column="4"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+
+            <Button
+              Grid.Row="1"
+              Grid.Column="0"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="1"
+              Grid.Column="1"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="1"
+              Grid.Column="2"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="1"
+              Grid.Column="3"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="1"
+              Grid.Column="4"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+
+            <Button
+              Grid.Row="2"
+              Grid.Column="0"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="2"
+              Grid.Column="1"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="2"
+              Grid.Column="2"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="2"
+              Grid.Column="3"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="2"
+              Grid.Column="4"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+
+            <Button
+              Grid.Row="3"
+              Grid.Column="0"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="3"
+              Grid.Column="1"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="3"
+              Grid.Column="2"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="3"
+              Grid.Column="3"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="3"
+              Grid.Column="4"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+
+            <Button
+              Grid.Row="4"
+              Grid.Column="0"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="4"
+              Grid.Column="1"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="4"
+              Grid.Column="2"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="4"
+              Grid.Column="3"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+            <Button
+              Grid.Row="4"
+              Grid.Column="4"
+              Margin="3"
+              hc:BorderElement.CornerRadius="8"
+              Background="#3a3a3a"
+              BorderThickness="0" />
+          </Grid>
+        </Border>
+
+      </Grid>
+
+      <!--  Right Panel - Game Controls  -->
+      <StackPanel Grid.Column="2">
+
+        <!--  Number of Mines Control  -->
+        <TextBlock
+          Margin="0,0,0,15"
+          Foreground="White"
+          Style="{StaticResource TextBlockDefaultBold}"
+          Text="Number of Mines" />
+
+        <Border
+          Margin="0,0,0,20"
+          Padding="15"
+          Background="#2a2a2a"
+          CornerRadius="8">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+              Grid.Column="0"
+              Width="30"
+              Height="30"
+              hc:BorderElement.CornerRadius="4"
+              Background="#3a3a3a"
+              BorderThickness="0"
+              Content="-"
+              Foreground="White" />
+
+            <TextBlock
+              Grid.Column="1"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Foreground="White"
+              Style="{StaticResource TextBlockLargeBold}"
+              Text="3" />
+
+            <Button
+              Grid.Column="2"
+              Width="30"
+              Height="30"
+              hc:BorderElement.CornerRadius="4"
+              Background="#3a3a3a"
+              BorderThickness="0"
+              Content="+"
+              Foreground="White" />
+          </Grid>
+        </Border>
+
+        <!--  Probability Info  -->
+        <TextBlock
+          Margin="0,0,0,10"
+          Foreground="#8b8b8b"
+          Style="{StaticResource TextBlockDefault}"
+          Text="You will get 1.08x per tile, probability of winning: 88.00%"
+          TextWrapping="Wrap" />
+
+        <TextBlock
+          Margin="0,0,0,30"
+          Foreground="#6c757d"
+          Style="{StaticResource TextBlockDefault}"
+          Text="Note: Maximum payout per game is capped at $2,000,000."
+          TextWrapping="Wrap" />
+
+        <!--  Bet Amount  -->
+        <TextBlock
+          Margin="0,0,0,15"
+          Foreground="White"
+          Style="{StaticResource TextBlockDefaultBold}"
+          Text="Bet Amount" />
+
+        <hc:TextBox
+          Margin="0,0,0,15"
+          Padding="15,12"
+          hc:BorderElement.CornerRadius="8"
+          Background="#2a2a2a"
+          BorderThickness="0"
+          Foreground="White"
+          Text="10" />
+
+        <TextBlock
+          Margin="0,0,0,20"
+          Foreground="#8b8b8b"
+          Style="{StaticResource TextBlockDefault}"
+          Text="Max bet: 1.000.000" />
+
+        <!--  Quick Bet Buttons  -->
+        <Grid Margin="0,0,0,30">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
 
-          <!--  Mine Buttons (5x5 grid)  -->
           <Button
-            Grid.Row="0"
             Grid.Column="0"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="0"
-            Grid.Column="2"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="0"
-            Grid.Column="3"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="0"
-            Grid.Column="4"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
+            Margin="0,0,3,0"
+            Padding="8"
+            hc:BorderElement.CornerRadius="6"
+            Background="#3a3a3a"
+            BorderThickness="0"
+            Content="25%"
+            Foreground="White" />
 
           <Button
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="1"
             Grid.Column="1"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="1"
-            Grid.Column="2"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="1"
-            Grid.Column="3"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="1"
-            Grid.Column="4"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
+            Margin="3,0,3,0"
+            Padding="8"
+            hc:BorderElement.CornerRadius="6"
+            Background="#3a3a3a"
+            BorderThickness="0"
+            Content="50%"
+            Foreground="White" />
 
           <Button
-            Grid.Row="2"
-            Grid.Column="0"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="2"
-            Grid.Column="1"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="2"
             Grid.Column="2"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="2"
-            Grid.Column="3"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="2"
-            Grid.Column="4"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
+            Margin="3,0,3,0"
+            Padding="8"
+            hc:BorderElement.CornerRadius="6"
+            Background="#3a3a3a"
+            BorderThickness="0"
+            Content="75%"
+            Foreground="White" />
 
           <Button
-            Grid.Row="3"
-            Grid.Column="0"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="3"
-            Grid.Column="2"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="3"
             Grid.Column="3"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="3"
-            Grid.Column="4"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-
-          <Button
-            Grid.Row="4"
-            Grid.Column="0"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="4"
-            Grid.Column="1"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="4"
-            Grid.Column="2"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="4"
-            Grid.Column="3"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Grid.Row="4"
-            Grid.Column="4"
-            Margin="2"
-            Style="{StaticResource ButtonDefault}" />
+            Margin="3,0,0,0"
+            Padding="8"
+            hc:BorderElement.CornerRadius="6"
+            Background="#3a3a3a"
+            BorderThickness="0"
+            Content="Max"
+            Foreground="White" />
         </Grid>
-      </Grid>
-    </Border>
 
-    <!--  Right Panel - Game Info  -->
-    <StackPanel Grid.Column="2">
+        <!--  Start Game Button  -->
+        <Button
+          Padding="0,15"
+          HorizontalAlignment="Stretch"
+          hc:BorderElement.CornerRadius="6"
+          Background="#dc3545"
+          BorderThickness="0"
+          Content="Start Game"
+          FontWeight="Bold"
+          Foreground="White" />
 
-      <!--  Game Status  -->
-      <TextBlock
-        Margin="0,0,0,15"
-        Style="{StaticResource TextBlockSubTitleBold}"
-        Text="STATUS DO JOGO" />
+      </StackPanel>
 
-      <Border
-        Margin="0,0,0,15"
-        Padding="15"
-        Background="{DynamicResource InfoBrush}"
-        CornerRadius="8">
-        <StackPanel>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Foreground="White"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="AGUARDANDO" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            Foreground="White"
-            Style="{StaticResource TextBlockDefault}"
-            Text="Configure sua aposta" />
-        </StackPanel>
-      </Border>
+    </Grid>
 
-      <!--  Game Statistics  -->
-      <TextBlock
-        Margin="0,0,0,15"
-        Style="{StaticResource TextBlockSubTitleBold}"
-        Text="ESTATISTICAS" />
-
-      <Border
-        Margin="0,0,0,10"
-        Padding="15"
-        Background="{DynamicResource RegionBrush}"
-        CornerRadius="8">
-        <StackPanel>
-          <TextBlock
-            Margin="0,0,0,5"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="Revelados" />
-          <TextBlock
-            Foreground="{DynamicResource PrimaryBrush}"
-            Style="{StaticResource TextBlockLarge}"
-            Text="0 / 25" />
-        </StackPanel>
-      </Border>
-
-      <Border
-        Margin="0,0,0,10"
-        Padding="15"
-        Background="{DynamicResource RegionBrush}"
-        CornerRadius="8">
-        <StackPanel>
-          <TextBlock
-            Margin="0,0,0,5"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="Minas Restantes" />
-          <TextBlock
-            Foreground="{DynamicResource DangerBrush}"
-            Style="{StaticResource TextBlockLarge}"
-            Text="3" />
-        </StackPanel>
-      </Border>
-
-      <!--  Recent Games  -->
-      <TextBlock
-        Margin="0,15,0,15"
-        Style="{StaticResource TextBlockSubTitleBold}"
-        Text="JOGOS RECENTES" />
-
-      <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-          <Border
-            Margin="0,0,0,5"
-            Padding="12,8"
-            Background="{DynamicResource SuccessBrush}"
-            CornerRadius="6">
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock
-                Grid.Column="0"
-                Foreground="White"
-                Style="{StaticResource TextBlockDefault}"
-                Text="3 Minas" />
-              <TextBlock
-                Grid.Column="1"
-                Foreground="White"
-                Style="{StaticResource TextBlockDefaultBold}"
-                Text="+R$ 45,30" />
-            </Grid>
-          </Border>
-
-          <Border
-            Margin="0,0,0,5"
-            Padding="12,8"
-            Background="{DynamicResource DangerBrush}"
-            CornerRadius="6">
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock
-                Grid.Column="0"
-                Foreground="White"
-                Style="{StaticResource TextBlockDefault}"
-                Text="5 Minas" />
-              <TextBlock
-                Grid.Column="1"
-                Foreground="White"
-                Style="{StaticResource TextBlockDefaultBold}"
-                Text="-R$ 20,00" />
-            </Grid>
-          </Border>
-
-          <Border
-            Margin="0,0,0,5"
-            Padding="12,8"
-            Background="{DynamicResource SuccessBrush}"
-            CornerRadius="6">
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock
-                Grid.Column="0"
-                Foreground="White"
-                Style="{StaticResource TextBlockDefault}"
-                Text="2 Minas" />
-              <TextBlock
-                Grid.Column="1"
-                Foreground="White"
-                Style="{StaticResource TextBlockDefaultBold}"
-                Text="+R$ 15,75" />
-            </Grid>
-          </Border>
-        </StackPanel>
-      </ScrollViewer>
-
-    </StackPanel>
-
-  </Grid>
+  </Border>
 </UserControl>

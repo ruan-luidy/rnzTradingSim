@@ -7,217 +7,71 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim.Views"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  d:DesignHeight="550"
-  d:DesignWidth="950"
+  d:DesignHeight="800"
+  d:DesignWidth="1150"
   mc:Ignorable="d">
 
-  <Grid Margin="30">
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <!--  Header  -->
-    <StackPanel Grid.Row="0" Margin="0,0,0,30">
+    <!--  Header with Game Title  -->
+    <Border Grid.Row="0" Padding="40,30,40,20">
       <TextBlock
-        Margin="0,0,0,10"
+        HorizontalAlignment="Center"
+        Foreground="White"
         Style="{StaticResource TextBlockLargeBold}"
-        Text="JOGOS DISPONIVEIS" />
-      <TextBlock
-        Foreground="{DynamicResource ThirdlyTextBrush}"
-        Style="{StaticResource TextBlockDefault}"
-        Text="Escolha um jogo para comecar a apostar" />
-    </StackPanel>
+        Text="Gambling" />
+    </Border>
 
-    <!--  Game Selection Grid  -->
-    <Grid Grid.Row="1" Margin="0,0,0,30">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
+    <!--  Game Selection Tabs  -->
+    <Border Grid.Row="1" Padding="40,0,40,30">
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 
-      <!--  Mines Game Card  -->
-      <Border
-        Grid.Column="0"
-        Margin="0,0,15,0"
-        Padding="20"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource PrimaryBrush}"
-        BorderThickness="2"
-        CornerRadius="12">
-        <StackPanel HorizontalAlignment="Center">
-          <Border
-            Width="60"
-            Height="60"
-            Margin="0,0,0,15"
-            Background="{DynamicResource DangerBrush}"
-            CornerRadius="30">
-            <TextBlock
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Foreground="White"
-              Style="{StaticResource TextBlockLargeBold}"
-              Text="M" />
-          </Border>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="MINES" />
-          <TextBlock
-            Margin="0,0,0,15"
-            HorizontalAlignment="Center"
-            Foreground="{DynamicResource ThirdlyTextBrush}"
-            Style="{StaticResource TextBlockDefault}"
-            Text="Campo minado" />
-          <Button
-            Padding="0,8"
-            HorizontalAlignment="Stretch"
-            Content="JOGAR"
-            Style="{StaticResource ButtonPrimary}" />
-        </StackPanel>
-      </Border>
+        <Button
+          Margin="0,0,10,0"
+          Padding="20,10"
+          hc:BorderElement.CornerRadius="8"
+          Background="#2a2a2a"
+          BorderThickness="0"
+          Content="Coinflip"
+          Foreground="#8b8b8b" />
 
-      <!--  Coinflip Game Card  -->
-      <Border
-        Grid.Column="1"
-        Margin="0,0,15,0"
-        Padding="20"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="1"
-        CornerRadius="12">
-        <StackPanel HorizontalAlignment="Center">
-          <Border
-            Width="60"
-            Height="60"
-            Margin="0,0,0,15"
-            Background="{DynamicResource WarningBrush}"
-            CornerRadius="30">
-            <TextBlock
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Foreground="White"
-              Style="{StaticResource TextBlockLargeBold}"
-              Text="C" />
-          </Border>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="COINFLIP" />
-          <TextBlock
-            Margin="0,0,0,15"
-            HorizontalAlignment="Center"
-            Foreground="{DynamicResource ThirdlyTextBrush}"
-            Style="{StaticResource TextBlockDefault}"
-            Text="Cara ou coroa" />
-          <Button
-            Padding="0,8"
-            HorizontalAlignment="Stretch"
-            Content="JOGAR"
-            Style="{StaticResource ButtonDefault}" />
-        </StackPanel>
-      </Border>
+        <Button
+          Margin="0,0,10,0"
+          Padding="20,10"
+          hc:BorderElement.CornerRadius="8"
+          Background="#2a2a2a"
+          BorderThickness="0"
+          Content="Slots"
+          Foreground="#8b8b8b" />
 
-      <!--  Dice Game Card  -->
-      <Border
-        Grid.Column="2"
-        Margin="0,0,15,0"
-        Padding="20"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="1"
-        CornerRadius="12">
-        <StackPanel HorizontalAlignment="Center">
-          <Border
-            Width="60"
-            Height="60"
-            Margin="0,0,0,15"
-            Background="{DynamicResource InfoBrush}"
-            CornerRadius="30">
-            <TextBlock
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Foreground="White"
-              Style="{StaticResource TextBlockLargeBold}"
-              Text="D" />
-          </Border>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="DICE" />
-          <TextBlock
-            Margin="0,0,0,15"
-            HorizontalAlignment="Center"
-            Foreground="{DynamicResource ThirdlyTextBrush}"
-            Style="{StaticResource TextBlockDefault}"
-            Text="Jogo de dados" />
-          <Button
-            Padding="0,8"
-            HorizontalAlignment="Stretch"
-            Content="JOGAR"
-            Style="{StaticResource ButtonDefault}" />
-        </StackPanel>
-      </Border>
+        <Button
+          Margin="0,0,10,0"
+          Padding="20,10"
+          hc:BorderElement.CornerRadius="8"
+          Background="#dc3545"
+          BorderThickness="0"
+          Content="Mines"
+          Foreground="White" />
 
-      <!--  Slots Game Card  -->
-      <Border
-        Grid.Column="3"
-        Padding="20"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="1"
-        CornerRadius="12">
-        <StackPanel HorizontalAlignment="Center">
-          <Border
-            Width="60"
-            Height="60"
-            Margin="0,0,0,15"
-            Background="{DynamicResource AccentBrush}"
-            CornerRadius="30">
-            <TextBlock
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Foreground="White"
-              Style="{StaticResource TextBlockLargeBold}"
-              Text="S" />
-          </Border>
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            Style="{StaticResource TextBlockDefaultBold}"
-            Text="SLOTS" />
-          <TextBlock
-            Margin="0,0,0,15"
-            HorizontalAlignment="Center"
-            Foreground="{DynamicResource ThirdlyTextBrush}"
-            Style="{StaticResource TextBlockDefault}"
-            Text="Caca-niqueis" />
-          <Button
-            Padding="0,8"
-            HorizontalAlignment="Stretch"
-            Content="JOGAR"
-            Style="{StaticResource ButtonDefault}" />
-        </StackPanel>
-      </Border>
-    </Grid>
+        <Button
+          Padding="20,10"
+          hc:BorderElement.CornerRadius="8"
+          Background="#2a2a2a"
+          BorderThickness="0"
+          Content="Dice"
+          Foreground="#8b8b8b" />
 
-    <!--  Current Game Content  -->
-    <Border
-      Grid.Row="2"
-      Background="{DynamicResource SecondaryRegionBrush}"
-      BorderBrush="{DynamicResource BorderBrush}"
-      BorderThickness="1"
-      CornerRadius="12">
-      <Grid>
-        <!--  Current game will be displayed here  -->
-        <games:MinesView />
-      </Grid>
+      </StackPanel>
+    </Border>
+
+    <!--  Game Content Area  -->
+    <Border Grid.Row="2" Margin="40,0,40,40">
+      <games:MinesView />
     </Border>
 
   </Grid>
