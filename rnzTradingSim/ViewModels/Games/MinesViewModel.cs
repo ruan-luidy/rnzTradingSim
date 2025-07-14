@@ -25,7 +25,7 @@ namespace rnzTradingSim.ViewModels.Games
     private decimal potentialWin = 10.00m;
 
     [ObservableProperty]
-    private decimal playerBalance = 0m;
+    private decimal playerBalance;
 
     [ObservableProperty]
     private string gameStatus = "WAITING";
@@ -63,16 +63,32 @@ namespace rnzTradingSim.ViewModels.Games
     public MinesViewModel()
     {
       _playerService = new PlayerService();
-      _currentPlayer = _playerService.GetCurrentPlayer();
 
       MineButtons = new ObservableCollection<MineButtonViewModel>();
       RecentGames = new ObservableCollection<GameResultViewModel>();
 
+      // Primeiro carrega o player e atualiza os dados
+      _currentPlayer = _playerService.GetCurrentPlayer();
+      UpdatePlayerData();
+
+      // Se ainda estiver com saldo 0, força a criação de um novo player
+      if (PlayerBalance <= 0)
+      {
+        System.Diagnostics.Debug.WriteLine("Balance is 0, resetting player...");
+        _playerService.ResetPlayer();
+        _currentPlayer = _playerService.GetCurrentPlayer();
+        UpdatePlayerData();
+      }
+
       InitializeMineGrid();
       LoadRecentGames();
-      UpdatePlayerData();
       CalculateProbability();
       CalculatePotentialWin();
+
+      // Atualiza a descrição inicial baseada no saldo atual
+      UpdateGameStatusDescription();
+
+      System.Diagnostics.Debug.WriteLine($"MinesViewModel initialized with balance: {PlayerBalance}");
     }
 
     [RelayCommand]
@@ -245,21 +261,7 @@ namespace rnzTradingSim.ViewModels.Games
       CalculatePotentialWin();
 
       // Atualiza a descrição do status se necessário
-      if (!IsGameActive)
-      {
-        if (value > PlayerBalance)
-        {
-          GameStatusDescription = "Insufficient balance!";
-        }
-        else if (value <= 0)
-        {
-          GameStatusDescription = "Enter a valid bet amount!";
-        }
-        else
-        {
-          GameStatusDescription = "Configure your bet";
-        }
-      }
+      UpdateGameStatusDescription();
     }
 
     [RelayCommand]
@@ -286,6 +288,25 @@ namespace rnzTradingSim.ViewModels.Games
     {
       CalculateProbability();
       CalculatePotentialWin();
+    }
+
+    private void UpdateGameStatusDescription()
+    {
+      if (!IsGameActive)
+      {
+        if (BetAmount > PlayerBalance)
+        {
+          GameStatusDescription = "Insufficient balance!";
+        }
+        else if (BetAmount <= 0)
+        {
+          GameStatusDescription = "Enter a valid bet amount!";
+        }
+        else
+        {
+          GameStatusDescription = "Configure your bet";
+        }
+      }
     }
 
     private void InitializeMineGrid()
@@ -368,6 +389,9 @@ namespace rnzTradingSim.ViewModels.Games
       _currentPlayer = _playerService.GetCurrentPlayer();
       PlayerBalance = _currentPlayer.Balance;
       MaxBetText = $"Max bet: {Math.Min(PlayerBalance, 100000):C}";
+
+      // Debug: verificar se o saldo foi carregado corretamente
+      System.Diagnostics.Debug.WriteLine($"Player Balance updated: {PlayerBalance}");
     }
 
     private void EndGame(bool won)

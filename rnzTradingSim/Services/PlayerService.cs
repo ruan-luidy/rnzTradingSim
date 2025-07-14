@@ -17,14 +17,28 @@ public class PlayerService
       {
         var json = File.ReadAllText(PlayerFileName);
         var player = JsonSerializer.Deserialize<Player>(json);
-        return player ?? CreateNewPlayer();
+
+        // Verificação adicional para garantir que o player tem saldo válido
+        if (player != null)
+        {
+          // Se o saldo for 0 ou negativo, resetar para o valor inicial
+          if (player.Balance <= 0)
+          {
+            player.Balance = 10000m;
+            SavePlayer(player);
+          }
+
+          System.Diagnostics.Debug.WriteLine($"Loaded player with balance: {player.Balance}");
+          return player;
+        }
       }
-      catch
+      catch (Exception ex)
       {
-        return CreateNewPlayer();
+        System.Diagnostics.Debug.WriteLine($"Error loading player: {ex.Message}");
       }
     }
 
+    System.Diagnostics.Debug.WriteLine("Creating new player");
     return CreateNewPlayer();
   }
 
@@ -37,6 +51,7 @@ public class PlayerService
         WriteIndented = true
       });
       File.WriteAllText(PlayerFileName, json);
+      System.Diagnostics.Debug.WriteLine($"Player saved with balance: {player.Balance}");
     }
     catch (Exception ex)
     {
@@ -103,6 +118,7 @@ public class PlayerService
     };
 
     SavePlayer(player);
+    System.Diagnostics.Debug.WriteLine($"New player created with balance: {player.Balance}");
     return player;
   }
 
@@ -129,7 +145,29 @@ public class PlayerService
         player.BiggestLoss = Math.Abs(result.NetResult);
     }
 
+    // Garantir que o saldo nunca seja negativo
+    if (player.Balance < 0)
+    {
+      player.Balance = 0;
+    }
+
     SavePlayer(player);
     AddGameResult(result);
+
+    System.Diagnostics.Debug.WriteLine($"Player stats updated. New balance: {player.Balance}");
+  }
+
+  // Método para resetar o player para debugging
+  public void ResetPlayer()
+  {
+    if (File.Exists(PlayerFileName))
+    {
+      File.Delete(PlayerFileName);
+    }
+    if (File.Exists(HistoryFileName))
+    {
+      File.Delete(HistoryFileName);
+    }
+    System.Diagnostics.Debug.WriteLine("Player data reset");
   }
 }
