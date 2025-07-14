@@ -17,6 +17,34 @@ namespace rnzTradingSim.Views.Games
       DataContext = _viewModel;
 
       InitializeMineGrid();
+
+      // Subscribe to property changes to reset grid when game starts
+      _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+    }
+
+    private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+      if (e.PropertyName == nameof(_viewModel.IsGameActive))
+      {
+        // Reset the visual grid only when game becomes active (starts a new game)
+        if (_viewModel.IsGameActive)
+        {
+          ResetGrid();
+        }
+      }
+      else if (e.PropertyName == nameof(_viewModel.GameStatus))
+      {
+        // When game status changes to "WON" (collected winnings), reset the grid
+        if (_viewModel.GameStatus == "WON")
+        {
+          ResetGrid();
+        }
+        // When game status is "LOST", reveal all mines but don't reset
+        else if (_viewModel.GameStatus == "LOST")
+        {
+          RevealAllMines();
+        }
+      }
     }
 
     private void InitializeMineGrid()
@@ -97,6 +125,32 @@ namespace rnzTradingSim.Views.Games
           // Force visual reset
           button.Tag = null;
           button.Tag = buttonData;
+        }
+      }
+    }
+
+    private void RevealAllMines()
+    {
+      for (int row = 0; row < 5; row++)
+      {
+        for (int col = 0; col < 5; col++)
+        {
+          int buttonIndex = row * 5 + col;
+          var mineButtonVM = _viewModel.MineButtons[buttonIndex];
+          var button = _mineButtons[row, col];
+          var buttonData = button.Tag as MineButtonData;
+
+          // If this button is a mine and not already revealed, reveal it
+          if (mineButtonVM.IsMine && !buttonData.IsRevealed)
+          {
+            buttonData.IsRevealed = true;
+            buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(220, 53, 69)); // #dc3545
+            buttonData.RevealedContent = "✕";
+
+            // Force visual update
+            button.Tag = null;
+            button.Tag = buttonData;
+          }
         }
       }
     }
