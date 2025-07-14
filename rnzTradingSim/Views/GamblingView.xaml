@@ -214,10 +214,10 @@
       BorderBrush="{DynamicResource BorderBrush}"
       BorderThickness="1"
       CornerRadius="12">
-      <ContentPresenter>
+      <Grid>
         <!--  Current game will be displayed here  -->
         <games:MinesView />
-      </ContentPresenter>
+      </Grid>
     </Border>
 
   </Grid>

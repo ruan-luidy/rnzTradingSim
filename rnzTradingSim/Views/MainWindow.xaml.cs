@@ -3,7 +3,7 @@ using rnzTradingSim.ViewModels;
 
 namespace rnzTradingSim
 {
-  public partial class MainWindow : Window
+  public partial class MainWindow : HandyControl.Controls.Window
   {
     public MainWindow()
     {
