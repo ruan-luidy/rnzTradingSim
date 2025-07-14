@@ -1,12 +1,131 @@
-﻿<Window x:Class="rnzTradingSim.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:rnzTradingSim"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+﻿<hc:Window
+  x:Class="rnzTradingSim.Views.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:views="clr-namespace:rnzTradingSim.Views"
+  Title="Gambling Simulator"
+  Width="1400"
+  Height="900"
+  WindowStartupLocation="CenterScreen"
+  WindowState="Maximized">
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="280"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Sidebar -->
+    <Border Grid.Column="0" Background="{DynamicResource RegionBrush}">
+      <StackPanel Margin="20">
+
+        <!-- Logo/Brand -->
+        <StackPanel Margin="0,0,0,30" HorizontalAlignment="Center">
+          <TextBlock Text="🎰" FontSize="32" HorizontalAlignment="Center"/>
+          <TextBlock Text="Gambling Simulator" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+          <TextBlock Text="by ruzinhobrabo" FontSize="12" HorizontalAlignment="Center" Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- Player Info -->
+        <hc:Card Margin="0,0,0,20" Padding="15">
+          <StackPanel>
+            <TextBlock Text="{Binding CurrentPlayer.Name}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <hc:Divider Margin="0,10"/>
+            <Grid>
+              <TextBlock Text="Balance" FontSize="12"/>
+              <TextBlock Text="{Binding CurrentPlayer.Balance, StringFormat='${0:N0}'}"
+                         FontSize="14" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid Margin="0,5,0,0">
+              <TextBlock Text="Net P&L" FontSize="12"/>
+              <TextBlock Text="{Binding CurrentPlayer.NetProfit, StringFormat='{}{0:+$#,0;-$#,0;$0}'}"
+                         FontSize="12" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+          </StackPanel>
+        </hc:Card>
+
+        <!-- Navigation -->
+        <TextBlock Text="NAVIGATION" FontSize="12" FontWeight="Bold" Margin="0,0,0,10" Opacity="0.7"/>
+
+        <StackPanel>
+          <Button Content="🏠 Home"
+                  Margin="0,0,0,5"
+                  Command="{Binding NavigateCommand}"
+                  CommandParameter="Home"
+                  Style="{StaticResource ButtonPrimary}"/>
+
+          <Button Content="🎲 Gambling"
+                  Margin="0,0,0,5"
+                  Command="{Binding NavigateCommand}"
+                  CommandParameter="Gambling"
+                  Style="{StaticResource ButtonPrimary}"/>
+
+          <Button Content="🏆 Leaderboard"
+                  Margin="0,0,0,5"
+                  Command="{Binding NavigateCommand}"
+                  CommandParameter="Leaderboard"
+                  Style="{StaticResource ButtonPrimary}"/>
+
+          <Button Content="👤 Profile"
+                  Margin="0,0,0,5"
+                  Command="{Binding NavigateCommand}"
+                  CommandParameter="Profile"
+                  Style="{StaticResource ButtonPrimary}"/>
+        </StackPanel>
+
+        <!-- Quick Stats -->
+        <hc:Divider Margin="0,30,0,15"/>
+        <TextBlock Text="QUICK STATS" FontSize="12" FontWeight="Bold" Margin="0,0,0,10" Opacity="0.7"/>
+
+        <StackPanel>
+          <Border Padding="10,5" Margin="0,2">
+            <Grid>
+              <TextBlock Text="Games Played" FontSize="11"/>
+              <TextBlock Text="{Binding CurrentPlayer.GamesPlayed}"
+                         FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+          </Border>
+
+          <Border Padding="10,5" Margin="0,2">
+            <Grid>
+              <TextBlock Text="Win Rate" FontSize="11"/>
+              <TextBlock Text="{Binding CurrentPlayer.WinRate, StringFormat='{0:F1}%'}"
+                         FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+          </Border>
+
+          <Border Padding="10,5" Margin="0,2">
+            <Grid>
+              <TextBlock Text="Biggest Win" FontSize="11"/>
+              <TextBlock Text="{Binding CurrentPlayer.BiggestWin, StringFormat='${0:N0}'}"
+                         FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+            </Grid>
+          </Border>
+        </StackPanel>
+
+      </StackPanel>
+    </Border>
+
+    <!-- Main Content -->
+    <Grid Grid.Column="1" Margin="20">
+
+      <!-- Home View -->
+      <views:HomeView DataContext="{Binding HomeViewModel}"
+                      Visibility="{Binding CurrentView, Converter={x:Static hc:Converter.String2VisibilityConverter}, ConverterParameter=Home}"/>
+
+      <!-- Gambling View -->
+      <views:GamblingView DataContext="{Binding GamblingViewModel}"
+                          Visibility="{Binding CurrentView, Converter={x:Static hc:Converter.String2VisibilityConverter}, ConverterParameter=Gambling}"/>
+
+      <!-- Leaderboard View -->
+      <views:LeaderboardView DataContext="{Binding LeaderboardViewModel}"
+                             Visibility="{Binding CurrentView, Converter={x:Static hc:Converter.String2VisibilityConverter}, ConverterParameter=Leaderboard}"/>
+
+      <!-- Profile View -->
+      <views:ProfileView DataContext="{Binding ProfileViewModel}"
+                         Visibility="{Binding CurrentView, Converter={x:Static hc:Converter.String2VisibilityConverter}, ConverterParameter=Profile}"/>
 
     </Grid>
-</Window>
+  </Grid>
+</hc:Window>

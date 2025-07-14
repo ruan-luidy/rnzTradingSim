@@ -1,5 +1,5 @@
 ﻿<Application
-  x:Class="rnzGamblingSimulator.App"
+  x:Class="rnzTradingSim.App"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:hc="https://handyorg.github.io/handycontrol"

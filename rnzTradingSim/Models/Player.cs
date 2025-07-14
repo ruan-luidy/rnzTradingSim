@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace rnzTradingSim.Models
+﻿namespace rnzTradingSim.Models
 {
-  internal class Player
+  public class Player
   {
+    public string Name { get; set; } = "Player";
+    public decimal Balance { get; set; } = 10000m;
+    public decimal TotalWagered { get; set; } = 0m;
+    public decimal TotalWon { get; set; } = 0m;
+    public decimal TotalLost { get; set; } = 0m;
+    public int GamesPlayed { get; set; } = 0;
+    public int GamesWon { get; set; } = 0;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public decimal BiggestWin { get; set; } = 0m;
+    public decimal BiggestLoss { get; set; } = 0m;
+
+    public decimal NetProfit => TotalWon - TotalLost;
+    public double WinRate => GamesPlayed > 0 ? (double)GamesWon / GamesPlayed * 100 : 0;
+    public decimal HouseEdge => TotalWagered > 0 ? (TotalLost - TotalWon) / TotalWagered * 100 : 0;
   }
 }

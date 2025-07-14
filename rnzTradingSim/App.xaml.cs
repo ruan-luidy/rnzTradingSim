@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace rnzGamblingSimulator;
+namespace rnzTradingSim;
 
 public partial class App : Application
 {
