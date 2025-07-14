@@ -3,7 +3,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:hc="https://handyorg.github.io/handycontrol">
 
-  <!--  Mine Button Style com Flip Effect  -->
+  <!--  Mine Button Style com Flip Effect e Suporte a Imagens  -->
   <Style x:Key="MineButtonStyle" TargetType="Button">
     <Setter Property="Background" Value="#2a2a2a" />
     <Setter Property="BorderBrush" Value="#404040" />
@@ -96,7 +96,7 @@
                 </Border.RenderTransform>
               </Border>
 
-              <!--  Estado revelado (com ícone)  -->
+              <!--  Estado revelado (com ícone ou imagem)  -->
               <Border
                 Name="RevealedElement"
                 Background="{Binding Path=Tag.RevealedBackground, RelativeSource={RelativeSource TemplatedParent}}"
@@ -110,13 +110,50 @@
                     <ScaleTransform ScaleX="0" />
                   </TransformGroup>
                 </Border.RenderTransform>
-                <TextBlock
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  FontSize="24"
-                  FontWeight="Bold"
-                  Foreground="White"
-                  Text="{Binding Path=Tag.RevealedContent, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                <!--  Content Container que suporta tanto Image quanto TextBlock  -->
+                <Grid>
+                  <!--  Image for PNG files  -->
+                  <Image
+                    Width="40"
+                    Height="40"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    Source="{Binding Path=Tag.RevealedContent, RelativeSource={RelativeSource TemplatedParent}}"
+                    Stretch="Uniform">
+                    <Image.Style>
+                      <Style TargetType="Image">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding Path=Tag.RevealedContent, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </Image.Style>
+                  </Image>
+
+                  <!--  Fallback TextBlock para compatibilidade  -->
+                  <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding Path=Tag.FallbackText, RelativeSource={RelativeSource TemplatedParent}}">
+                    <TextBlock.Style>
+                      <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                          <DataTrigger Binding="{Binding Path=Tag.RevealedContent, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Visible" />
+                          </DataTrigger>
+                        </Style.Triggers>
+                      </Style>
+                    </TextBlock.Style>
+                  </TextBlock>
+                </Grid>
               </Border>
             </hc:SimplePanel>
           </Border>

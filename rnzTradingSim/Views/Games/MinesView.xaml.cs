@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using rnzTradingSim.ViewModels.Games;
 
 namespace rnzTradingSim.Views.Games
@@ -64,7 +65,7 @@ namespace rnzTradingSim.Views.Games
               Row = row,
               Col = col,
               IsRevealed = false,
-              RevealedContent = "",
+              RevealedContent = null,
               RevealedBackground = new SolidColorBrush(Colors.Transparent)
             }
           };
@@ -96,20 +97,35 @@ namespace rnzTradingSim.Views.Games
 
       if (mineButtonVM.IsMine)
       {
-        // Hit a mine - show red background with X symbol
+        // Hit a mine - show red background with mine image
         buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(220, 53, 69)); // #dc3545
-        buttonData.RevealedContent = "✕";
+        buttonData.RevealedContent = LoadImageFromResource("pack://application:,,,/Resources/Images/mine.png");
+        buttonData.FallbackText = "✕"; // Fallback text if image fails to load
       }
       else
       {
-        // Safe tile - show green background with diamond symbol
+        // Safe tile - show green background with gem image
         buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(40, 167, 69)); // #28a745
-        buttonData.RevealedContent = "♦";
+        buttonData.RevealedContent = LoadImageFromResource("pack://application:,,,/Resources/Images/gem.png");
+        buttonData.FallbackText = "♦"; // Fallback text if image fails to load
       }
 
       // Trigger the visual update by setting Tag again (force binding update)
       button.Tag = null;
       button.Tag = buttonData;
+    }
+
+    private ImageSource LoadImageFromResource(string resourcePath)
+    {
+      try
+      {
+        return new BitmapImage(new System.Uri(resourcePath, System.UriKind.Absolute));
+      }
+      catch
+      {
+        // Fallback to text if image is not found
+        return null;
+      }
     }
 
     public void ResetGrid()
@@ -119,7 +135,8 @@ namespace rnzTradingSim.Views.Games
         if (button?.Tag is MineButtonData buttonData)
         {
           buttonData.IsRevealed = false;
-          buttonData.RevealedContent = "";
+          buttonData.RevealedContent = null;
+          buttonData.FallbackText = "";
           buttonData.RevealedBackground = new SolidColorBrush(Colors.Transparent);
 
           // Force visual reset
@@ -145,7 +162,8 @@ namespace rnzTradingSim.Views.Games
           {
             buttonData.IsRevealed = true;
             buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(220, 53, 69)); // #dc3545
-            buttonData.RevealedContent = "✕";
+            buttonData.RevealedContent = LoadImageFromResource("pack://application:,,,/Resources/Images/mine.png");
+            buttonData.FallbackText = "✕"; // Fallback text
 
             // Force visual update
             button.Tag = null;
@@ -161,7 +179,8 @@ namespace rnzTradingSim.Views.Games
     public int Row { get; set; }
     public int Col { get; set; }
     public bool IsRevealed { get; set; }
-    public string RevealedContent { get; set; } = "";
+    public ImageSource RevealedContent { get; set; } = null;
+    public string FallbackText { get; set; } = "";
     public SolidColorBrush RevealedBackground { get; set; } = new SolidColorBrush(Colors.Transparent);
   }
 }
