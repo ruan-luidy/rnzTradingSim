@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace rnzTradingSim.ViewModels
+namespace rnzTradingSim.Converters
 {
-  internal class MainWindowViewModel
+  internal class ColorConverters
   {
   }
 }

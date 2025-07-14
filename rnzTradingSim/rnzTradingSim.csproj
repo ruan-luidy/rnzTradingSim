@@ -11,25 +11,11 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="HandyControl" Version="3.5.1" />
-    <PackageReference Include="HandyControls.Lang.pt-BR" Version="3.6.0" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc5.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="Properties\DesignTimeResources.xaml"
-          Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
-    </Page>
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Assets\" />
     <Folder Include="Models\" />
-    <Folder Include="Services\" />
-    <Folder Include="Styles\" />
+    <Folder Include="Resources\Images\" />
+    <Folder Include="Resources\Sounds\" />
   </ItemGroup>
-
 </Project>

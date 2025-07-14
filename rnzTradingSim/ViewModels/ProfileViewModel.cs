@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace rnzTradingSim.ViewModels
 {
-  internal class MainWindowViewModel
+  internal class ProfileViewModel
   {
   }
 }

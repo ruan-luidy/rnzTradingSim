@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace rnzTradingSim.Views
 {
   /// <summary>
-  /// Interaction logic for GamblingView.xaml
+  /// Interaction logic for ProfileView.xaml
   /// </summary>
-  public partial class GamblingView : UserControl
+  public partial class ProfileView : UserControl
   {
-    public GamblingView()
+    public ProfileView()
     {
       InitializeComponent();
     }

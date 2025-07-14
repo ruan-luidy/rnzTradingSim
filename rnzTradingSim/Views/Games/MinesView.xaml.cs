@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace rnzTradingSim.Views
+namespace rnzTradingSim.Views.Games
 {
   /// <summary>
-  /// Interaction logic for GamblingView.xaml
+  /// Interaction logic for MinesView.xaml
   /// </summary>
-  public partial class GamblingView : UserControl
+  public partial class MinesView : UserControl
   {
-    public GamblingView()
+    public MinesView()
     {
       InitializeComponent();
     }

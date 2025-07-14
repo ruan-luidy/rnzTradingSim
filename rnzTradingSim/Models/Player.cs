@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace rnzTradingSim.ViewModels
+namespace rnzTradingSim.Models
 {
-  internal class MainWindowViewModel
+  internal class Player
   {
   }
 }
