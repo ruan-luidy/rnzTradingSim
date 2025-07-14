@@ -97,8 +97,11 @@ namespace rnzTradingSim.ViewModels.Games
       ResetMineGrid();
       PlaceMines();
       CalculatePotentialWin();
-    }
 
+      // Adicione esta linha para notificar a View que deve resetar visualmente
+      OnPropertyChanged(nameof(IsGameActive));
+    }
+    
     [RelayCommand]
     private void CollectWinnings()
     {

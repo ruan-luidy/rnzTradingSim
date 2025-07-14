@@ -10,6 +10,8 @@
       <ResourceDictionary.MergedDictionaries>
         <!--  HandyControl Dark Theme  -->
         <hc:Theme Skin="Dark" />
+        <!--  Custom Styles  -->
+        <ResourceDictionary Source="Resources/Styles/CustomStyles.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Application.Resources>
