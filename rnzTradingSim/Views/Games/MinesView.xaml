@@ -10,11 +10,6 @@
   d:DesignWidth="1070"
   mc:Ignorable="d">
 
-  <UserControl.Resources>
-    <!--  Conversor local se necessário  -->
-    <local:StringToDecimalConverter x:Key="StringToDecimalConverter" />
-  </UserControl.Resources>
-
   <Grid Margin="20">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -230,7 +225,7 @@
           Text="Note: Maximum payout per game is capped at $2,000,000."
           TextWrapping="Wrap" />
 
-        <!--  Bet Amount - CORRIGIDO  -->
+        <!--  Bet Amount  -->
         <TextBlock
           Margin="0,0,0,15"
           FontSize="18"
@@ -247,7 +242,8 @@
           BorderBrush="#404040"
           BorderThickness="1"
           FontSize="16"
-          Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}" />
+          Foreground="White"
+          Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToDecimalConverter}}" />
 
         <TextBlock
           Margin="0,0,0,20"
