@@ -11,179 +11,86 @@
   d:DesignWidth="1200"
   mc:Ignorable="d">
 
-  <UserControl.Resources>
-    <Style x:Key="GameTabStyle" TargetType="Button">
-      <Setter Property="Height" Value="45" />
-      <Setter Property="MinWidth" Value="120" />
-      <Setter Property="Margin" Value="5,0" />
-      <Setter Property="FontSize" Value="14" />
-      <Setter Property="FontWeight" Value="Bold" />
-      <Setter Property="Foreground" Value="White" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="Button">
-            <Border
-              x:Name="border"
-              Background="{TemplateBinding Background}"
-              BorderBrush="{TemplateBinding BorderBrush}"
-              BorderThickness="{TemplateBinding BorderThickness}"
-              CornerRadius="8">
-              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
-            <ControlTemplate.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryBrush}" />
-                <Setter TargetName="border" Property="Opacity" Value="0.8" />
-              </Trigger>
-              <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{DynamicResource DarkPrimaryBrush}" />
-              </Trigger>
-            </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-      <Style.Triggers>
-        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-          <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
-        </DataTrigger>
-      </Style.Triggers>
-    </Style>
-  </UserControl.Resources>
+  <Grid Margin="20">
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <!--  Título  -->
+      <TextBlock
+        Margin="0,0,0,15"
+        HorizontalAlignment="Center"
+        FontSize="32"
+        FontWeight="Bold"
+        Text="Gambling" />
 
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
-
-    <!--  Main Content Area  -->
-    <Grid Grid.Row="0" Margin="20">
-      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <!--  Título  -->
-        <TextBlock
-          Margin="0,0,0,15"
-          HorizontalAlignment="Center"
-          FontSize="32"
-          FontWeight="Bold"
-          Text="Gambling" />
-
-        <!--  Game Tabs  -->
-        <hc:UniformSpacingPanel
-          Margin="0,0,0,15"
-          HorizontalAlignment="Center"
-          Orientation="Horizontal"
-          Spacing="10">
-          <ItemsControl ItemsSource="{Binding GameTabs}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <Button
-                  Command="{Binding DataContext.SelectGameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                  CommandParameter="{Binding Name}"
-                  Style="{StaticResource GameTabStyle}">
-                  <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                      VerticalAlignment="Center"
-                      FontSize="16"
-                      Text="{Binding Icon}" />
-                    <TextBlock
-                      Margin="8,0,0,0"
-                      VerticalAlignment="Center"
-                      Text="{Binding Name}" />
-                  </StackPanel>
-                </Button>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </hc:UniformSpacingPanel>
-        <!--  Game Content  -->
-        <hc:Card
-          Width="1000"
-          Height="600"
-          Margin="10"
-          Padding="0"
-          Background="{DynamicResource RegionBrush}"
-          BorderBrush="{DynamicResource BorderBrush}"
-          BorderThickness="1">
-          <hc:Card.Effect>
-            <DropShadowEffect
-              BlurRadius="15"
-              Opacity="0.3"
-              ShadowDepth="3" />
-          </hc:Card.Effect>
-
-          <Grid>
-            <!--  Coinflip Game  -->
-            <games:CoinflipControl
-              x:Name="CoinflipGame"
-              DataContext="{Binding CoinflipViewModel}"
-              Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Coinflip}" />
-
-            <!--  Slots Game  -->
-            <games:SlotsControl
-              x:Name="SlotsGame"
-              DataContext="{Binding SlotsViewModel}"
-              Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Slots}" />
-
-            <!--  Mines Game (Placeholder)  -->
-            <Border
-              Background="{DynamicResource SecondaryRegionBrush}"
-              CornerRadius="10"
-              Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Mines}">
-              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock
-                  HorizontalAlignment="Center"
-                  FontSize="48"
-                  Text="💣" />
-                <TextBlock
-                  Margin="0,10,0,0"
-                  HorizontalAlignment="Center"
-                  FontSize="24"
-                  FontWeight="Bold"
-                  Text="Mines" />
-                <TextBlock
-                  Margin="0,5,0,0"
-                  HorizontalAlignment="Center"
-                  FontSize="14"
-                  Foreground="{DynamicResource SecondaryTextBrush}"
-                  Text="Coming Soon!" />
-              </StackPanel>
-            </Border>
-
-            <!--  Dice Game (Placeholder)  -->
-            <Border
-              Background="{DynamicResource SecondaryRegionBrush}"
-              CornerRadius="10"
-              Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Dice}">
-              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock
-                  HorizontalAlignment="Center"
-                  FontSize="48"
-                  Text="🎲" />
-                <TextBlock
-                  Margin="0,10,0,0"
-                  HorizontalAlignment="Center"
-                  FontSize="24"
-                  FontWeight="Bold"
-                  Text="Dice" />
-                <TextBlock
-                  Margin="0,5,0,0"
-                  HorizontalAlignment="Center"
-                  FontSize="14"
-                  Foreground="{DynamicResource SecondaryTextBrush}"
-                  Text="Coming Soon!" />
-              </StackPanel>
-            </Border>
-          </Grid>
-        </hc:Card>
+      <!--  Game Tabs  -->
+      <StackPanel
+        Margin="0,0,0,15"
+        HorizontalAlignment="Center"
+        Orientation="Horizontal">
+        <ItemsControl ItemsSource="{Binding GameTabs}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Button
+                Height="40"
+                MinWidth="100"
+                Margin="5,0"
+                Command="{Binding DataContext.SelectGameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding Name}"
+                Content="{Binding Name}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
       </StackPanel>
 
+      <!--  Game Content  -->
+      <hc:Card
+        Width="900"
+        Height="500"
+        Margin="10"
+        Padding="20">
 
-    </Grid>
+        <Grid>
+          <!--  Coinflip Game  -->
+          <games:CoinflipControl
+            x:Name="CoinflipGame"
+            DataContext="{Binding CoinflipViewModel}"
+            Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Coinflip}" />
+
+          <!--  Slots Game  -->
+          <games:SlotsControl
+            x:Name="SlotsGame"
+            DataContext="{Binding SlotsViewModel}"
+            Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Slots}" />
+
+          <!--  Mines Game (Placeholder)  -->
+          <Border Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Mines}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock FontSize="48" Text="💣" />
+              <TextBlock
+                FontSize="24"
+                FontWeight="Bold"
+                Text="Mines" />
+              <TextBlock Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+
+          <!--  Dice Game (Placeholder)  -->
+          <Border Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Dice}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock FontSize="48" Text="🎲" />
+              <TextBlock
+                FontSize="24"
+                FontWeight="Bold"
+                Text="Dice" />
+              <TextBlock Text="Coming Soon!" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </hc:Card>
+    </StackPanel>
   </Grid>
 </UserControl>

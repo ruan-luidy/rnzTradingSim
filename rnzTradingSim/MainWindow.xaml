@@ -10,64 +10,8 @@
   Title="RugPlay - Trading &amp; Gambling Simulator"
   Width="1400"
   Height="900"
-  Background="{DynamicResource SecondaryRegionBrush}"
   WindowState="Maximized"
   mc:Ignorable="d">
-
-  <hc:Window.Resources>
-    <Style x:Key="SidebarButtonStyle" TargetType="Button">
-      <Setter Property="Height" Value="45" />
-      <Setter Property="Margin" Value="5" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="HorizontalContentAlignment" Value="Left" />
-      <Setter Property="FontSize" Value="14" />
-      <Setter Property="FontWeight" Value="Medium" />
-      <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Padding" Value="15,0" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="Button">
-            <Border
-              x:Name="border"
-              Padding="{TemplateBinding Padding}"
-              Background="{TemplateBinding Background}"
-              BorderBrush="{TemplateBinding BorderBrush}"
-              BorderThickness="{TemplateBinding BorderThickness}"
-              CornerRadius="8">
-              <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
-            </Border>
-            <ControlTemplate.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
-              </Trigger>
-              <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryBrush}" />
-                <Setter Property="Foreground" Value="White" />
-              </Trigger>
-            </ControlTemplate.Triggers>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-
-    <Style x:Key="StatCardStyle" TargetType="hc:Card">
-      <Setter Property="Background" Value="{DynamicResource DarkPrimaryBrush}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
-      <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="Margin" Value="5" />
-      <Setter Property="Padding" Value="15" />
-      <Setter Property="Effect">
-        <Setter.Value>
-          <DropShadowEffect
-            BlurRadius="8"
-            Opacity="0.2"
-            ShadowDepth="2" />
-        </Setter.Value>
-      </Setter>
-    </Style>
-  </hc:Window.Resources>
 
   <Grid>
     <Grid.ColumnDefinitions>
@@ -76,51 +20,32 @@
     </Grid.ColumnDefinitions>
 
     <!--  Sidebar  -->
-    <Border
-      Grid.Column="0"
-      Background="{DynamicResource RegionBrush}"
-      BorderBrush="{DynamicResource BorderBrush}"
-      BorderThickness="0,0,1,0">
+    <Border Grid.Column="0" Background="{DynamicResource RegionBrush}">
       <StackPanel Margin="15">
         <!--  Logo/Brand  -->
         <StackPanel Margin="0,20,0,30" HorizontalAlignment="Center">
-          <Border
-            Width="60"
-            Height="60"
-            Background="{DynamicResource PrimaryBrush}"
-            CornerRadius="30">
-            <TextBlock
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              FontSize="30"
-              Text="💎" />
-          </Border>
           <TextBlock
-            Margin="0,10,0,0"
             HorizontalAlignment="Center"
-            FontSize="20"
+            FontSize="24"
             FontWeight="Bold"
             Text="RugPlay" />
           <TextBlock
             HorizontalAlignment="Center"
             FontSize="12"
-            Foreground="{DynamicResource SecondaryTextBrush}"
             Text="Gaming Simulator" />
         </StackPanel>
 
         <!--  User Stats  -->
-        <hc:Card Style="{StaticResource StatCardStyle}">
+        <hc:Card Margin="5" Padding="15">
           <StackPanel>
             <TextBlock
               HorizontalAlignment="Center"
               FontSize="12"
-              Foreground="{DynamicResource SecondaryTextBrush}"
               Text="Balance" />
             <TextBlock
               HorizontalAlignment="Center"
               FontSize="18"
               FontWeight="Bold"
-              Foreground="{DynamicResource SuccessBrush}"
               Text="{Binding Balance, StringFormat='${0:N2}'}" />
           </StackPanel>
         </hc:Card>
@@ -131,59 +56,43 @@
           Margin="10,0,0,10"
           FontSize="12"
           FontWeight="Bold"
-          Foreground="{DynamicResource SecondaryTextBrush}"
           Text="NAVIGATION" />
 
         <StackPanel>
           <Button
+            Height="35"
+            Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Home"
-            Style="{StaticResource SidebarButtonStyle}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="16" Text="🏠" />
-              <TextBlock Margin="10,0,0,0" Text="Home" />
-            </StackPanel>
-          </Button>
+            Content="🏠 Home" />
 
           <Button
+            Height="35"
+            Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Market"
-            Style="{StaticResource SidebarButtonStyle}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="16" Text="📈" />
-              <TextBlock Margin="10,0,0,0" Text="Market" />
-            </StackPanel>
-          </Button>
+            Content="📈 Market" />
 
           <Button
+            Height="35"
+            Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Gambling"
-            Style="{StaticResource SidebarButtonStyle}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="16" Text="🎰" />
-              <TextBlock Margin="10,0,0,0" Text="Gambling" />
-            </StackPanel>
-          </Button>
+            Content="🎰 Gambling" />
 
           <Button
+            Height="35"
+            Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Portfolio"
-            Style="{StaticResource SidebarButtonStyle}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="16" Text="💼" />
-              <TextBlock Margin="10,0,0,0" Text="Portfolio" />
-            </StackPanel>
-          </Button>
+            Content="💼 Portfolio" />
 
           <Button
+            Height="35"
+            Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Leaderboard"
-            Style="{StaticResource SidebarButtonStyle}">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock FontSize="16" Text="🏆" />
-              <TextBlock Margin="10,0,0,0" Text="Leaderboard" />
-            </StackPanel>
-          </Button>
+            Content="🏆 Leaderboard" />
         </StackPanel>
 
         <!--  Quick Stats  -->
@@ -192,48 +101,25 @@
           Margin="10,0,0,10"
           FontSize="12"
           FontWeight="Bold"
-          Foreground="{DynamicResource SecondaryTextBrush}"
           Text="QUICK STATS" />
 
         <StackPanel>
-          <Border
-            Margin="5"
-            Padding="10"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            CornerRadius="5">
+          <Border Margin="5" Padding="10">
             <Grid>
-              <TextBlock
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontSize="12"
-                Text="Profit/Loss" />
+              <TextBlock Text="Profit/Loss" />
               <TextBlock
                 HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                FontSize="12"
                 FontWeight="Bold"
-                Foreground="{Binding ProfitLoss, Converter={x:Static local:Converters.ProfitLossToColorConverter}}"
                 Text="{Binding ProfitLoss, StringFormat='{}{0:+$#,0;-$#,0;$0}'}" />
             </Grid>
           </Border>
 
-          <Border
-            Margin="5"
-            Padding="10"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            CornerRadius="5">
+          <Border Margin="5" Padding="10">
             <Grid>
-              <TextBlock
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontSize="12"
-                Text="Rank" />
+              <TextBlock Text="Rank" />
               <TextBlock
                 HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                FontSize="12"
                 FontWeight="Bold"
-                Foreground="{DynamicResource WarningBrush}"
                 Text="{Binding Rank, StringFormat='#{0}'}" />
             </Grid>
           </Border>
@@ -243,121 +129,58 @@
 
     <!--  Main Content Area  -->
     <Grid Grid.Column="1">
-      <!--  Content Container  -->
-      <Border Background="{DynamicResource SecondaryRegionBrush}">
-        <Grid>
-          <!--  Gambling View  -->
-          <views:GamblingView
-            x:Name="GamblingViewContainer"
-            DataContext="{Binding GamblingViewModel}"
-            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
+      <!--  Gambling View  -->
+      <views:GamblingView
+        x:Name="GamblingViewContainer"
+        DataContext="{Binding GamblingViewModel}"
+        Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Gambling}" />
 
-          <!--  Home View (Placeholder)  -->
-          <Border
-            x:Name="HomeViewContainer"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="48"
-                Text="🏠" />
-              <TextBlock
-                Margin="0,20,0,0"
-                HorizontalAlignment="Center"
-                FontSize="32"
-                FontWeight="Bold"
-                Text="Home" />
-              <TextBlock
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                FontSize="16"
-                Foreground="{DynamicResource SecondaryTextBrush}"
-                Text="Welcome to RugPlay!" />
-              <TextBlock
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                FontSize="14"
-                Foreground="{DynamicResource SecondaryTextBrush}"
-                Text="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, StringFormat='Current View: {0}'}" />
-            </StackPanel>
-          </Border>
+      <!--  Home View (Placeholder)  -->
+      <Border x:Name="HomeViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+          <TextBlock FontSize="48" Text="🏠" />
+          <TextBlock
+            FontSize="32"
+            FontWeight="Bold"
+            Text="Home" />
+          <TextBlock Text="Welcome to RugPlay!" />
+        </StackPanel>
+      </Border>
 
-          <!--  Market View (Placeholder)  -->
-          <Border
-            x:Name="MarketViewContainer"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="48"
-                Text="📈" />
-              <TextBlock
-                Margin="0,20,0,0"
-                HorizontalAlignment="Center"
-                FontSize="32"
-                FontWeight="Bold"
-                Text="Market" />
-              <TextBlock
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                FontSize="16"
-                Foreground="{DynamicResource SecondaryTextBrush}"
-                Text="Coming Soon!" />
-            </StackPanel>
-          </Border>
+      <!--  Market View (Placeholder)  -->
+      <Border x:Name="MarketViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+          <TextBlock FontSize="48" Text="📈" />
+          <TextBlock
+            FontSize="32"
+            FontWeight="Bold"
+            Text="Market" />
+          <TextBlock Text="Coming Soon!" />
+        </StackPanel>
+      </Border>
 
-          <!--  Portfolio View (Placeholder)  -->
-          <Border
-            x:Name="PortfolioViewContainer"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="48"
-                Text="💼" />
-              <TextBlock
-                Margin="0,20,0,0"
-                HorizontalAlignment="Center"
-                FontSize="32"
-                FontWeight="Bold"
-                Text="Portfolio" />
-              <TextBlock
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                FontSize="16"
-                Foreground="{DynamicResource SecondaryTextBrush}"
-                Text="Coming Soon!" />
-            </StackPanel>
-          </Border>
+      <!--  Portfolio View (Placeholder)  -->
+      <Border x:Name="PortfolioViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+          <TextBlock FontSize="48" Text="💼" />
+          <TextBlock
+            FontSize="32"
+            FontWeight="Bold"
+            Text="Portfolio" />
+          <TextBlock Text="Coming Soon!" />
+        </StackPanel>
+      </Border>
 
-          <!--  Leaderboard View (Placeholder)  -->
-          <Border
-            x:Name="LeaderboardViewContainer"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="48"
-                Text="🏆" />
-              <TextBlock
-                Margin="0,20,0,0"
-                HorizontalAlignment="Center"
-                FontSize="32"
-                FontWeight="Bold"
-                Text="Leaderboard" />
-              <TextBlock
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                FontSize="16"
-                Foreground="{DynamicResource SecondaryTextBrush}"
-                Text="Coming Soon!" />
-            </StackPanel>
-          </Border>
-        </Grid>
+      <!--  Leaderboard View (Placeholder)  -->
+      <Border x:Name="LeaderboardViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+          <TextBlock FontSize="48" Text="🏆" />
+          <TextBlock
+            FontSize="32"
+            FontWeight="Bold"
+            Text="Leaderboard" />
+          <TextBlock Text="Coming Soon!" />
+        </StackPanel>
       </Border>
     </Grid>
   </Grid>

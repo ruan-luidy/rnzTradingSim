@@ -6,464 +6,184 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  d:DesignHeight="600"
-  d:DesignWidth="900"
+  d:DesignHeight="450"
+  d:DesignWidth="850"
   mc:Ignorable="d">
 
-  <Grid Margin="40,30">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1*" />
+      <ColumnDefinition Width="1*" />
+    </Grid.ColumnDefinitions>
 
-    <!--  Header  -->
-    <StackPanel Grid.Row="0" Margin="0,0,0,30">
-      <TextBlock
-        HorizontalAlignment="Left"
-        FontSize="28"
-        FontWeight="Bold"
-        Text="Coinflip" />
-      <TextBlock
-        Margin="0,5,0,0"
-        HorizontalAlignment="Left"
-        FontSize="14"
-        Foreground="{DynamicResource SecondaryTextBrush}"
-        Text="Choose heads or tails and double your money!" />
+    <!--  Left Side - Coin and Session  -->
+    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+      <!--  Session Balance  -->
+      <StackPanel Margin="0,0,0,30" HorizontalAlignment="Center">
+        <TextBlock
+          HorizontalAlignment="Center"
+          FontSize="14"
+          Text="Session P&amp;L" />
+        <TextBlock
+          HorizontalAlignment="Center"
+          FontSize="24"
+          FontWeight="Bold"
+          Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
+      </StackPanel>
+
+      <!--  Coin Display  -->
+      <Border
+        Width="150"
+        Height="150"
+        HorizontalAlignment="Center"
+        Background="{DynamicResource RegionBrush}"
+        BorderBrush="{DynamicResource BorderBrush}"
+        BorderThickness="2"
+        CornerRadius="10">
+
+        <Grid>
+          <!--  Coin Animation  -->
+          <Ellipse
+            x:Name="CoinEllipse"
+            Width="100"
+            Height="100"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Fill="Gold"
+            RenderTransformOrigin="0.5,0.5"
+            Stroke="DarkGoldenrod"
+            StrokeThickness="3">
+            <Ellipse.RenderTransform>
+              <ScaleTransform x:Name="CoinScale" ScaleX="1" />
+            </Ellipse.RenderTransform>
+          </Ellipse>
+
+          <!--  Coin Text  -->
+          <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="24"
+            FontWeight="Bold"
+            Text="{Binding FinalResult}" />
+
+          <!--  Loading when flipping  -->
+          <hc:LoadingCircle
+            Width="120"
+            Height="120"
+            IsRunning="{Binding IsFlipping}"
+            Opacity="0.3"
+            Visibility="{Binding IsFlipping, Converter={StaticResource Boolean2VisibilityConverter}}" />
+        </Grid>
+      </Border>
     </StackPanel>
 
-    <!--  Main Content  -->
-    <Grid Grid.Row="1">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="1*" />
-        <ColumnDefinition Width="1.5*" />
-      </Grid.ColumnDefinitions>
+    <!--  Right Side - Controls  -->
+    <StackPanel
+      Grid.Column="1"
+      Margin="30,0,0,0"
+      VerticalAlignment="Center">
 
-      <!--  Left Side - Coin Area  -->
-      <StackPanel Grid.Column="0" VerticalAlignment="Center">
-        <!--  Session Balance Display  -->
-        <StackPanel Margin="0,0,0,40" HorizontalAlignment="Center">
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="14"
-            Foreground="{DynamicResource SecondaryTextBrush}"
-            Text="Session P&amp;L" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="32"
-            FontWeight="Bold"
-            Foreground="{Binding SessionBalance, Converter={x:Static local:Converters.ProfitLossToColorConverter}}"
-            Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
-        </StackPanel>
-
-        <!--  Coin Animation Area  -->
-        <Border
-          Width="180"
-          Height="180"
-          HorizontalAlignment="Center"
-          Background="{DynamicResource RegionBrush}"
-          BorderBrush="{DynamicResource PrimaryBrush}"
-          BorderThickness="3"
-          CornerRadius="15">
-          <Grid>
-            <!--  Moeda com animação estilo HandyControl  -->
-            <ContentControl
-              Width="120"
-              Height="120"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center">
-              <ContentControl.Template>
-                <ControlTemplate TargetType="ContentControl">
-                  <ControlTemplate.Resources>
-                    <!--  Animação de flip genérica  -->
-                    <Storyboard x:Key="CoinFlipAnimation">
-                      <DoubleAnimationUsingKeyFrames
-                        RepeatBehavior="7x"
-                        Storyboard.TargetName="CoinContainer"
-                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
-                        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1" />
-                      </DoubleAnimationUsingKeyFrames>
-                      <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CoinContainer" Storyboard.TargetProperty="Tag">
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.7" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0.9" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.0" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.1" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="HEADS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.3" Value="TAILS" />
-                        <DiscreteObjectKeyFrame KeyTime="0:0:1.4" Value="HEADS" />
-                      </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                  </ControlTemplate.Resources>
-
-                  <Grid
-                    x:Name="CoinContainer"
-                    RenderTransformOrigin="0.5,0.5"
-                    Tag="HEADS">
-                    <Grid.RenderTransform>
-                      <TransformGroup>
-                        <ScaleTransform ScaleX="1" />
-                      </TransformGroup>
-                    </Grid.RenderTransform>
-
-                    <!--  HEADS Element (Dourado)  -->
-                    <Border
-                      x:Name="HeadsElement"
-                      RenderTransformOrigin="0.5,0.5"
-                      SnapsToDevicePixels="True">
-                      <Border.RenderTransform>
-                        <TransformGroup>
-                          <ScaleTransform ScaleX="1" />
-                        </TransformGroup>
-                      </Border.RenderTransform>
-
-                      <Border.Style>
-                        <Style TargetType="Border">
-                          <Setter Property="Visibility" Value="Visible" />
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=CoinContainer, Path=Tag}" Value="TAILS">
-                              <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </Border.Style>
-
-                      <Grid>
-                        <Ellipse
-                          Fill="#FFD700"
-                          Stroke="#FFA500"
-                          StrokeThickness="6">
-                          <Ellipse.Effect>
-                            <DropShadowEffect
-                              BlurRadius="25"
-                              Opacity="0.8"
-                              ShadowDepth="4"
-                              Color="#FFD700" />
-                          </Ellipse.Effect>
-                        </Ellipse>
-
-                        <Ellipse
-                          Margin="10"
-                          Fill="Transparent"
-                          Stroke="#FFFF00"
-                          StrokeThickness="2" />
-
-                        <TextBlock
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          FontSize="24"
-                          FontWeight="Bold"
-                          Foreground="#8B4513"
-                          Text="H" />
-                      </Grid>
-                    </Border>
-
-                    <!--  TAILS Element (Prata)  -->
-                    <Border
-                      x:Name="TailsElement"
-                      RenderTransformOrigin="0.5,0.5"
-                      SnapsToDevicePixels="True">
-                      <Border.RenderTransform>
-                        <TransformGroup>
-                          <ScaleTransform ScaleX="1" />
-                        </TransformGroup>
-                      </Border.RenderTransform>
-
-                      <Border.Style>
-                        <Style TargetType="Border">
-                          <Setter Property="Visibility" Value="Collapsed" />
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=CoinContainer, Path=Tag}" Value="TAILS">
-                              <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </Border.Style>
-
-                      <Grid>
-                        <Ellipse
-                          Fill="#C0C0C0"
-                          Stroke="#808080"
-                          StrokeThickness="6">
-                          <Ellipse.Effect>
-                            <DropShadowEffect
-                              BlurRadius="25"
-                              Opacity="0.8"
-                              ShadowDepth="4"
-                              Color="#C0C0C0" />
-                          </Ellipse.Effect>
-                        </Ellipse>
-
-                        <Ellipse
-                          Margin="10"
-                          Fill="Transparent"
-                          Stroke="#E5E5E5"
-                          StrokeThickness="2" />
-
-                        <TextBlock
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          FontSize="24"
-                          FontWeight="Bold"
-                          Foreground="#2F4F4F"
-                          Text="T" />
-                      </Grid>
-                    </Border>
-                  </Grid>
-
-                  <ControlTemplate.Triggers>
-                    <!--  Trigger para iniciar animação de flip quando IsFlipping = True  -->
-                    <DataTrigger Binding="{Binding IsFlipping}" Value="True">
-                      <DataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="FlipStoryboard" Storyboard="{StaticResource CoinFlipAnimation}" />
-                      </DataTrigger.EnterActions>
-                      <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="FlipStoryboard" />
-                      </DataTrigger.ExitActions>
-                    </DataTrigger>
-
-                    <!--  Trigger para mostrar resultado final quando parar  -->
-                    <MultiDataTrigger>
-                      <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsFlipping}" Value="False" />
-                        <Condition Binding="{Binding FinalResult}" Value="TAILS" />
-                      </MultiDataTrigger.Conditions>
-                      <Setter TargetName="CoinContainer" Property="Tag" Value="TAILS" />
-                    </MultiDataTrigger>
-
-                    <MultiDataTrigger>
-                      <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsFlipping}" Value="False" />
-                        <Condition Binding="{Binding FinalResult}" Value="HEADS" />
-                      </MultiDataTrigger.Conditions>
-                      <Setter TargetName="CoinContainer" Property="Tag" Value="HEADS" />
-                    </MultiDataTrigger>
-                  </ControlTemplate.Triggers>
-                </ControlTemplate>
-              </ContentControl.Template>
-            </ContentControl>
-
-            <!--  Loading indicator when flipping  -->
-            <hc:LoadingCircle
-              Width="140"
-              Height="140"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              IsRunning="{Binding IsFlipping}"
-              Opacity="0.15"
-              Visibility="{Binding IsFlipping, Converter={StaticResource Boolean2VisibilityConverter}}" />
-          </Grid>
-        </Border>
-      </StackPanel>
-
-      <!--  Right Side - Controls  -->
-      <StackPanel
-        Grid.Column="1"
-        Margin="60,0,0,0"
-        VerticalAlignment="Center">
-        <!--  Choose Side  -->
-        <StackPanel Margin="0,0,0,40">
-          <TextBlock
-            Margin="0,0,0,15"
-            FontSize="16"
-            FontWeight="Bold"
-            Text="Choose Side" />
-
-          <Grid>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Button
-              Grid.Column="0"
-              Height="60"
-              Margin="0,0,8,0"
-              Command="{Binding SelectSideCommand}"
-              CommandParameter="HEADS"
-              FontSize="16"
-              FontWeight="Bold">
-              <Button.Style>
-                <Style BasedOn="{StaticResource ButtonSuccess}" TargetType="Button">
-                  <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
-                  <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-                  <Setter Property="BorderThickness" Value="2" />
-                  <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding SelectedSide}" Value="HEADS">
-                      <Setter Property="Background" Value="{StaticResource RugPlayPrimaryBrush}" />
-                      <Setter Property="BorderBrush" Value="{StaticResource RugPlayPrimaryBrush}" />
-                      <Setter Property="Foreground" Value="White" />
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </Button.Style>
-              <StackPanel Orientation="Horizontal">
-                <TextBlock
-                  VerticalAlignment="Center"
-                  FontSize="20"
-                  Text="🟡" />
-                <TextBlock
-                  Margin="8,0,0,0"
-                  VerticalAlignment="Center"
-                  Text="Heads" />
-              </StackPanel>
-            </Button>
-
-            <Button
-              Grid.Column="1"
-              Height="60"
-              Margin="8,0,0,0"
-              Command="{Binding SelectSideCommand}"
-              CommandParameter="TAILS"
-              FontSize="16"
-              FontWeight="Bold">
-              <Button.Style>
-                <Style BasedOn="{StaticResource ButtonSuccess}" TargetType="Button">
-                  <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
-                  <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-                  <Setter Property="BorderThickness" Value="2" />
-                  <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding SelectedSide}" Value="TAILS">
-                      <Setter Property="Background" Value="{StaticResource RugPlayPrimaryBrush}" />
-                      <Setter Property="BorderBrush" Value="{StaticResource RugPlayPrimaryBrush}" />
-                      <Setter Property="Foreground" Value="White" />
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </Button.Style>
-              <StackPanel Orientation="Horizontal">
-                <TextBlock
-                  VerticalAlignment="Center"
-                  FontSize="20"
-                  Text="⚪" />
-                <TextBlock
-                  Margin="8,0,0,0"
-                  VerticalAlignment="Center"
-                  Text="Tails" />
-              </StackPanel>
-            </Button>
-          </Grid>
-        </StackPanel>
-
-        <!--  Bet Amount  -->
-        <StackPanel Margin="0,0,0,40">
-          <TextBlock
-            Margin="0,0,0,15"
-            FontSize="16"
-            FontWeight="Bold"
-            Text="Bet Amount" />
-
-          <TextBox
-            Height="50"
-            VerticalContentAlignment="Center"
-            FontSize="16"
-            Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged}"
-            TextAlignment="Center">
-            <TextBox.Style>
-              <Style TargetType="TextBox">
-                <Setter Property="Background" Value="{DynamicResource RegionBrush}" />
-                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-                <Setter Property="BorderThickness" Value="2" />
-                <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
-                <Setter Property="Padding" Value="10" />
-                <Setter Property="Template">
-                  <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                      <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="8">
-                        <ScrollViewer x:Name="PART_ContentHost" />
-                      </Border>
-                    </ControlTemplate>
-                  </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                  <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
-                  </Trigger>
-                </Style.Triggers>
-              </Style>
-            </TextBox.Style>
-          </TextBox>
-
-          <TextBlock
-            Margin="0,8,0,0"
-            FontSize="12"
-            Foreground="{DynamicResource SecondaryTextBrush}"
-            Text="{Binding ParentBalance, StringFormat='Max bet: ${0:N0}'}" />
-
-          <!--  Quick Bet Buttons  -->
-          <Grid Margin="0,15,0,0">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Button
-              Grid.Column="0"
-              Height="35"
-              Margin="0,0,4,0"
-              Command="{Binding SetBetPercentageCommand}"
-              CommandParameter="0.25"
-              Content="25%"
-              FontSize="12"
-              Style="{StaticResource ButtonDefault}" />
-            <Button
-              Grid.Column="1"
-              Height="35"
-              Margin="4,0,4,0"
-              Command="{Binding SetBetPercentageCommand}"
-              CommandParameter="0.50"
-              Content="50%"
-              FontSize="12"
-              Style="{StaticResource ButtonDefault}" />
-            <Button
-              Grid.Column="2"
-              Height="35"
-              Margin="4,0,4,0"
-              Command="{Binding SetBetPercentageCommand}"
-              CommandParameter="0.75"
-              Content="75%"
-              FontSize="12"
-              Style="{StaticResource ButtonDefault}" />
-            <Button
-              Grid.Column="3"
-              Height="35"
-              Margin="4,0,0,0"
-              Command="{Binding SetBetPercentageCommand}"
-              CommandParameter="1.0"
-              Content="Max"
-              FontSize="12"
-              Style="{StaticResource ButtonDefault}" />
-          </Grid>
-        </StackPanel>
-
-        <!--  Flip Button  -->
-        <Button
-          Height="65"
-          Background="{DynamicResource PrimaryBrush}"
-          Command="{Binding FlipCommand}"
-          Content="{Binding IsFlipping, Converter={x:Static local:Converters.FlipButtonTextConverter}}"
-          FontSize="18"
+      <!--  Choose Side  -->
+      <StackPanel Margin="0,0,0,30">
+        <TextBlock
+          Margin="0,0,0,10"
+          FontSize="16"
           FontWeight="Bold"
-          Foreground="White"
-          IsEnabled="{Binding IsFlipping, Converter={x:Static local:Converters.InverseBooleanConverter}}"
-          Style="{StaticResource ButtonPrimary}" />
+          Text="Choose Side" />
+
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <Button
+            Grid.Column="0"
+            Height="50"
+            Margin="0,0,5,0"
+            Command="{Binding SelectSideCommand}"
+            CommandParameter="HEADS"
+            Content="HEADS"
+            FontWeight="Bold" />
+
+          <Button
+            Grid.Column="1"
+            Height="50"
+            Margin="5,0,0,0"
+            Command="{Binding SelectSideCommand}"
+            CommandParameter="TAILS"
+            Content="TAILS"
+            FontWeight="Bold" />
+        </Grid>
       </StackPanel>
-    </Grid>
+
+      <!--  Bet Amount  -->
+      <StackPanel Margin="0,0,0,30">
+        <TextBlock
+          Margin="0,0,0,10"
+          FontSize="16"
+          FontWeight="Bold"
+          Text="Bet Amount" />
+
+        <hc:NumericUpDown
+          Height="40"
+          Maximum="10000"
+          Minimum="1"
+          Value="{Binding BetAmount}" />
+
+        <TextBlock
+          Margin="0,5,0,0"
+          FontSize="12"
+          Text="{Binding ParentBalance, StringFormat='Max bet: ${0:N0}'}" />
+
+        <!--  Quick Bet Buttons  -->
+        <Grid Margin="0,10,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <Button
+            Grid.Column="0"
+            Height="30"
+            Margin="0,0,2,0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="0.25"
+            Content="25%" />
+          <Button
+            Grid.Column="1"
+            Height="30"
+            Margin="2,0,2,0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="0.50"
+            Content="50%" />
+          <Button
+            Grid.Column="2"
+            Height="30"
+            Margin="2,0,2,0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="0.75"
+            Content="75%" />
+          <Button
+            Grid.Column="3"
+            Height="30"
+            Margin="2,0,0,0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="1.0"
+            Content="Max" />
+        </Grid>
+      </StackPanel>
+
+      <!--  Flip Button  -->
+      <Button
+        Height="50"
+        Command="{Binding FlipCommand}"
+        Content="{Binding IsFlipping, Converter={x:Static local:Converters.FlipButtonTextConverter}}"
+        FontSize="16"
+        FontWeight="Bold"
+        IsEnabled="{Binding IsFlipping, Converter={x:Static local:Converters.InverseBooleanConverter}}" />
+    </StackPanel>
   </Grid>
 </UserControl>

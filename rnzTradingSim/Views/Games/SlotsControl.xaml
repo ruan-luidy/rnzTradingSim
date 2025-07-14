@@ -6,449 +6,207 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  d:DesignHeight="600"
+  d:DesignHeight="450"
   d:DesignWidth="400"
   mc:Ignorable="d">
 
-  <UserControl.Resources>
-    <Storyboard x:Key="SlotSpinStoryboard" RepeatBehavior="Forever">
-      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="-30">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <QuadraticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <BounceEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-      </DoubleAnimationUsingKeyFrames>
-      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
-        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="1.2" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.8" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <ElasticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-      </DoubleAnimationUsingKeyFrames>
-    </Storyboard>
-
-    <Storyboard x:Key="WinCelebrationStoryboard">
-      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)">
-        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <ElasticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-        <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <ElasticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-      </DoubleAnimationUsingKeyFrames>
-      <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
-        <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-        <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.3">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <ElasticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-        <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
-          <EasingDoubleKeyFrame.EasingFunction>
-            <ElasticEase EasingMode="EaseOut" />
-          </EasingDoubleKeyFrame.EasingFunction>
-        </EasingDoubleKeyFrame>
-      </DoubleAnimationUsingKeyFrames>
-    </Storyboard>
-  </UserControl.Resources>
-
-  <Grid>
-    <StackPanel Margin="20">
-      <!--  Game Description  -->
-      <TextBlock
-        Margin="0,0,0,15"
-        HorizontalAlignment="Center"
-        FontSize="14"
-        Foreground="{DynamicResource SecondaryTextBrush}"
-        Text="Match 3 symbols for big wins!"
-        TextWrapping="Wrap" />
-
-      <!--  Session Balance Display  -->
-      <hc:Card
-        Margin="0,0,0,20"
-        Padding="15"
-        Background="{DynamicResource SecondaryRegionBrush}">
-        <StackPanel HorizontalAlignment="Center">
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="12"
-            Foreground="{DynamicResource SecondaryTextBrush}"
-            Text="Session P&amp;L" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="24"
-            FontWeight="Bold"
-            Foreground="{Binding SessionBalance, Converter={x:Static local:Converters.ProfitLossToColorConverter}}"
-            Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
-        </StackPanel>
-      </hc:Card>
-
-      <!--  Slot Machine  -->
-      <Border
-        Height="180"
-        Margin="0,0,0,20"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource PrimaryBrush}"
-        BorderThickness="2"
-        CornerRadius="15">
-        <Grid>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
-
-          <!--  Slot Reels  -->
-          <Border
-            Grid.Column="0"
-            Margin="8"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            BorderBrush="{DynamicResource WarningBrush}"
-            BorderThickness="2"
-            CornerRadius="10">
-            <TextBlock
-              x:Name="Reel1"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              FontSize="45"
-              RenderTransformOrigin="0.5,0.5"
-              Text="{Binding Reels[0]}">
-              <TextBlock.RenderTransform>
-                <TransformGroup>
-                  <TranslateTransform Y="0" />
-                  <ScaleTransform ScaleX="1" ScaleY="1" />
-                </TransformGroup>
-              </TextBlock.RenderTransform>
-              <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsSpinning}" Value="True">
-                      <DataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="Reel1Storyboard">
-                          <Storyboard RepeatBehavior="Forever">
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
-                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
-                            </DoubleAnimationUsingKeyFrames>
-                          </Storyboard>
-                        </BeginStoryboard>
-                      </DataTrigger.EnterActions>
-                      <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="Reel1Storyboard" />
-                      </DataTrigger.ExitActions>
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </TextBlock.Style>
-            </TextBlock>
-          </Border>
-
-          <Border
-            Grid.Column="1"
-            Margin="8"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            BorderBrush="{DynamicResource WarningBrush}"
-            BorderThickness="2"
-            CornerRadius="10">
-            <TextBlock
-              x:Name="Reel2"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              FontSize="45"
-              RenderTransformOrigin="0.5,0.5"
-              Text="{Binding Reels[1]}">
-              <TextBlock.RenderTransform>
-                <TransformGroup>
-                  <TranslateTransform Y="0" />
-                  <ScaleTransform ScaleX="1" ScaleY="1" />
-                </TransformGroup>
-              </TextBlock.RenderTransform>
-              <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsSpinning}" Value="True">
-                      <DataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="Reel2Storyboard">
-                          <Storyboard BeginTime="0:0:0.03" RepeatBehavior="Forever">
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
-                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
-                            </DoubleAnimationUsingKeyFrames>
-                          </Storyboard>
-                        </BeginStoryboard>
-                      </DataTrigger.EnterActions>
-                      <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="Reel2Storyboard" />
-                      </DataTrigger.ExitActions>
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </TextBlock.Style>
-            </TextBlock>
-          </Border>
-
-          <Border
-            Grid.Column="2"
-            Margin="8"
-            Background="{DynamicResource SecondaryRegionBrush}"
-            BorderBrush="{DynamicResource WarningBrush}"
-            BorderThickness="2"
-            CornerRadius="10">
-            <TextBlock
-              x:Name="Reel3"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              FontSize="45"
-              RenderTransformOrigin="0.5,0.5"
-              Text="{Binding Reels[2]}">
-              <TextBlock.RenderTransform>
-                <TransformGroup>
-                  <TranslateTransform Y="0" />
-                  <ScaleTransform ScaleX="1" ScaleY="1" />
-                </TransformGroup>
-              </TextBlock.RenderTransform>
-              <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsSpinning}" Value="True">
-                      <DataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="Reel3Storyboard">
-                          <Storyboard BeginTime="0:0:0.06" RepeatBehavior="Forever">
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)">
-                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="-20" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(ScaleTransform.ScaleY)">
-                              <EasingDoubleKeyFrame KeyTime="0:0:0" Value="1" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0.8" />
-                              <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1" />
-                            </DoubleAnimationUsingKeyFrames>
-                          </Storyboard>
-                        </BeginStoryboard>
-                      </DataTrigger.EnterActions>
-                      <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="Reel3Storyboard" />
-                      </DataTrigger.ExitActions>
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </TextBlock.Style>
-            </TextBlock>
-          </Border>
-
-          <!--  Loading overlay when spinning  -->
-          <Border
-            Grid.ColumnSpan="3"
-            Background="{DynamicResource RegionBrush}"
-            CornerRadius="15"
-            Opacity="0.9"
-            Visibility="{Binding IsSpinning, Converter={StaticResource Boolean2VisibilityConverter}}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <hc:LoadingCircle
-                Width="60"
-                Height="60"
-                IsRunning="{Binding IsSpinning}" />
-              <TextBlock
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                FontSize="14"
-                FontWeight="Bold"
-                Text="SPINNING..." />
-            </StackPanel>
-          </Border>
-        </Grid>
-      </Border>
-
-      <!--  Bet Amount  -->
-      <StackPanel Margin="0,0,0,20">
+  <StackPanel Margin="20">
+    <!--  Session Balance  -->
+    <hc:Card Margin="0,0,0,20" Padding="15">
+      <StackPanel HorizontalAlignment="Center">
         <TextBlock
-          Margin="0,0,0,10"
           HorizontalAlignment="Center"
-          FontSize="14"
+          FontSize="12"
+          Text="Session P&amp;L" />
+        <TextBlock
+          HorizontalAlignment="Center"
+          FontSize="20"
           FontWeight="Bold"
-          Text="Bet Amount" />
-
-        <hc:NumericUpDown
-          Height="45"
-          Maximum="5000"
-          Minimum="1"
-          Style="{StaticResource NumericUpDownExtend}"
-          Value="{Binding BetAmount}" />
-
-        <!--  Quick Bet Buttons  -->
-        <hc:UniformSpacingPanel
-          Margin="0,10,0,0"
-          Orientation="Horizontal"
-          Spacing="10">
-          <Button
-            Width="60"
-            Height="30"
-            Command="{Binding SetBetPercentageCommand}"
-            CommandParameter="0.25"
-            Content="25%"
-            FontSize="11"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Width="60"
-            Height="30"
-            Command="{Binding SetBetPercentageCommand}"
-            CommandParameter="0.50"
-            Content="50%"
-            FontSize="11"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Width="60"
-            Height="30"
-            Command="{Binding SetBetPercentageCommand}"
-            CommandParameter="0.75"
-            Content="75%"
-            FontSize="11"
-            Style="{StaticResource ButtonDefault}" />
-          <Button
-            Width="60"
-            Height="30"
-            Command="{Binding SetBetPercentageCommand}"
-            CommandParameter="1.0"
-            Content="Max"
-            FontSize="11"
-            Style="{StaticResource ButtonDefault}" />
-        </hc:UniformSpacingPanel>
+          Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
       </StackPanel>
+    </hc:Card>
 
-      <!--  Spin Button  -->
-      <Button
-        Height="55"
-        Background="{DynamicResource DangerBrush}"
-        Command="{Binding SpinCommand}"
-        Content="{Binding IsSpinning, Converter={x:Static local:Converters.SpinButtonTextConverter}}"
-        FontSize="16"
-        FontWeight="Bold"
-        Foreground="White"
-        IsEnabled="{Binding IsSpinning, Converter={x:Static local:Converters.InverseBooleanConverter}}"
-        RenderTransformOrigin="0.5,0.5"
-        Style="{StaticResource ButtonDanger}">
-        <Button.RenderTransform>
-          <ScaleTransform ScaleX="1" ScaleY="1" />
-        </Button.RenderTransform>
-        <Button.Triggers>
-          <EventTrigger RoutedEvent="Button.PreviewMouseDown">
-            <BeginStoryboard>
-              <Storyboard>
-                <DoubleAnimation
-                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                  To="0.95"
-                  Duration="0:0:0.1" />
-                <DoubleAnimation
-                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                  To="0.95"
-                  Duration="0:0:0.1" />
-              </Storyboard>
-            </BeginStoryboard>
-          </EventTrigger>
-          <EventTrigger RoutedEvent="Button.PreviewMouseUp">
-            <BeginStoryboard>
-              <Storyboard>
-                <DoubleAnimation
-                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                  To="1"
-                  Duration="0:0:0.1" />
-                <DoubleAnimation
-                  Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                  To="1"
-                  Duration="0:0:0.1" />
-              </Storyboard>
-            </BeginStoryboard>
-          </EventTrigger>
-        </Button.Triggers>
-      </Button>
+    <!--  Slot Machine  -->
+    <Border
+      Height="120"
+      Margin="0,0,0,20"
+      Background="{DynamicResource RegionBrush}"
+      BorderBrush="{DynamicResource BorderBrush}"
+      BorderThickness="2"
+      CornerRadius="10">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-      <!--  Paytable  -->
-      <hc:Divider Margin="0,20,0,15" />
+        <!--  Slot Reels  -->
+        <Border
+          Grid.Column="0"
+          Margin="5"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1">
+          <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="36"
+            Text="{Binding Reels[0]}" />
+        </Border>
+
+        <Border
+          Grid.Column="1"
+          Margin="5"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1">
+          <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="36"
+            Text="{Binding Reels[1]}" />
+        </Border>
+
+        <Border
+          Grid.Column="2"
+          Margin="5"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1">
+          <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="36"
+            Text="{Binding Reels[2]}" />
+        </Border>
+
+        <!--  Loading overlay  -->
+        <Border
+          Grid.ColumnSpan="3"
+          Background="{DynamicResource RegionBrush}"
+          CornerRadius="10"
+          Opacity="0.8"
+          Visibility="{Binding IsSpinning, Converter={StaticResource Boolean2VisibilityConverter}}">
+          <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <hc:LoadingCircle
+              Width="40"
+              Height="40"
+              IsRunning="{Binding IsSpinning}" />
+            <TextBlock
+              Margin="0,5,0,0"
+              HorizontalAlignment="Center"
+              FontSize="12"
+              FontWeight="Bold"
+              Text="SPINNING..." />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Border>
+
+    <!--  Bet Amount  -->
+    <StackPanel Margin="0,0,0,20">
       <TextBlock
         Margin="0,0,0,10"
         HorizontalAlignment="Center"
         FontSize="14"
         FontWeight="Bold"
-        Text="Paytable" />
+        Text="Bet Amount" />
 
-      <StackPanel>
-        <Grid Margin="0,3">
-          <TextBlock
-            HorizontalAlignment="Left"
-            FontSize="14"
-            Text="💎💎💎" />
-          <TextBlock
-            HorizontalAlignment="Right"
-            FontSize="14"
-            FontWeight="Bold"
-            Foreground="{DynamicResource WarningBrush}"
-            Text="100x" />
-        </Grid>
-        <Grid Margin="0,3">
-          <TextBlock
-            HorizontalAlignment="Left"
-            FontSize="14"
-            Text="⭐⭐⭐" />
-          <TextBlock
-            HorizontalAlignment="Right"
-            FontSize="14"
-            FontWeight="Bold"
-            Foreground="{DynamicResource SuccessBrush}"
-            Text="50x" />
-        </Grid>
-        <Grid Margin="0,3">
-          <TextBlock
-            HorizontalAlignment="Left"
-            FontSize="14"
-            Text="🔔🔔🔔" />
-          <TextBlock
-            HorizontalAlignment="Right"
-            FontSize="14"
-            FontWeight="Bold"
-            Foreground="{DynamicResource SuccessBrush}"
-            Text="25x" />
-        </Grid>
-        <Grid Margin="0,3">
-          <TextBlock
-            HorizontalAlignment="Left"
-            FontSize="14"
-            Text="🍒🍒🍒" />
-          <TextBlock
-            HorizontalAlignment="Right"
-            FontSize="14"
-            FontWeight="Bold"
-            Foreground="{DynamicResource SuccessBrush}"
-            Text="5x" />
-        </Grid>
-      </StackPanel>
+      <hc:NumericUpDown
+        Height="40"
+        Maximum="5000"
+        Minimum="1"
+        Value="{Binding BetAmount}" />
+
+      <!--  Quick Bet Buttons  -->
+      <Grid Margin="0,10,0,0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Button
+          Grid.Column="0"
+          Height="30"
+          Margin="0,0,2,0"
+          Command="{Binding SetBetPercentageCommand}"
+          CommandParameter="0.25"
+          Content="25%" />
+        <Button
+          Grid.Column="1"
+          Height="30"
+          Margin="2,0,2,0"
+          Command="{Binding SetBetPercentageCommand}"
+          CommandParameter="0.50"
+          Content="50%" />
+        <Button
+          Grid.Column="2"
+          Height="30"
+          Margin="2,0,2,0"
+          Command="{Binding SetBetPercentageCommand}"
+          CommandParameter="0.75"
+          Content="75%" />
+        <Button
+          Grid.Column="3"
+          Height="30"
+          Margin="2,0,0,0"
+          Command="{Binding SetBetPercentageCommand}"
+          CommandParameter="1.0"
+          Content="Max" />
+      </Grid>
     </StackPanel>
-  </Grid>
+
+    <!--  Spin Button  -->
+    <Button
+      Height="50"
+      Command="{Binding SpinCommand}"
+      Content="{Binding IsSpinning, Converter={x:Static local:Converters.SpinButtonTextConverter}}"
+      FontSize="16"
+      FontWeight="Bold"
+      IsEnabled="{Binding IsSpinning, Converter={x:Static local:Converters.InverseBooleanConverter}}" />
+
+    <!--  Paytable  -->
+    <hc:Divider Margin="0,20,0,15" />
+    <TextBlock
+      Margin="0,0,0,10"
+      HorizontalAlignment="Center"
+      FontSize="14"
+      FontWeight="Bold"
+      Text="Paytable" />
+
+    <StackPanel>
+      <Grid Margin="0,3">
+        <TextBlock FontSize="14" Text="💎💎💎" />
+        <TextBlock
+          HorizontalAlignment="Right"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="100x" />
+      </Grid>
+      <Grid Margin="0,3">
+        <TextBlock FontSize="14" Text="⭐⭐⭐" />
+        <TextBlock
+          HorizontalAlignment="Right"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="50x" />
+      </Grid>
+      <Grid Margin="0,3">
+        <TextBlock FontSize="14" Text="🔔🔔🔔" />
+        <TextBlock
+          HorizontalAlignment="Right"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="25x" />
+      </Grid>
+      <Grid Margin="0,3">
+        <TextBlock FontSize="14" Text="🍒🍒🍒" />
+        <TextBlock
+          HorizontalAlignment="Right"
+          FontSize="14"
+          FontWeight="Bold"
+          Text="5x" />
+      </Grid>
+    </StackPanel>
+  </StackPanel>
 </UserControl>
