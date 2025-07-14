@@ -7,7 +7,7 @@
   xmlns:local="clr-namespace:rnzTradingSim"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:views="clr-namespace:rnzTradingSim.Views"
-  Title="RugPlay - Trading &amp; Gambling Simulator"
+  Title="rnzTradingSim"
   Width="1400"
   Height="900"
   WindowState="Maximized"
@@ -26,25 +26,17 @@
         <StackPanel Margin="0,20,0,30" HorizontalAlignment="Center">
           <TextBlock
             HorizontalAlignment="Center"
-            FontSize="24"
             FontWeight="Bold"
-            Text="RugPlay" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="12"
-            Text="Gaming Simulator" />
+            Text="ruzinhobrabo" />
+          <TextBlock HorizontalAlignment="Center" Text="Gaming Simulator" />
         </StackPanel>
 
         <!--  User Stats  -->
         <hc:Card Margin="5" Padding="15">
           <StackPanel>
+            <TextBlock HorizontalAlignment="Center" Text="Balance" />
             <TextBlock
               HorizontalAlignment="Center"
-              FontSize="12"
-              Text="Balance" />
-            <TextBlock
-              HorizontalAlignment="Center"
-              FontSize="18"
               FontWeight="Bold"
               Text="{Binding Balance, StringFormat='${0:N2}'}" />
           </StackPanel>
@@ -54,45 +46,39 @@
         <hc:Divider Margin="0,20" />
         <TextBlock
           Margin="10,0,0,10"
-          FontSize="12"
           FontWeight="Bold"
           Text="NAVIGATION" />
 
         <StackPanel>
           <Button
-            Height="35"
             Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Home"
-            Content="🏠 Home" />
+            Content="Home" />
 
           <Button
-            Height="35"
             Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Market"
-            Content="📈 Market" />
+            Content="Market" />
 
           <Button
-            Height="35"
             Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Gambling"
-            Content="🎰 Gambling" />
+            Content="Gambling" />
 
           <Button
-            Height="35"
             Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Portfolio"
-            Content="💼 Portfolio" />
+            Content="Portfolio" />
 
           <Button
-            Height="35"
             Margin="5"
             Command="{Binding NavigateCommand}"
             CommandParameter="Leaderboard"
-            Content="🏆 Leaderboard" />
+            Content="Leaderboard" />
         </StackPanel>
 
         <!--  Quick Stats  -->
@@ -138,23 +124,15 @@
       <!--  Home View (Placeholder)  -->
       <Border x:Name="HomeViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Home}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-          <TextBlock FontSize="48" Text="🏠" />
-          <TextBlock
-            FontSize="32"
-            FontWeight="Bold"
-            Text="Home" />
-          <TextBlock Text="Welcome to RugPlay!" />
+          <TextBlock FontWeight="Bold" Text="Home" />
+          <TextBlock Text="Welcome to rnzTradingSim!" />
         </StackPanel>
       </Border>
 
       <!--  Market View (Placeholder)  -->
       <Border x:Name="MarketViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Market}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-          <TextBlock FontSize="48" Text="📈" />
-          <TextBlock
-            FontSize="32"
-            FontWeight="Bold"
-            Text="Market" />
+          <TextBlock FontWeight="Bold" Text="Market" />
           <TextBlock Text="Coming Soon!" />
         </StackPanel>
       </Border>
@@ -162,11 +140,7 @@
       <!--  Portfolio View (Placeholder)  -->
       <Border x:Name="PortfolioViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Portfolio}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-          <TextBlock FontSize="48" Text="💼" />
-          <TextBlock
-            FontSize="32"
-            FontWeight="Bold"
-            Text="Portfolio" />
+          <TextBlock FontWeight="Bold" Text="Portfolio" />
           <TextBlock Text="Coming Soon!" />
         </StackPanel>
       </Border>
@@ -174,11 +148,7 @@
       <!--  Leaderboard View (Placeholder)  -->
       <Border x:Name="LeaderboardViewContainer" Visibility="{Binding DataContext.CurrentView, RelativeSource={RelativeSource AncestorType=hc:Window}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Leaderboard}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-          <TextBlock FontSize="48" Text="🏆" />
-          <TextBlock
-            FontSize="32"
-            FontWeight="Bold"
-            Text="Leaderboard" />
+          <TextBlock FontWeight="Bold" Text="Leaderboard" />
           <TextBlock Text="Coming Soon!" />
         </StackPanel>
       </Border>

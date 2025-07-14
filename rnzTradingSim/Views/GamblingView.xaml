@@ -35,8 +35,6 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Button
-                Height="40"
-                MinWidth="100"
                 Margin="5,0"
                 Command="{Binding DataContext.SelectGameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                 CommandParameter="{Binding Name}"
@@ -69,11 +67,7 @@
           <!--  Mines Game (Placeholder)  -->
           <Border Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Mines}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <TextBlock FontSize="48" Text="💣" />
-              <TextBlock
-                FontSize="24"
-                FontWeight="Bold"
-                Text="Mines" />
+              <TextBlock FontWeight="Bold" Text="Mines" />
               <TextBlock Text="Coming Soon!" />
             </StackPanel>
           </Border>
@@ -81,11 +75,7 @@
           <!--  Dice Game (Placeholder)  -->
           <Border Visibility="{Binding DataContext.SelectedGame, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource String2VisibilityConverter}, ConverterParameter=Dice}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-              <TextBlock FontSize="48" Text="🎲" />
-              <TextBlock
-                FontSize="24"
-                FontWeight="Bold"
-                Text="Dice" />
+              <TextBlock FontWeight="Bold" Text="Dice" />
               <TextBlock Text="Coming Soon!" />
             </StackPanel>
           </Border>
