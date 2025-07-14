@@ -1,11 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using rnzTradingSim.Models;
+using rnzTradingSim.Services;
 
 namespace rnzTradingSim.ViewModels.Games
 {
   public partial class MinesViewModel : ObservableObject
   {
+    private readonly PlayerService _playerService;
+    private Player _currentPlayer;
+
     [ObservableProperty]
     private decimal betAmount = 10.00m;
 
@@ -17,6 +22,9 @@ namespace rnzTradingSim.ViewModels.Games
 
     [ObservableProperty]
     private decimal potentialWin = 10.00m;
+
+    [ObservableProperty]
+    private decimal playerBalance = 0m;
 
     [ObservableProperty]
     private string gameStatus = "AGUARDANDO";
@@ -39,22 +47,44 @@ namespace rnzTradingSim.ViewModels.Games
     [ObservableProperty]
     private bool canCollectWinnings = false;
 
+    [ObservableProperty]
+    private string probabilityText = "Probability: 88.00%";
+
+    [ObservableProperty]
+    private string maxBetText = "Max bet: R$ 1.000.000";
+
+    [ObservableProperty]
+    private string collectButtonText = "Collect Winnings";
+
     public ObservableCollection<MineButtonViewModel> MineButtons { get; }
     public ObservableCollection<GameResultViewModel> RecentGames { get; }
 
     public MinesViewModel()
     {
+      _playerService = new PlayerService();
+      _currentPlayer = _playerService.GetCurrentPlayer();
+
       MineButtons = new ObservableCollection<MineButtonViewModel>();
       RecentGames = new ObservableCollection<GameResultViewModel>();
 
       InitializeMineGrid();
       LoadRecentGames();
+      UpdatePlayerData();
+      CalculateProbability();
+      CalculatePotentialWin();
     }
 
     [RelayCommand]
     private void StartGame()
     {
-      if (!CanStartGame) return;
+      if (!CanStartGame || BetAmount > PlayerBalance)
+      {
+        if (BetAmount > PlayerBalance)
+        {
+          GameStatusDescription = "Saldo insuficiente!";
+        }
+        return;
+      }
 
       IsGameActive = true;
       CanStartGame = false;
@@ -62,6 +92,7 @@ namespace rnzTradingSim.ViewModels.Games
       GameStatus = "EM JOGO";
       GameStatusDescription = "Clique nos quadrados";
       RevealedTiles = 0;
+      CurrentMultiplier = 1.00m;
 
       ResetMineGrid();
       PlaceMines();
@@ -73,7 +104,19 @@ namespace rnzTradingSim.ViewModels.Games
     {
       if (!CanCollectWinnings) return;
 
-      // Add win to recent games
+      var gameResult = new GameResult
+      {
+        GameType = "Mines",
+        BetAmount = BetAmount,
+        WinAmount = PotentialWin,
+        IsWin = true,
+        Multiplier = CurrentMultiplier,
+        Details = $"{{\"mines\":{NumberOfMines},\"revealed\":{RevealedTiles}}}"
+      };
+
+      _playerService.UpdatePlayerStats(_currentPlayer, gameResult);
+      UpdatePlayerData();
+
       RecentGames.Insert(0, new GameResultViewModel
       {
         MineCount = NumberOfMines,
@@ -96,6 +139,19 @@ namespace rnzTradingSim.ViewModels.Games
         // Game over - hit a mine
         RevealAllMines();
 
+        var gameResult = new GameResult
+        {
+          GameType = "Mines",
+          BetAmount = BetAmount,
+          WinAmount = 0,
+          IsWin = false,
+          Multiplier = 0,
+          Details = $"{{\"mines\":{NumberOfMines},\"revealed\":{RevealedTiles}}}"
+        };
+
+        _playerService.UpdatePlayerStats(_currentPlayer, gameResult);
+        UpdatePlayerData();
+
         RecentGames.Insert(0, new GameResultViewModel
         {
           MineCount = NumberOfMines,
@@ -112,6 +168,7 @@ namespace rnzTradingSim.ViewModels.Games
         CalculateCurrentMultiplier();
         CalculatePotentialWin();
         CanCollectWinnings = true;
+        CollectButtonText = $"Collect R$ {PotentialWin:N2}";
 
         // Check if all safe tiles are revealed
         int safeTiles = TotalTiles - NumberOfMines;
@@ -123,13 +180,54 @@ namespace rnzTradingSim.ViewModels.Games
       }
     }
 
+    [RelayCommand]
+    private void IncreaseMines()
+    {
+      if (NumberOfMines < 20 && !IsGameActive)
+      {
+        NumberOfMines++;
+        CalculateProbability();
+        CalculatePotentialWin();
+      }
+    }
+
+    [RelayCommand]
+    private void DecreaseMines()
+    {
+      if (NumberOfMines > 1 && !IsGameActive)
+      {
+        NumberOfMines--;
+        CalculateProbability();
+        CalculatePotentialWin();
+      }
+    }
+
+    [RelayCommand]
+    private void SetBetPercentage(string percentage)
+    {
+      if (IsGameActive) return;
+
+      var percent = int.Parse(percentage);
+      BetAmount = Math.Round(PlayerBalance * percent / 100, 2);
+
+      if (BetAmount < 1) BetAmount = 1;
+      if (BetAmount > 100000) BetAmount = 100000;
+
+      CalculatePotentialWin();
+    }
+
     partial void OnBetAmountChanged(decimal value)
     {
+      if (value > PlayerBalance)
+      {
+        BetAmount = PlayerBalance;
+      }
       CalculatePotentialWin();
     }
 
     partial void OnNumberOfMinesChanged(int value)
     {
+      CalculateProbability();
       CalculatePotentialWin();
     }
 
@@ -184,15 +282,34 @@ namespace rnzTradingSim.ViewModels.Games
 
     private void CalculateCurrentMultiplier()
     {
-      // Basic multiplier calculation (can be made more sophisticated)
+      if (RevealedTiles == 0)
+      {
+        CurrentMultiplier = 1.00m;
+        return;
+      }
+
       int safeTiles = TotalTiles - NumberOfMines;
-      double baseMultiplier = 1.0 + (0.25 * NumberOfMines / safeTiles);
-      CurrentMultiplier = (decimal)Math.Pow(baseMultiplier, RevealedTiles);
+      double baseMultiplier = (double)TotalTiles / safeTiles;
+      CurrentMultiplier = (decimal)Math.Pow(baseMultiplier, RevealedTiles / (double)safeTiles);
     }
 
     private void CalculatePotentialWin()
     {
       PotentialWin = BetAmount * CurrentMultiplier;
+    }
+
+    private void CalculateProbability()
+    {
+      int safeTiles = TotalTiles - NumberOfMines;
+      double probability = (double)safeTiles / TotalTiles * 100;
+      ProbabilityText = $"Probability: {probability:F2}%";
+    }
+
+    private void UpdatePlayerData()
+    {
+      _currentPlayer = _playerService.GetCurrentPlayer();
+      PlayerBalance = _currentPlayer.Balance;
+      MaxBetText = $"Max bet: R$ {Math.Min(PlayerBalance, 100000):N2}";
     }
 
     private void EndGame(bool won)
@@ -202,18 +319,30 @@ namespace rnzTradingSim.ViewModels.Games
       CanCollectWinnings = false;
 
       GameStatus = won ? "GANHOU" : "PERDEU";
-      GameStatusDescription = won ? "Parabens!" : "Tente novamente";
+      GameStatusDescription = won ? "Parabéns!" : "Tente novamente";
 
       CurrentMultiplier = 1.00m;
       RevealedTiles = 0;
+      CollectButtonText = "Collect Winnings";
+      CalculatePotentialWin();
     }
 
     private void LoadRecentGames()
     {
-      // Sample recent games data
-      RecentGames.Add(new GameResultViewModel { MineCount = 3, Amount = 45.30m, IsWin = true });
-      RecentGames.Add(new GameResultViewModel { MineCount = 5, Amount = -20.00m, IsWin = false });
-      RecentGames.Add(new GameResultViewModel { MineCount = 2, Amount = 15.75m, IsWin = true });
+      var history = _playerService.GetGameHistory()
+        .Where(g => g.GameType == "Mines")
+        .Take(5)
+        .OrderByDescending(g => g.PlayedAt);
+
+      foreach (var game in history)
+      {
+        RecentGames.Add(new GameResultViewModel
+        {
+          MineCount = NumberOfMines, // Could parse from Details JSON
+          Amount = game.NetResult,
+          IsWin = game.IsWin
+        });
+      }
     }
   }
 

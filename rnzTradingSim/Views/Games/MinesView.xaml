@@ -41,7 +41,7 @@
 
         <!--  Balance Display  -->
         <Border
-          Margin="0,0,0,30"
+          Margin="0,0,0,20"
           Padding="20"
           Background="#2a2a2a"
           CornerRadius="8">
@@ -56,7 +56,48 @@
               HorizontalAlignment="Center"
               Foreground="White"
               Style="{StaticResource TextBlockLargeBold}"
-              Text="$1.80K" />
+              Text="{Binding PlayerBalance, StringFormat='R$ {0:N2}'}" />
+          </StackPanel>
+        </Border>
+
+        <!--  Game Status  -->
+        <Border
+          Margin="0,0,0,20"
+          Padding="15"
+          Background="#2a2a2a"
+          CornerRadius="8">
+          <StackPanel HorizontalAlignment="Center">
+            <TextBlock
+              HorizontalAlignment="Center"
+              Foreground="White"
+              Style="{StaticResource TextBlockDefaultBold}"
+              Text="{Binding GameStatus}" />
+            <TextBlock
+              HorizontalAlignment="Center"
+              Foreground="#8b8b8b"
+              Style="{StaticResource TextBlockDefault}"
+              Text="{Binding GameStatusDescription}" />
+          </StackPanel>
+        </Border>
+
+        <!--  Current Multiplier  -->
+        <Border
+          Margin="0,0,0,30"
+          Padding="15"
+          Background="#2a2a2a"
+          CornerRadius="8">
+          <StackPanel HorizontalAlignment="Center">
+            <TextBlock
+              Margin="0,0,0,5"
+              HorizontalAlignment="Center"
+              Foreground="#8b8b8b"
+              Style="{StaticResource TextBlockDefault}"
+              Text="Current Multiplier" />
+            <TextBlock
+              HorizontalAlignment="Center"
+              Foreground="{StaticResource SuccessBrush}"
+              Style="{StaticResource TextBlockLargeBold}"
+              Text="{Binding CurrentMultiplier, StringFormat={}{0:F2}x}" />
           </StackPanel>
         </Border>
 
@@ -65,11 +106,35 @@
       <!--  Center Panel - Game Grid  -->
       <Grid Grid.Column="1" Margin="30,0">
         <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!--  Potential Win Display  -->
+        <Border
+          Grid.Row="0"
+          Margin="0,0,0,20"
+          Padding="20"
+          Background="#2a2a2a"
+          CornerRadius="8">
+          <StackPanel HorizontalAlignment="Center">
+            <TextBlock
+              Margin="0,0,0,5"
+              HorizontalAlignment="Center"
+              Foreground="#8b8b8b"
+              Style="{StaticResource TextBlockDefault}"
+              Text="Potential Win" />
+            <TextBlock
+              HorizontalAlignment="Center"
+              Foreground="{StaticResource WarningBrush}"
+              Style="{StaticResource TextBlockLargeBold}"
+              Text="{Binding PotentialWin, StringFormat='R$ {0:N2}'}" />
+          </StackPanel>
+        </Border>
+
         <!--  Mine Grid Container  -->
         <Border
+          Grid.Row="1"
           Padding="20"
           Background="#2a2a2a"
           CornerRadius="12">
@@ -112,17 +177,17 @@
               hc:BorderElement.CornerRadius="4"
               Background="#3a3a3a"
               BorderThickness="0"
+              Command="{Binding DecreaseMinesCommand}"
               Content="-"
               Foreground="White" />
 
             <TextBlock
-              Name="MineCountText"
               Grid.Column="1"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
               Foreground="White"
               Style="{StaticResource TextBlockLargeBold}"
-              Text="{Binding MineCount}" />
+              Text="{Binding NumberOfMines}" />
 
             <Button
               Grid.Column="2"
@@ -131,6 +196,7 @@
               hc:BorderElement.CornerRadius="4"
               Background="#3a3a3a"
               BorderThickness="0"
+              Command="{Binding IncreaseMinesCommand}"
               Content="+"
               Foreground="White" />
           </Grid>
@@ -138,17 +204,10 @@
 
         <!--  Probability Info  -->
         <TextBlock
-          Margin="0,0,0,10"
+          Margin="0,0,0,30"
           Foreground="#8b8b8b"
           Style="{StaticResource TextBlockDefault}"
-          Text="You will get 1.08x per tile, probability of winning: 88.00%"
-          TextWrapping="Wrap" />
-
-        <TextBlock
-          Margin="0,0,0,30"
-          Foreground="#6c757d"
-          Style="{StaticResource TextBlockDefault}"
-          Text="Note: Maximum payout per game is capped at $2,000,000."
+          Text="{Binding ProbabilityText}"
           TextWrapping="Wrap" />
 
         <!--  Bet Amount  -->
@@ -158,20 +217,23 @@
           Style="{StaticResource TextBlockDefaultBold}"
           Text="Bet Amount" />
 
-        <hc:TextBox
+        <hc:NumericUpDown
           Margin="0,0,0,15"
           Padding="15,12"
           hc:BorderElement.CornerRadius="8"
           Background="#2a2a2a"
           BorderThickness="0"
+          DecimalPlaces="2"
           Foreground="White"
-          Text="10" />
+          Maximum="100000"
+          Minimum="1"
+          Value="{Binding BetAmount}" />
 
         <TextBlock
           Margin="0,0,0,20"
           Foreground="#8b8b8b"
           Style="{StaticResource TextBlockDefault}"
-          Text="Max bet: 1.000.000" />
+          Text="{Binding MaxBetText}" />
 
         <!--  Quick Bet Buttons  -->
         <Grid Margin="0,0,0,30">
@@ -189,6 +251,8 @@
             hc:BorderElement.CornerRadius="6"
             Background="#3a3a3a"
             BorderThickness="0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="25"
             Content="25%"
             Foreground="White" />
 
@@ -199,6 +263,8 @@
             hc:BorderElement.CornerRadius="6"
             Background="#3a3a3a"
             BorderThickness="0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="50"
             Content="50%"
             Foreground="White" />
 
@@ -209,6 +275,8 @@
             hc:BorderElement.CornerRadius="6"
             Background="#3a3a3a"
             BorderThickness="0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="75"
             Content="75%"
             Foreground="White" />
 
@@ -219,21 +287,37 @@
             hc:BorderElement.CornerRadius="6"
             Background="#3a3a3a"
             BorderThickness="0"
+            Command="{Binding SetBetPercentageCommand}"
+            CommandParameter="100"
             Content="Max"
             Foreground="White" />
         </Grid>
 
-        <!--  Start Game Button  -->
+        <!--  Action Buttons  -->
         <Button
+          Margin="0,0,0,10"
           Padding="0,15"
           HorizontalAlignment="Stretch"
           hc:BorderElement.CornerRadius="8"
           Background="#dc3545"
           BorderThickness="0"
-          Click="StartGameButton_Click"
+          Command="{Binding StartGameCommand}"
           Content="Start Game"
           FontWeight="Bold"
-          Foreground="White" />
+          Foreground="White"
+          Visibility="{Binding CanStartGame, Converter={StaticResource Boolean2VisibilityConverter}}" />
+
+        <Button
+          Padding="0,15"
+          HorizontalAlignment="Stretch"
+          hc:BorderElement.CornerRadius="8"
+          Background="#28a745"
+          BorderThickness="0"
+          Command="{Binding CollectWinningsCommand}"
+          Content="{Binding CollectButtonText}"
+          FontWeight="Bold"
+          Foreground="White"
+          Visibility="{Binding CanCollectWinnings, Converter={StaticResource Boolean2VisibilityConverter}}" />
 
       </StackPanel>
 
