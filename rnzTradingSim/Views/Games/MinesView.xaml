@@ -73,203 +73,12 @@
           Padding="20"
           Background="#2a2a2a"
           CornerRadius="12">
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="*" />
-              <RowDefinition Height="*" />
-              <RowDefinition Height="*" />
-              <RowDefinition Height="*" />
-              <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!--  Mine Buttons (5x5 grid)  -->
-            <Button
-              Grid.Row="0"
-              Grid.Column="0"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="0"
-              Grid.Column="1"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="0"
-              Grid.Column="2"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="0"
-              Grid.Column="3"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="0"
-              Grid.Column="4"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-
-            <Button
-              Grid.Row="1"
-              Grid.Column="0"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="1"
-              Grid.Column="1"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="1"
-              Grid.Column="2"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="1"
-              Grid.Column="3"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="1"
-              Grid.Column="4"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-
-            <Button
-              Grid.Row="2"
-              Grid.Column="0"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="2"
-              Grid.Column="1"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="2"
-              Grid.Column="2"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="2"
-              Grid.Column="3"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="2"
-              Grid.Column="4"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-
-            <Button
-              Grid.Row="3"
-              Grid.Column="0"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="3"
-              Grid.Column="1"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="3"
-              Grid.Column="2"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="3"
-              Grid.Column="3"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="3"
-              Grid.Column="4"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-
-            <Button
-              Grid.Row="4"
-              Grid.Column="0"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="4"
-              Grid.Column="1"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="4"
-              Grid.Column="2"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="4"
-              Grid.Column="3"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-            <Button
-              Grid.Row="4"
-              Grid.Column="4"
-              Margin="3"
-              hc:BorderElement.CornerRadius="8"
-              Background="#3a3a3a"
-              BorderThickness="0" />
-          </Grid>
+          <UniformGrid
+            Name="MineGrid"
+            Columns="5"
+            Rows="5">
+            <!--  Grid will be populated programmatically with ToggleButtonFlip  -->
+          </UniformGrid>
         </Border>
 
       </Grid>
@@ -307,12 +116,13 @@
               Foreground="White" />
 
             <TextBlock
+              Name="MineCountText"
               Grid.Column="1"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
               Foreground="White"
               Style="{StaticResource TextBlockLargeBold}"
-              Text="3" />
+              Text="{Binding MineCount}" />
 
             <Button
               Grid.Column="2"
@@ -417,9 +227,10 @@
         <Button
           Padding="0,15"
           HorizontalAlignment="Stretch"
-          hc:BorderElement.CornerRadius="6"
+          hc:BorderElement.CornerRadius="8"
           Background="#dc3545"
           BorderThickness="0"
+          Click="StartGameButton_Click"
           Content="Start Game"
           FontWeight="Bold"
           Foreground="White" />
