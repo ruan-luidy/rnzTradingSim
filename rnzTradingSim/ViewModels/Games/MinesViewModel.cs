@@ -27,10 +27,10 @@ namespace rnzTradingSim.ViewModels.Games
     private decimal playerBalance = 0m;
 
     [ObservableProperty]
-    private string gameStatus = "AGUARDANDO";
+    private string gameStatus = "WAITING";
 
     [ObservableProperty]
-    private string gameStatusDescription = "Configure sua aposta";
+    private string gameStatusDescription = "Configure your bet";
 
     [ObservableProperty]
     private int revealedTiles = 0;
@@ -48,10 +48,10 @@ namespace rnzTradingSim.ViewModels.Games
     private bool canCollectWinnings = false;
 
     [ObservableProperty]
-    private string probabilityText = "Probability: 88.00%";
+    private string probabilityText = "You will get 1.08x per tile, probability of winning: 88.00%";
 
     [ObservableProperty]
-    private string maxBetText = "Max bet: R$ 1.000.000";
+    private string maxBetText = "Max bet: 1.000.000";
 
     [ObservableProperty]
     private string collectButtonText = "Collect Winnings";
@@ -81,7 +81,7 @@ namespace rnzTradingSim.ViewModels.Games
       {
         if (BetAmount > PlayerBalance)
         {
-          GameStatusDescription = "Saldo insuficiente!";
+          GameStatusDescription = "Insufficient balance!";
         }
         return;
       }
@@ -89,8 +89,8 @@ namespace rnzTradingSim.ViewModels.Games
       IsGameActive = true;
       CanStartGame = false;
       CanCollectWinnings = false;
-      GameStatus = "EM JOGO";
-      GameStatusDescription = "Clique nos quadrados";
+      GameStatus = "IN GAME";
+      GameStatusDescription = "Click the tiles";
       RevealedTiles = 0;
       CurrentMultiplier = 1.00m;
 
@@ -98,10 +98,10 @@ namespace rnzTradingSim.ViewModels.Games
       PlaceMines();
       CalculatePotentialWin();
 
-      // Adicione esta linha para notificar a View que deve resetar visualmente
+      // Trigger visual reset
       OnPropertyChanged(nameof(IsGameActive));
     }
-    
+
     [RelayCommand]
     private void CollectWinnings()
     {
@@ -171,7 +171,7 @@ namespace rnzTradingSim.ViewModels.Games
         CalculateCurrentMultiplier();
         CalculatePotentialWin();
         CanCollectWinnings = true;
-        CollectButtonText = $"Collect R$ {PotentialWin:N2}";
+        CollectButtonText = $"Collect {PotentialWin:C}";
 
         // Check if all safe tiles are revealed
         int safeTiles = TotalTiles - NumberOfMines;
@@ -305,14 +305,15 @@ namespace rnzTradingSim.ViewModels.Games
     {
       int safeTiles = TotalTiles - NumberOfMines;
       double probability = (double)safeTiles / TotalTiles * 100;
-      ProbabilityText = $"Probability: {probability:F2}%";
+      double multiplierPerTile = (double)TotalTiles / safeTiles;
+      ProbabilityText = $"You will get {multiplierPerTile:F2}x per tile, probability of winning: {probability:F2}%";
     }
 
     private void UpdatePlayerData()
     {
       _currentPlayer = _playerService.GetCurrentPlayer();
       PlayerBalance = _currentPlayer.Balance;
-      MaxBetText = $"Max bet: R$ {Math.Min(PlayerBalance, 100000):N2}";
+      MaxBetText = $"Max bet: {Math.Min(PlayerBalance, 100000):C}";
     }
 
     private void EndGame(bool won)
@@ -321,13 +322,19 @@ namespace rnzTradingSim.ViewModels.Games
       CanStartGame = true;
       CanCollectWinnings = false;
 
-      GameStatus = won ? "GANHOU" : "PERDEU";
-      GameStatusDescription = won ? "Parabéns!" : "Tente novamente";
+      GameStatus = won ? "WON" : "LOST";
+      GameStatusDescription = won ? "Congratulations!" : "Try again";
 
       CurrentMultiplier = 1.00m;
       RevealedTiles = 0;
       CollectButtonText = "Collect Winnings";
       CalculatePotentialWin();
+
+      // Trigger visual update for loss (to show all mines)
+      if (!won)
+      {
+        OnPropertyChanged(nameof(GameStatus));
+      }
     }
 
     private void LoadRecentGames()
@@ -376,6 +383,6 @@ namespace rnzTradingSim.ViewModels.Games
     public bool IsWin { get; set; }
 
     public string DisplayText => $"{MineCount} Minas";
-    public string AmountText => IsWin ? $"+R$ {Amount:F2}" : $"-R$ {Math.Abs(Amount):F2}";
+    public string AmountText => IsWin ? $"+{Amount:C}" : $"-{Math.Abs(Amount):C}";
   }
 }
