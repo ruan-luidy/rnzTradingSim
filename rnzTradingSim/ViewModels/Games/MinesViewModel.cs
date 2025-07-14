@@ -226,26 +226,28 @@ namespace rnzTradingSim.ViewModels.Games
 
     partial void OnBetAmountChanged(decimal value)
     {
-      // Validate bet amount
       if (value < 0)
       {
-        BetAmount = 0.01m;
-        return;
-      }
-
-      if (value > PlayerBalance)
-      {
-        BetAmount = PlayerBalance;
-        return;
-      }
-
-      if (value > 100000)
-      {
-        BetAmount = 100000;
+        BetAmount = Math.Abs(value);
         return;
       }
 
       CalculatePotentialWin();
+    }
+
+    [RelayCommand]
+    private void UpdateBetAmount(string newValue)
+    {
+      if (IsGameActive) return;
+
+      if (decimal.TryParse(newValue, out decimal amount))
+      {
+        // Aplicar limites sem resetar
+        if (amount < 0.01m) amount = 0.01m;
+        if (amount > Math.Min(PlayerBalance, 100000)) amount = Math.Min(PlayerBalance, 100000);
+
+        BetAmount = amount;
+      }
     }
 
     partial void OnNumberOfMinesChanged(int value)

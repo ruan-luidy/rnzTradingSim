@@ -2,6 +2,7 @@
   x:Class="rnzTradingSim.App"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:converters="clr-namespace:rnzTradingSim.Converters"
   xmlns:hc="https://handyorg.github.io/handycontrol"
   StartupUri="Views/MainWindow.xaml">
 
@@ -13,6 +14,9 @@
         <!--  Custom Styles  -->
         <ResourceDictionary Source="Resources/Styles/CustomStyles.xaml" />
       </ResourceDictionary.MergedDictionaries>
+
+      <!--  Global Converters  -->
+      <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

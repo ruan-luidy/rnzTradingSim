@@ -10,6 +10,11 @@
   d:DesignWidth="1070"
   mc:Ignorable="d">
 
+  <UserControl.Resources>
+    <!--  Conversor local se necessário  -->
+    <local:StringToDecimalConverter x:Key="StringToDecimalConverter" />
+  </UserControl.Resources>
+
   <Grid Margin="20">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -177,12 +182,13 @@
               Width="50"
               Height="50"
               hc:BorderElement.CornerRadius="8"
-              hc:IconElement.Geometry="{StaticResource SubGeometry}"
-              hc:IconElement.Width="20"
               Background="#1f1f1f"
               BorderBrush="#404040"
               BorderThickness="1"
-              Command="{Binding DecreaseMinesCommand}" />
+              Command="{Binding DecreaseMinesCommand}"
+              Content="-"
+              FontSize="20"
+              FontWeight="Bold" />
 
             <TextBlock
               Grid.Column="1"
@@ -198,12 +204,13 @@
               Width="50"
               Height="50"
               hc:BorderElement.CornerRadius="8"
-              hc:IconElement.Geometry="{StaticResource AddGeometry}"
-              hc:IconElement.Width="20"
               Background="#1f1f1f"
               BorderBrush="#404040"
               BorderThickness="1"
-              Command="{Binding IncreaseMinesCommand}" />
+              Command="{Binding IncreaseMinesCommand}"
+              Content="+"
+              FontSize="20"
+              FontWeight="Bold" />
           </Grid>
         </Border>
 
@@ -223,7 +230,7 @@
           Text="Note: Maximum payout per game is capped at $2,000,000."
           TextWrapping="Wrap" />
 
-        <!--  Bet Amount  -->
+        <!--  Bet Amount - CORRIGIDO  -->
         <TextBlock
           Margin="0,0,0,15"
           FontSize="18"
@@ -240,8 +247,7 @@
           BorderBrush="#404040"
           BorderThickness="1"
           FontSize="16"
-          Foreground="White"
-          Text="10.00" />
+          Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}" />
 
         <TextBlock
           Margin="0,0,0,20"
@@ -295,8 +301,6 @@
             Content="75%"
             Foreground="White" />
 
-
-
           <Button
             Grid.Column="3"
             Width="80"
@@ -314,7 +318,7 @@
 
         <!--  Action Buttons  -->
         <Button
-          Height="Auto"
+          Height="50"
           HorizontalAlignment="Stretch"
           hc:BorderElement.CornerRadius="8"
           Background="#dc3545"
@@ -326,7 +330,7 @@
           Visibility="{Binding CanStartGame, Converter={StaticResource Boolean2VisibilityConverter}}" />
 
         <Button
-          Height="Auto"
+          Height="50"
           HorizontalAlignment="Stretch"
           hc:BorderElement.CornerRadius="8"
           Background="#22c55e"
