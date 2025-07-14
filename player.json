@@ -1,0 +1,15 @@
+{
+  "Name": "Player",
+  "Balance": 10000,
+  "TotalWagered": 0,
+  "TotalWon": 0,
+  "TotalLost": 0,
+  "GamesPlayed": 0,
+  "GamesWon": 0,
+  "CreatedAt": "2025-07-14T20:40:31.8786062-03:00",
+  "BiggestWin": 0,
+  "BiggestLoss": 0,
+  "NetProfit": 0,
+  "WinRate": 0,
+  "HouseEdge": 0
+}

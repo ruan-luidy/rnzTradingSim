@@ -66,6 +66,7 @@ namespace rnzTradingSim.Views.Games
               Col = col,
               IsRevealed = false,
               RevealedContent = null,
+              FallbackText = "",
               RevealedBackground = new SolidColorBrush(Colors.Transparent)
             }
           };
@@ -99,14 +100,14 @@ namespace rnzTradingSim.Views.Games
       {
         // Hit a mine - show red background with mine image
         buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(220, 53, 69)); // #dc3545
-        buttonData.RevealedContent = LoadImageFromResource("pack://application:,,,/Resources/Images/mine.png");
+        buttonData.RevealedContent = LoadImageFromResource("/Resources/Images/mine.png");
         buttonData.FallbackText = "✕"; // Fallback text if image fails to load
       }
       else
       {
         // Safe tile - show green background with gem image
         buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(40, 167, 69)); // #28a745
-        buttonData.RevealedContent = LoadImageFromResource("pack://application:,,,/Resources/Images/gem.png");
+        buttonData.RevealedContent = LoadImageFromResource("/Resources/Images/gem.png");
         buttonData.FallbackText = "♦"; // Fallback text if image fails to load
       }
 
@@ -119,12 +120,34 @@ namespace rnzTradingSim.Views.Games
     {
       try
       {
-        return new BitmapImage(new System.Uri(resourcePath, System.UriKind.Absolute));
+        // Primeira tentativa: URI relativo
+        var uri = new System.Uri(resourcePath, System.UriKind.Relative);
+        return new BitmapImage(uri);
       }
       catch
       {
-        // Fallback to text if image is not found
-        return null;
+        try
+        {
+          // Segunda tentativa: URI absoluto pack
+          var packUri = new System.Uri($"pack://application:,,,{resourcePath}", System.UriKind.Absolute);
+          return new BitmapImage(packUri);
+        }
+        catch
+        {
+          try
+          {
+            // Terceira tentativa: Buscar no assembly atual
+            var assemblyUri = new System.Uri($"pack://application:,,,/rnzTradingSim;component{resourcePath}", System.UriKind.Absolute);
+            return new BitmapImage(assemblyUri);
+          }
+          catch (System.Exception ex)
+          {
+            // Log do erro para debug
+            System.Diagnostics.Debug.WriteLine($"Failed to load image {resourcePath}: {ex.Message}");
+            // Fallback to text if image is not found
+            return null;
+          }
+        }
       }
     }
 
@@ -162,7 +185,7 @@ namespace rnzTradingSim.Views.Games
           {
             buttonData.IsRevealed = true;
             buttonData.RevealedBackground = new SolidColorBrush(Color.FromRgb(220, 53, 69)); // #dc3545
-            buttonData.RevealedContent = LoadImageFromResource("pack://application:,,,/Resources/Images/mine.png");
+            buttonData.RevealedContent = LoadImageFromResource("/Resources/Images/mine.png");
             buttonData.FallbackText = "✕"; // Fallback text
 
             // Force visual update

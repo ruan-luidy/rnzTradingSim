@@ -17,4 +17,13 @@
     <Folder Include="Models\" />
     <Folder Include="Resources\Sounds\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\mine.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\gem.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
 </Project>
