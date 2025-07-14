@@ -28,7 +28,7 @@
             HorizontalAlignment="Center"
             FontWeight="Bold"
             Text="ruzinhobrabo" />
-          <TextBlock HorizontalAlignment="Center" Text="Gaming Simulator" />
+          <TextBlock HorizontalAlignment="Center" Text="Gabling Simulator" />
         </StackPanel>
 
         <!--  User Stats  -->

@@ -20,61 +20,41 @@
     <StackPanel Grid.Column="0" VerticalAlignment="Center">
       <!--  Session Balance  -->
       <StackPanel Margin="0,0,0,30" HorizontalAlignment="Center">
+        <TextBlock HorizontalAlignment="Center" Text="Session P&amp;L" />
         <TextBlock
           HorizontalAlignment="Center"
-          FontSize="14"
-          Text="Session P&amp;L" />
-        <TextBlock
-          HorizontalAlignment="Center"
-          FontSize="24"
           FontWeight="Bold"
           Text="{Binding SessionBalance, StringFormat='{}{0:+$#,0.00;-$#,0.00;$0.00}'}" />
       </StackPanel>
 
-      <!--  Coin Display  -->
-      <Border
+      <Grid
         Width="150"
         Height="150"
-        HorizontalAlignment="Center"
-        Background="{DynamicResource RegionBrush}"
-        BorderBrush="{DynamicResource BorderBrush}"
-        BorderThickness="2"
-        CornerRadius="10">
+        HorizontalAlignment="Center">
+        <!--  Coin Animation  -->
+        <Ellipse
+          x:Name="CoinEllipse"
+          Width="100"
+          Height="100"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          Fill="Gold"
+          RenderTransformOrigin="0.5,0.5"
+          Stroke="DarkGoldenrod"
+          StrokeThickness="3">
+          <Ellipse.RenderTransform>
+            <ScaleTransform x:Name="CoinScale" ScaleX="1" />
+          </Ellipse.RenderTransform>
+        </Ellipse>
 
-        <Grid>
-          <!--  Coin Animation  -->
-          <Ellipse
-            x:Name="CoinEllipse"
-            Width="100"
-            Height="100"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Fill="Gold"
-            RenderTransformOrigin="0.5,0.5"
-            Stroke="DarkGoldenrod"
-            StrokeThickness="3">
-            <Ellipse.RenderTransform>
-              <ScaleTransform x:Name="CoinScale" ScaleX="1" />
-            </Ellipse.RenderTransform>
-          </Ellipse>
-
-          <!--  Coin Text  -->
-          <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="24"
-            FontWeight="Bold"
-            Text="{Binding FinalResult}" />
-
-          <!--  Loading when flipping  -->
-          <hc:LoadingCircle
-            Width="120"
-            Height="120"
-            IsRunning="{Binding IsFlipping}"
-            Opacity="0.3"
-            Visibility="{Binding IsFlipping, Converter={StaticResource Boolean2VisibilityConverter}}" />
-        </Grid>
-      </Border>
+        <!--  Coin Text  -->
+        <TextBlock
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          FontSize="24"
+          FontWeight="Bold"
+          Text="{Binding FinalResult}" />
+      </Grid>
     </StackPanel>
 
     <!--  Right Side - Controls  -->
@@ -87,7 +67,6 @@
       <StackPanel Margin="0,0,0,30">
         <TextBlock
           Margin="0,0,0,10"
-          FontSize="16"
           FontWeight="Bold"
           Text="Choose Side" />
 
@@ -99,7 +78,6 @@
 
           <Button
             Grid.Column="0"
-            Height="50"
             Margin="0,0,5,0"
             Command="{Binding SelectSideCommand}"
             CommandParameter="HEADS"
@@ -108,7 +86,6 @@
 
           <Button
             Grid.Column="1"
-            Height="50"
             Margin="5,0,0,0"
             Command="{Binding SelectSideCommand}"
             CommandParameter="TAILS"
@@ -121,20 +98,15 @@
       <StackPanel Margin="0,0,0,30">
         <TextBlock
           Margin="0,0,0,10"
-          FontSize="16"
           FontWeight="Bold"
           Text="Bet Amount" />
 
         <hc:NumericUpDown
-          Height="40"
           Maximum="10000"
           Minimum="1"
           Value="{Binding BetAmount}" />
 
-        <TextBlock
-          Margin="0,5,0,0"
-          FontSize="12"
-          Text="{Binding ParentBalance, StringFormat='Max bet: ${0:N0}'}" />
+        <TextBlock Margin="0,5,0,0" Text="{Binding ParentBalance, StringFormat='Max bet: ${0:N0}'}" />
 
         <!--  Quick Bet Buttons  -->
         <Grid Margin="0,10,0,0">
@@ -147,28 +119,24 @@
 
           <Button
             Grid.Column="0"
-            Height="30"
             Margin="0,0,2,0"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="0.25"
             Content="25%" />
           <Button
             Grid.Column="1"
-            Height="30"
             Margin="2,0,2,0"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="0.50"
             Content="50%" />
           <Button
             Grid.Column="2"
-            Height="30"
             Margin="2,0,2,0"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="0.75"
             Content="75%" />
           <Button
             Grid.Column="3"
-            Height="30"
             Margin="2,0,0,0"
             Command="{Binding SetBetPercentageCommand}"
             CommandParameter="1.0"

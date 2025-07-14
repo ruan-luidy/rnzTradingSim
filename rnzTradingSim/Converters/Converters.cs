@@ -46,9 +46,9 @@ namespace rnzTradingSim
     {
       if (value is bool isFlipping)
       {
-        return isFlipping ? "🪙 Flipping..." : "🪙 FLIP COIN";
+        return isFlipping ? "Flipping..." : "FLIP COIN";
       }
-      return "🪙 FLIP COIN";
+      return "FLIP COIN";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -63,9 +63,9 @@ namespace rnzTradingSim
     {
       if (value is bool isSpinning)
       {
-        return isSpinning ? "🎰 Spinning..." : "🎰 SPIN";
+        return isSpinning ? "Spinning..." : "SPIN";
       }
-      return "🎰 SPIN";
+      return "SPIN";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
