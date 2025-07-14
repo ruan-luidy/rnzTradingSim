@@ -1,270 +1,249 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using rnzTradingSim.Models;
 using System.Collections.ObjectModel;
 
-namespace rnzTradingSim.ViewModels.Games;
-
-public partial class MinesViewModel : ObservableObject
+namespace rnzTradingSim.ViewModels.Games
 {
-  private readonly Player _player;
-  private readonly GamblingViewModel _parent;
-  private Random _random = new();
-
-  [ObservableProperty]
-  private decimal betAmount = 10m;
-
-  [ObservableProperty]
-  private int mineCount = 3;
-
-  [ObservableProperty]
-  private bool isGameActive = false;
-
-  [ObservableProperty]
-  private bool canCashOut = false;
-
-  [ObservableProperty]
-  private decimal currentMultiplier = 1.0m;
-
-  [ObservableProperty]
-  private decimal potentialWin = 0m;
-
-  [ObservableProperty]
-  private int tilesRevealed = 0;
-
-  [ObservableProperty]
-  private int safetilesRemaining = 25;
-
-  [ObservableProperty]
-  private string gameStatus = "Place your bet and start playing!";
-
-  public ObservableCollection<MinesTile> GameBoard { get; } = new();
-
-  public MinesViewModel(Player player, GamblingViewModel parent)
+  public partial class MinesViewModel : ObservableObject
   {
-    _player = player;
-    _parent = parent;
-    InitializeBoard();
-    UpdateSafeTilesRemaining();
-  }
+    [ObservableProperty]
+    private decimal betAmount = 10.00m;
 
-  [RelayCommand]
-  private void SetBetPercentage(string percentageStr)
-  {
-    if (IsGameActive) return;
+    [ObservableProperty]
+    private int numberOfMines = 3;
 
-    if (double.TryParse(percentageStr, out double percentage))
+    [ObservableProperty]
+    private decimal currentMultiplier = 1.00m;
+
+    [ObservableProperty]
+    private decimal potentialWin = 10.00m;
+
+    [ObservableProperty]
+    private string gameStatus = "AGUARDANDO";
+
+    [ObservableProperty]
+    private string gameStatusDescription = "Configure sua aposta";
+
+    [ObservableProperty]
+    private int revealedTiles = 0;
+
+    [ObservableProperty]
+    private int totalTiles = 25;
+
+    [ObservableProperty]
+    private bool isGameActive = false;
+
+    [ObservableProperty]
+    private bool canStartGame = true;
+
+    [ObservableProperty]
+    private bool canCollectWinnings = false;
+
+    public ObservableCollection<MineButtonViewModel> MineButtons { get; }
+    public ObservableCollection<GameResultViewModel> RecentGames { get; }
+
+    public MinesViewModel()
     {
-      BetAmount = Math.Round(_player.Balance * (decimal)percentage, 2);
-      if (BetAmount < 1) BetAmount = 1;
+      MineButtons = new ObservableCollection<MineButtonViewModel>();
+      RecentGames = new ObservableCollection<GameResultViewModel>();
+
+      InitializeMineGrid();
+      LoadRecentGames();
     }
-  }
 
-  [RelayCommand]
-  private void StartGame()
-  {
-    if (IsGameActive || !_parent.CanPlaceBet(BetAmount)) return;
-
-    _parent.DeductBet(BetAmount);
-
-    IsGameActive = true;
-    CanCashOut = false;
-    TilesRevealed = 0;
-    CurrentMultiplier = 1.0m;
-    UpdatePotentialWin();
-    GameStatus = "Click tiles to reveal them. Avoid the mines!";
-
-    InitializeBoard();
-    PlaceMines();
-  }
-
-  [RelayCommand]
-  private void CashOut()
-  {
-    if (!CanCashOut || !IsGameActive) return;
-
-    var winAmount = BetAmount * CurrentMultiplier;
-    _parent.AddWinnings(winAmount);
-
-    var result = new GameResult
+    [RelayCommand]
+    private void StartGame()
     {
-      GameType = "Mines",
-      BetAmount = BetAmount,
-      WinAmount = winAmount,
-      IsWin = true,
-      Multiplier = CurrentMultiplier,
-      Details = $"Cashed out after {TilesRevealed} tiles with {MineCount} mines"
-    };
+      if (!CanStartGame) return;
 
-    _parent.OnGameCompleted(result);
+      IsGameActive = true;
+      CanStartGame = false;
+      CanCollectWinnings = false;
+      GameStatus = "EM JOGO";
+      GameStatusDescription = "Clique nos quadrados";
+      RevealedTiles = 0;
 
-    GameStatus = $"Cashed out! Won ${winAmount:F2} with {CurrentMultiplier:F2}x multiplier!";
-    EndGame(false);
-  }
+      ResetMineGrid();
+      PlaceMines();
+      CalculatePotentialWin();
+    }
 
-  [RelayCommand]
-  private void RevealTile(MinesTile tile)
-  {
-    if (!IsGameActive || tile.IsRevealed) return;
-
-    tile.IsRevealed = true;
-
-    if (tile.IsMine)
+    [RelayCommand]
+    private void CollectWinnings()
     {
-      // Hit a mine - game over
-      tile.IsExploded = true;
-      RevealAllMines();
+      if (!CanCollectWinnings) return;
 
-      var result = new GameResult
+      // Add win to recent games
+      RecentGames.Insert(0, new GameResultViewModel
       {
-        GameType = "Mines",
-        BetAmount = BetAmount,
-        WinAmount = 0,
-        IsWin = false,
-        Multiplier = 0,
-        Details = $"Hit mine after {TilesRevealed} tiles with {MineCount} mines"
-      };
+        MineCount = NumberOfMines,
+        Amount = PotentialWin - BetAmount,
+        IsWin = true
+      });
 
-      _parent.OnGameCompleted(result);
-
-      GameStatus = $"💥 BOOM! You hit a mine and lost ${BetAmount:F2}";
       EndGame(true);
     }
-    else
-    {
-      // Safe tile
-      TilesRevealed++;
-      CalculateMultiplier();
-      UpdatePotentialWin();
-      CanCashOut = true;
 
-      if (TilesRevealed == SafetilesRemaining)
+    [RelayCommand]
+    private void RevealTile(MineButtonViewModel button)
+    {
+      if (!IsGameActive || button.IsRevealed) return;
+
+      button.IsRevealed = true;
+
+      if (button.IsMine)
       {
-        // All safe tiles revealed - auto cash out
-        GameStatus = "Perfect! You found all safe tiles!";
-        CashOut();
+        // Game over - hit a mine
+        RevealAllMines();
+
+        RecentGames.Insert(0, new GameResultViewModel
+        {
+          MineCount = NumberOfMines,
+          Amount = -BetAmount,
+          IsWin = false
+        });
+
+        EndGame(false);
       }
       else
       {
-        GameStatus = $"Safe! {TilesRevealed} tiles revealed. Multiplier: {CurrentMultiplier:F2}x";
+        // Safe tile revealed
+        RevealedTiles++;
+        CalculateCurrentMultiplier();
+        CalculatePotentialWin();
+        CanCollectWinnings = true;
+
+        // Check if all safe tiles are revealed
+        int safeTiles = TotalTiles - NumberOfMines;
+        if (RevealedTiles >= safeTiles)
+        {
+          // Auto-collect maximum win
+          CollectWinnings();
+        }
       }
     }
-  }
 
-  [RelayCommand]
-  private void ResetGame()
-  {
-    if (IsGameActive) return;
-
-    IsGameActive = false;
-    CanCashOut = false;
-    TilesRevealed = 0;
-    CurrentMultiplier = 1.0m;
-    PotentialWin = 0m;
-    GameStatus = "Place your bet and start playing!";
-    InitializeBoard();
-  }
-
-  partial void OnMineCountChanged(int value)
-  {
-    if (!IsGameActive)
+    partial void OnBetAmountChanged(decimal value)
     {
-      UpdateSafeTilesRemaining();
-      InitializeBoard();
+      CalculatePotentialWin();
     }
-  }
 
-  private void InitializeBoard()
-  {
-    GameBoard.Clear();
-    for (int i = 0; i < 25; i++)
+    partial void OnNumberOfMinesChanged(int value)
     {
-      GameBoard.Add(new MinesTile
+      CalculatePotentialWin();
+    }
+
+    private void InitializeMineGrid()
+    {
+      MineButtons.Clear();
+      for (int i = 0; i < TotalTiles; i++)
       {
-        Index = i,
-        Row = i / 5,
-        Column = i % 5
-      });
+        var button = new MineButtonViewModel
+        {
+          Index = i,
+          Row = i / 5,
+          Column = i % 5,
+          ClickCommand = new RelayCommand<MineButtonViewModel>(RevealTile)
+        };
+        MineButtons.Add(button);
+      }
     }
-  }
 
-  private void PlaceMines()
-  {
-    var minePositions = new HashSet<int>();
-
-    while (minePositions.Count < MineCount)
+    private void ResetMineGrid()
     {
-      var position = _random.Next(0, 25);
-      minePositions.Add(position);
+      foreach (var button in MineButtons)
+      {
+        button.Reset();
+      }
     }
 
-    foreach (var position in minePositions)
+    private void PlaceMines()
     {
-      GameBoard[position].IsMine = true;
-    }
-  }
+      var random = new Random();
+      var minePositions = new HashSet<int>();
 
-  private void RevealAllMines()
-  {
-    foreach (var tile in GameBoard.Where(t => t.IsMine))
+      while (minePositions.Count < NumberOfMines)
+      {
+        int position = random.Next(TotalTiles);
+        minePositions.Add(position);
+      }
+
+      foreach (int position in minePositions)
+      {
+        MineButtons[position].IsMine = true;
+      }
+    }
+
+    private void RevealAllMines()
     {
-      tile.IsRevealed = true;
+      foreach (var button in MineButtons.Where(b => b.IsMine))
+      {
+        button.IsRevealed = true;
+      }
     }
-  }
 
-  private void CalculateMultiplier()
-  {
-    // Mines multiplier formula: (25 - mines) / (25 - mines - tiles_revealed)
-    var safeTiles = 25 - MineCount;
-    var remainingSafeTiles = safeTiles - TilesRevealed;
-
-    if (remainingSafeTiles > 0)
+    private void CalculateCurrentMultiplier()
     {
-      CurrentMultiplier = (decimal)safeTiles / remainingSafeTiles;
+      // Basic multiplier calculation (can be made more sophisticated)
+      int safeTiles = TotalTiles - NumberOfMines;
+      double baseMultiplier = 1.0 + (0.25 * NumberOfMines / safeTiles);
+      CurrentMultiplier = (decimal)Math.Pow(baseMultiplier, RevealedTiles);
     }
-  }
 
-  private void UpdatePotentialWin()
-  {
-    PotentialWin = BetAmount * CurrentMultiplier;
-  }
-
-  private void UpdateSafeTilesRemaining()
-  {
-    SafetilesRemaining = 25 - MineCount;
-  }
-
-  private void EndGame(bool showMines)
-  {
-    IsGameActive = false;
-    CanCashOut = false;
-
-    if (showMines)
+    private void CalculatePotentialWin()
     {
-      RevealAllMines();
+      PotentialWin = BetAmount * CurrentMultiplier;
+    }
+
+    private void EndGame(bool won)
+    {
+      IsGameActive = false;
+      CanStartGame = true;
+      CanCollectWinnings = false;
+
+      GameStatus = won ? "GANHOU" : "PERDEU";
+      GameStatusDescription = won ? "Parabens!" : "Tente novamente";
+
+      CurrentMultiplier = 1.00m;
+      RevealedTiles = 0;
+    }
+
+    private void LoadRecentGames()
+    {
+      // Sample recent games data
+      RecentGames.Add(new GameResultViewModel { MineCount = 3, Amount = 45.30m, IsWin = true });
+      RecentGames.Add(new GameResultViewModel { MineCount = 5, Amount = -20.00m, IsWin = false });
+      RecentGames.Add(new GameResultViewModel { MineCount = 2, Amount = 15.75m, IsWin = true });
     }
   }
-}
 
-public partial class MinesTile : ObservableObject
-{
-  [ObservableProperty]
-  private int index;
+  public partial class MineButtonViewModel : ObservableObject
+  {
+    [ObservableProperty]
+    private bool isRevealed = false;
 
-  [ObservableProperty]
-  private int row;
+    [ObservableProperty]
+    private bool isMine = false;
 
-  [ObservableProperty]
-  private int column;
+    public int Index { get; set; }
+    public int Row { get; set; }
+    public int Column { get; set; }
+    public RelayCommand<MineButtonViewModel> ClickCommand { get; set; }
 
-  [ObservableProperty]
-  private bool isRevealed = false;
+    public void Reset()
+    {
+      IsRevealed = false;
+      IsMine = false;
+    }
+  }
 
-  [ObservableProperty]
-  private bool isMine = false;
+  public class GameResultViewModel
+  {
+    public int MineCount { get; set; }
+    public decimal Amount { get; set; }
+    public bool IsWin { get; set; }
 
-  [ObservableProperty]
-  private bool isExploded = false;
-
-  public string DisplayText => IsRevealed ? (IsMine ? "💣" : "💎") : "";
+    public string DisplayText => $"{MineCount} Minas";
+    public string AmountText => IsWin ? $"+R$ {Amount:F2}" : $"-R$ {Math.Abs(Amount):F2}";
+  }
 }

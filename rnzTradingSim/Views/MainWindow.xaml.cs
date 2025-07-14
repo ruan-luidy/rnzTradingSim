@@ -1,12 +1,14 @@
-﻿using rnzTradingSim.ViewModels;
+﻿using System.Windows;
+using rnzTradingSim.ViewModels;
 
-namespace rnzTradingSim.Views;
-
-public partial class MainWindow
+namespace rnzTradingSim
 {
-  public MainWindow()
+  public partial class MainWindow : Window
   {
-    InitializeComponent();
-    DataContext = new MainWindowViewModel();
+    public MainWindow()
+    {
+      InitializeComponent();
+      DataContext = new MainWindowViewModel();
+    }
   }
 }

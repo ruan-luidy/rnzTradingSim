@@ -1,74 +1,70 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using rnzTradingSim.Models;
-using rnzTradingSim.Services;
+using System.Collections.ObjectModel;
 
-namespace rnzTradingSim.ViewModels;
-
-public partial class MainWindowViewModel : ObservableObject
+namespace rnzTradingSim.ViewModels
 {
-  private readonly PlayerService _playerService;
-
-  [ObservableProperty]
-  private Player currentPlayer;
-
-  [ObservableProperty]
-  private string currentView = "Home";
-
-  [ObservableProperty]
-  private HomeViewModel homeViewModel;
-
-  [ObservableProperty]
-  private GamblingViewModel gamblingViewModel;
-
-  [ObservableProperty]
-  private LeaderboardViewModel leaderboardViewModel;
-
-  [ObservableProperty]
-  private ProfileViewModel profileViewModel;
-
-  public MainWindowViewModel()
+  public partial class MainWindowViewModel : ObservableObject
   {
-    _playerService = new PlayerService();
-    CurrentPlayer = _playerService.GetCurrentPlayer();
+    [ObservableProperty]
+    private decimal playerBalance = 1000.00m;
 
-    // Initialize ViewModels
-    HomeViewModel = new HomeViewModel(CurrentPlayer);
-    GamblingViewModel = new GamblingViewModel(CurrentPlayer, _playerService);
-    LeaderboardViewModel = new LeaderboardViewModel();
-    ProfileViewModel = new ProfileViewModel(CurrentPlayer);
+    [ObservableProperty]
+    private int gamesPlayedToday = 23;
 
-    // Subscribe to player updates
-    GamblingViewModel.PlayerUpdated += OnPlayerUpdated;
-  }
+    [ObservableProperty]
+    private decimal dailyProfitLoss = 245.50m;
 
-  [RelayCommand]
-  private void Navigate(string viewName)
-  {
-    CurrentView = viewName;
+    [ObservableProperty]
+    private string selectedView = "GamblingView";
 
-    // Update ViewModels when navigating
-    switch (viewName)
+    [ObservableProperty]
+    private bool isProfileVisible = false;
+
+    public MainWindowViewModel()
     {
-      case "Home":
-        HomeViewModel.RefreshData();
-        break;
-      case "Leaderboard":
-        LeaderboardViewModel.RefreshData();
-        break;
-      case "Profile":
-        ProfileViewModel.RefreshData();
-        break;
+      // Initialize any required services or data
     }
-  }
 
-  private void OnPlayerUpdated(Player updatedPlayer)
-  {
-    CurrentPlayer = updatedPlayer;
-    _playerService.SavePlayer(updatedPlayer);
+    [RelayCommand]
+    private void NavigateToHome()
+    {
+      SelectedView = "HomeView";
+    }
 
-    // Notify other ViewModels
-    HomeViewModel.UpdatePlayer(updatedPlayer);
-    ProfileViewModel.UpdatePlayer(updatedPlayer);
+    [RelayCommand]
+    private void NavigateToGambling()
+    {
+      SelectedView = "GamblingView";
+    }
+
+    [RelayCommand]
+    private void NavigateToLeaderboard()
+    {
+      SelectedView = "LeaderboardView";
+    }
+
+    [RelayCommand]
+    private void NavigateToProfile()
+    {
+      SelectedView = "ProfileView";
+    }
+
+    [RelayCommand]
+    private void ShowProfile()
+    {
+      IsProfileVisible = !IsProfileVisible;
+    }
+
+    public void UpdateBalance(decimal newBalance)
+    {
+      PlayerBalance = newBalance;
+    }
+
+    public void UpdateDailyStats(int games, decimal profitLoss)
+    {
+      GamesPlayedToday = games;
+      DailyProfitLoss = profitLoss;
+    }
   }
 }

@@ -1,11 +1,14 @@
 ﻿using System.Windows.Controls;
+using rnzTradingSim.ViewModels;
 
-namespace rnzTradingSim.Views;
-
-public partial class GamblingView : UserControl
+namespace rnzTradingSim.Views
 {
-  public GamblingView()
+  public partial class GamblingView : UserControl
   {
-    InitializeComponent();
+    public GamblingView()
+    {
+      InitializeComponent();
+      DataContext = new GamblingViewModel();
+    }
   }
 }

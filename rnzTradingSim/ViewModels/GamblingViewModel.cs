@@ -1,107 +1,68 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using rnzTradingSim.Models;
-using rnzTradingSim.Services;
-using rnzTradingSim.ViewModels.Games;
 
-namespace rnzTradingSim.ViewModels;
-
-public partial class GamblingViewModel : ObservableObject
+namespace rnzTradingSim.ViewModels
 {
-  private readonly Player _player;
-  private readonly PlayerService _playerService;
-
-  public event Action<Player>? PlayerUpdated;
-
-  [ObservableProperty]
-  private string selectedGame = "Mines";
-
-  [ObservableProperty]
-  private MinesViewModel minesViewModel;
-
-  public List<GameTab> GameTabs { get; }
-
-  public GamblingViewModel(Player player, PlayerService playerService)
+  public partial class GamblingViewModel : ObservableObject
   {
-    _player = player;
-    _playerService = playerService;
+    [ObservableProperty]
+    private string selectedGame = "MinesView";
 
-    // Initialize game tabs
-    GameTabs = new List<GameTab>
-        {
-            new() { Name = "Mines", Icon = "💣", IsSelected = true },
-            new() { Name = "Coinflip", Icon = "🪙", IsSelected = false },
-            new() { Name = "Slots", Icon = "🎰", IsSelected = false },
-            new() { Name = "Dice", Icon = "🎲", IsSelected = false }
-        };
+    [ObservableProperty]
+    private bool isMinesSelected = true;
 
-    // Initialize game ViewModels
-    MinesViewModel = new MinesViewModel(_player, this);
-  }
+    [ObservableProperty]
+    private bool isCoinflipSelected = false;
 
-  [RelayCommand]
-  private void SelectGame(string gameName)
-  {
-    if (SelectedGame == gameName) return;
+    [ObservableProperty]
+    private bool isDiceSelected = false;
 
-    // Reset current game session
-    ResetCurrentGameSession();
+    [ObservableProperty]
+    private bool isSlotsSelected = false;
 
-    SelectedGame = gameName;
-
-    // Update tab selection
-    foreach (var tab in GameTabs)
+    public GamblingViewModel()
     {
-      tab.IsSelected = tab.Name == gameName;
+      // Initialize with Mines as default selected game
+    }
+
+    [RelayCommand]
+    private void SelectMines()
+    {
+      ResetGameSelection();
+      IsMinesSelected = true;
+      SelectedGame = "MinesView";
+    }
+
+    [RelayCommand]
+    private void SelectCoinflip()
+    {
+      ResetGameSelection();
+      IsCoinflipSelected = true;
+      SelectedGame = "CoinflipView";
+    }
+
+    [RelayCommand]
+    private void SelectDice()
+    {
+      ResetGameSelection();
+      IsDiceSelected = true;
+      SelectedGame = "DiceView";
+    }
+
+    [RelayCommand]
+    private void SelectSlots()
+    {
+      ResetGameSelection();
+      IsSlotsSelected = true;
+      SelectedGame = "SlotsView";
+    }
+
+    private void ResetGameSelection()
+    {
+      IsMinesSelected = false;
+      IsCoinflipSelected = false;
+      IsDiceSelected = false;
+      IsSlotsSelected = false;
     }
   }
-
-  public void OnGameCompleted(GameResult result)
-  {
-    _playerService.UpdatePlayerStats(_player, result);
-    PlayerUpdated?.Invoke(_player);
-  }
-
-  public bool CanPlaceBet(decimal amount)
-  {
-    return amount > 0 && amount <= _player.Balance;
-  }
-
-  public void DeductBet(decimal amount)
-  {
-    if (CanPlaceBet(amount))
-    {
-      _player.Balance -= amount;
-      PlayerUpdated?.Invoke(_player);
-    }
-  }
-
-  public void AddWinnings(decimal amount)
-  {
-    _player.Balance += amount;
-    PlayerUpdated?.Invoke(_player);
-  }
-
-  private void ResetCurrentGameSession()
-  {
-    switch (SelectedGame)
-    {
-      case "Mines":
-        MinesViewModel.ResetGame();
-        break;
-        // Add other games later
-    }
-  }
-}
-
-public partial class GameTab : ObservableObject
-{
-  [ObservableProperty]
-  private string name = string.Empty;
-
-  [ObservableProperty]
-  private string icon = string.Empty;
-
-  [ObservableProperty]
-  private bool isSelected = false;
 }
