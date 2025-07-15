@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using rnzTradingSim.Data;
 using rnzTradingSim.Models;
+using static GameConstants;
 
 namespace rnzTradingSim.Services;
 
@@ -39,7 +40,7 @@ public class PlayerService
     // Verificação adicional para garantir que o player tem saldo válido
     if (_currentPlayer.Balance <= 0)
     {
-      _currentPlayer.Balance = 10000m;
+      _currentPlayer.Balance = DEFAULT_BALANCE;
       SavePlayer(_currentPlayer);
     }
 
@@ -150,7 +151,7 @@ public class PlayerService
       var player = new Player
       {
         Name = "Player",
-        Balance = 10000m,
+        Balance = DEFAULT_BALANCE,
         CreatedAt = DateTime.Now
       };
 
@@ -167,7 +168,7 @@ public class PlayerService
       return new Player
       {
         Name = "Player",
-        Balance = 10000m,
+        Balance = DEFAULT_BALANCE,
         CreatedAt = DateTime.Now
       };
     }
@@ -231,7 +232,7 @@ public class PlayerService
       }
 
       // Resetar estatísticas do player
-      _currentPlayer.Balance = 10000m;
+      _currentPlayer.Balance = DEFAULT_BALANCE;
       _currentPlayer.TotalWagered = 0m;
       _currentPlayer.TotalWon = 0m;
       _currentPlayer.TotalLost = 0m;

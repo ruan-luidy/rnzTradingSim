@@ -6,6 +6,7 @@ using rnzTradingSim.Services;
 using System.Globalization;
 using rnzTradingSim.Helpers;
 using System.ComponentModel;
+using static GameConstants;
 
 namespace rnzTradingSim.ViewModels.Games
 {
@@ -15,7 +16,7 @@ namespace rnzTradingSim.ViewModels.Games
     private Player _currentPlayer;
 
     [ObservableProperty]
-    private decimal betAmount = 10.00m;
+    private decimal betAmount;
 
     [ObservableProperty]
     private int numberOfMines = 3;
@@ -168,7 +169,6 @@ namespace rnzTradingSim.ViewModels.Games
       OnPropertyChanged("ForceGridReset");
     }
 
-
     [RelayCommand]
     private void RevealTile(MineButtonViewModel button)
     {
@@ -252,8 +252,8 @@ namespace rnzTradingSim.ViewModels.Games
       var percent = int.Parse(percentage);
       BetAmount = Math.Round(PlayerBalance * percent / 100, 2);
 
-      if (BetAmount < 0.01m) BetAmount = 0.01m;
-      if (BetAmount > 100000) BetAmount = 100000;
+      if (BetAmount < MIN_BET) BetAmount = MIN_BET;
+      if (BetAmount > MAX_BET) BetAmount = MAX_BET;
 
       CalculatePotentialWin();
     }
@@ -261,15 +261,15 @@ namespace rnzTradingSim.ViewModels.Games
     partial void OnBetAmountChanged(decimal value)
     {
       // Garantir que seja sempre positivo e dentro dos limites
-      if (value < 0.01m)
+      if (value < MIN_BET)
       {
-        BetAmount = 0.01m;
+        BetAmount = MIN_BET;
         return;
       }
 
-      if (value > 1_000_000m) // Limite máximo
+      if (value > MAX_BET)
       {
-        BetAmount = 1_000_000m;
+        BetAmount = MAX_BET;
         return;
       }
 
@@ -286,9 +286,9 @@ namespace rnzTradingSim.ViewModels.Games
       decimal amount = CurrencyHelper.ParseCurrency(newValue);
 
       // Aplicar limites
-      if (amount < 0.01m) amount = 0.01m;
-      if (amount > Math.Min(PlayerBalance, 1_000_000m))
-        amount = Math.Min(PlayerBalance, 1_000_000m);
+      if (amount < MIN_BET) amount = MIN_BET;
+      if (amount > Math.Min(PlayerBalance, MAX_BET))
+        amount = Math.Min(PlayerBalance, MAX_BET);
 
       BetAmount = amount;
     }
@@ -385,38 +385,44 @@ namespace rnzTradingSim.ViewModels.Games
         return;
       }
 
-      // Cálculo mais preciso do multiplicador baseado em combinações
-      double multiplier = 1.0;
+      // Cálculo usando apenas decimal
+      decimal multiplier = 1.0m;
 
       for (int i = 0; i < RevealedTiles; i++)
       {
-        double currentSafeTiles = safeTiles - i;
-        double currentTotalTiles = TotalTiles - i;
+        decimal currentSafeTiles = safeTiles - i;
+        decimal currentTotalTiles = TotalTiles - i;
 
         if (currentTotalTiles <= 0) break;
 
-        // Multiplicador com house edge
-        double tileMultiplier = currentTotalTiles / currentSafeTiles * 0.97;
+        // Multiplicador com house edge - tudo em decimal
+        decimal tileMultiplier = (currentTotalTiles / currentSafeTiles) * MINES_HOUSE_EDGE;
         multiplier *= tileMultiplier;
       }
 
       // Limitar multiplicador máximo
-      CurrentMultiplier = (decimal)Math.Min(multiplier, 999999);
+      CurrentMultiplier = Math.Min(multiplier, 999999m);
 
-      // Atualizar texto do botão com formatação correta
-      CollectButtonText = $"Sacar {FormatCurrency(PotentialWin)}";
+      // Atualizar texto do botão
+      CollectButtonText = $"Sacar {PotentialWin.FormatAbbreviated()}";
     }
 
     private void CalculatePotentialWin()
     {
       PotentialWin = BetAmount * CurrentMultiplier;
+
+      // Limitar ao pagamento máximo
+      if (PotentialWin > MAX_PAYOUT)
+      {
+        PotentialWin = MAX_PAYOUT;
+      }
     }
 
     private void CalculateProbability()
     {
       int safeTiles = TotalTiles - NumberOfMines;
 
-      // Evitar divisão por zero e valores inválidos
+      // Evitar divisão por zero
       if (safeTiles <= 0)
       {
         MultiplierText = "∞";
@@ -425,14 +431,14 @@ namespace rnzTradingSim.ViewModels.Games
         return;
       }
 
-      // Probabilidade de acertar o primeiro tile seguro
-      double probability = (double)safeTiles / TotalTiles * 100;
+      // Probabilidade usando decimal
+      decimal probability = ((decimal)safeTiles / TotalTiles) * 100m;
 
-      // Multiplicador base por tile (house edge de ~3%)
-      double multiplierPerTile = (double)TotalTiles / safeTiles * 0.97;
+      // Multiplicador base por tile com house edge
+      decimal multiplierPerTile = ((decimal)TotalTiles / safeTiles) * MINES_HOUSE_EDGE;
 
       // Limitar valores extremos
-      if (multiplierPerTile > 100)
+      if (multiplierPerTile > 100m)
       {
         MultiplierText = "99.99x";
         ProbabilityPercentText = $"{probability:F2}%";
@@ -452,31 +458,11 @@ namespace rnzTradingSim.ViewModels.Games
       PlayerBalance = _currentPlayer.Balance;
 
       // Formatação com K, M, B para aposta máxima
-      decimal maxBet = Math.Min(PlayerBalance, 100000);
-      MaxBetText = $"Aposta máxima: {FormatCurrency(maxBet)}";
+      decimal maxBet = Math.Min(PlayerBalance, MAX_BET);
+      MaxBetText = $"Aposta máxima: {maxBet.FormatAbbreviated()}";
 
       // Debug: verificar se o saldo foi carregado corretamente
       System.Diagnostics.Debug.WriteLine($"Player Balance updated: {PlayerBalance}");
-    }
-
-    private string FormatCurrency(decimal value)
-    {
-      if (value >= 1_000_000_000)
-      {
-        return $"R$ {(value / 1_000_000_000):F1}B";
-      }
-      else if (value >= 1_000_000)
-      {
-        return $"R$ {(value / 1_000_000):F1}M";
-      }
-      else if (value >= 1_000)
-      {
-        return $"R$ {(value / 1_000):F1}K";
-      }
-      else
-      {
-        return $"R$ {value:N2}";
-      }
     }
 
     private void EndGame(bool won)

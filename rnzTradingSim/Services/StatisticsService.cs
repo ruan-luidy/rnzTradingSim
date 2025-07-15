@@ -84,7 +84,7 @@ public class StatisticsService
           GameType = g.Key,
           GamesPlayed = g.Count(),
           GamesWon = g.Count(r => r.IsWin),
-          WinRate = g.Count() > 0 ? (double)g.Count(r => r.IsWin) / g.Count() * 100 : 0,
+          WinRate = g.Count() > 0 ? (decimal)g.Count(r => r.IsWin) / g.Count() * 100 : 0,
           TotalWagered = g.Sum(r => r.BetAmount),
           TotalWon = g.Where(r => r.IsWin).Sum(r => r.WinAmount),
           TotalLost = g.Where(r => !r.IsWin).Sum(r => r.BetAmount),
@@ -165,7 +165,7 @@ public class PlayerStatistics
   // Estatísticas gerais
   public int TotalGamesPlayed { get; set; }
   public int TotalGamesWon { get; set; }
-  public double WinRate { get; set; }
+  public decimal WinRate { get; set; }
   public decimal TotalWagered { get; set; }
   public decimal TotalWon { get; set; }
   public decimal TotalLost { get; set; }
@@ -179,21 +179,21 @@ public class PlayerStatistics
   public int TodayGamesWon { get; set; }
   public decimal TodayProfit { get; set; }
   public decimal TodayWagered { get; set; }
-  public double TodayWinRate => TodayGamesPlayed > 0 ? (double)TodayGamesWon / TodayGamesPlayed * 100 : 0;
+  public decimal TodayWinRate => TodayGamesPlayed > 0 ? (decimal)TodayGamesWon / TodayGamesPlayed * 100 : 0;
 
   // Estatísticas semanais
   public int WeekGamesPlayed { get; set; }
   public int WeekGamesWon { get; set; }
   public decimal WeekProfit { get; set; }
   public decimal WeekWagered { get; set; }
-  public double WeekWinRate => WeekGamesPlayed > 0 ? (double)WeekGamesWon / WeekGamesPlayed * 100 : 0;
+  public decimal WeekWinRate => WeekGamesPlayed > 0 ? (decimal)WeekGamesWon / WeekGamesPlayed * 100 : 0;
 
   // Estatísticas mensais
   public int MonthGamesPlayed { get; set; }
   public int MonthGamesWon { get; set; }
   public decimal MonthProfit { get; set; }
   public decimal MonthWagered { get; set; }
-  public double MonthWinRate => MonthGamesPlayed > 0 ? (double)MonthGamesWon / MonthGamesPlayed * 100 : 0;
+  public decimal MonthWinRate => MonthGamesPlayed > 0 ? (decimal)MonthGamesWon / MonthGamesPlayed * 100 : 0;
 
   // Estatísticas por tipo de jogo
   public List<GameTypeStatistics> GameStatistics { get; set; } = new List<GameTypeStatistics>();
@@ -204,7 +204,7 @@ public class GameTypeStatistics
   public string GameType { get; set; } = string.Empty;
   public int GamesPlayed { get; set; }
   public int GamesWon { get; set; }
-  public double WinRate { get; set; }
+  public decimal WinRate { get; set; }
   public decimal TotalWagered { get; set; }
   public decimal TotalWon { get; set; }
   public decimal TotalLost { get; set; }

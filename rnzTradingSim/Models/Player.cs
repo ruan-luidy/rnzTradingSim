@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static GameConstants;
 
 namespace rnzTradingSim.Models
 {
@@ -7,7 +8,7 @@ namespace rnzTradingSim.Models
     [Key]
     public int Id { get; set; }
     public string Name { get; set; } = "Player";
-    public decimal Balance { get; set; } = 10000m;
+    public decimal Balance { get; set; } = DEFAULT_BALANCE;
     public decimal TotalWagered { get; set; } = 0m;
     public decimal TotalWon { get; set; } = 0m;
     public decimal TotalLost { get; set; } = 0m;
@@ -18,7 +19,7 @@ namespace rnzTradingSim.Models
     public decimal BiggestLoss { get; set; } = 0m;
 
     public decimal NetProfit => TotalWon - TotalLost;
-    public double WinRate => GamesPlayed > 0 ? (double)GamesWon / GamesPlayed * 100 : 0;
+    public decimal WinRate => GamesPlayed > 0 ? (decimal)GamesWon / GamesPlayed * 100 : 0;
     public decimal HouseEdge => TotalWagered > 0 ? (TotalLost - TotalWon) / TotalWagered * 100 : 0;
   }
 }
