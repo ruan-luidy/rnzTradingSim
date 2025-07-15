@@ -161,10 +161,19 @@
               HorizontalAlignment="Left"
               FontSize="14"
               FontWeight="SemiBold"
-              Foreground="#22c55e"
-              Text="{Binding ProbabilityText}"
               TextAlignment="Center"
-              TextWrapping="Wrap" />
+              TextWrapping="Wrap">
+              <Run Foreground="#8b8b8b" Text="Você receberá " />
+              <Run
+                FontWeight="Bold"
+                Foreground="#22c55e"
+                Text="{Binding MultiplierText}" />
+              <Run Foreground="#8b8b8b" Text=" por tile, probabilidade de ganhar: " />
+              <Run
+                FontWeight="Bold"
+                Foreground="#22c55e"
+                Text="{Binding ProbabilityPercentText}" />
+            </TextBlock>
           </StackPanel>
 
           <!--  Bet Amount  -->
