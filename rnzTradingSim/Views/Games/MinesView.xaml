@@ -6,6 +6,8 @@
   xmlns:hc="https://handyorg.github.io/handycontrol"
   xmlns:local="clr-namespace:rnzTradingSim.Views.Games"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:vm="clr-namespace:rnzTradingSim.ViewModels.Games"
+  d:DataContext="{d:DesignInstance Type=vm:MinesViewModel}"
   d:DesignHeight="600"
   d:DesignWidth="1070"
   mc:Ignorable="d">
@@ -190,6 +192,7 @@
             hc:BorderElement.CornerRadius="8"
             BorderThickness="1"
             FontSize="16"
+            IsEnabled="{Binding IsGameActive, Converter={StaticResource Boolean2BooleanReConverter}}"
             Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged}" />
 
           <TextBlock
