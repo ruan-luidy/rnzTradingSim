@@ -29,12 +29,12 @@
         HorizontalAlignment="Left"
         FontWeight="Bold"
         Style="{StaticResource TextBlockLargeBold}"
-        Text="Mines" />
+        Text="Minas" />
       <TextBlock
         HorizontalAlignment="Left"
         Foreground="{DynamicResource SecondaryTextBrush}"
         Style="{StaticResource TextBlockSubTitle}"
-        Text="Navigate through the minefield and cash out before hitting a mine!"
+        Text="Navegue pelo campo minado e retire seus ganhos antes de acertar uma mina!"
         TextWrapping="Wrap" />
     </StackPanel>
 
@@ -70,11 +70,11 @@
               HorizontalAlignment="Center"
               Foreground="{DynamicResource SecondaryTextBrush}"
               Style="{StaticResource TextBlockSubTitle}"
-              Text="Balance" />
+              Text="Saldo" />
             <TextBlock
               HorizontalAlignment="Center"
               Style="{StaticResource TextBlockTitleBold}"
-              Text="{Binding PlayerBalance, StringFormat='{}{0:C}'}" />
+              Text="{Binding PlayerBalance, StringFormat='R$ {0:N2}'}" />
           </StackPanel>
 
           <!--  Mine Grid  -->
@@ -103,10 +103,10 @@
             Margin="0,0,0,20"
             HorizontalAlignment="Left">
             <TextBlock
-              Margin="0,0,0,15"
+              Margin="0,0,0,10"
               HorizontalAlignment="Left"
               Style="{StaticResource TextBlockSubTitleBold}"
-              Text="Number of Mines" />
+              Text="Número de Minas" />
 
             <Grid>
               <Grid.ColumnDefinitions>
@@ -117,30 +117,35 @@
 
               <Button
                 Grid.Column="0"
+                Height="32"
                 hc:BorderElement.CornerRadius="8"
                 hc:IconElement.Geometry="{StaticResource SubGeometry}"
                 hc:IconElement.Width="15"
-                Background="#2a2a2a"
-                BorderBrush="#505050"
+                BorderBrush="Transparent"
                 Command="{Binding DecreaseMinesCommand}"
                 FontWeight="Bold" />
 
-              <TextBlock
+              <Border
                 Grid.Column="1"
-                Margin="30,0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="15"
-                FontWeight="Bold"
-                Text="{Binding NumberOfMines}" />
+                Margin="10,0,10,0"
+                Padding="5"
+                CornerRadius="5"
+                Style="{StaticResource BorderRegion}">
+                <TextBlock
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  FontSize="15"
+                  FontWeight="Bold"
+                  Text="{Binding NumberOfMines}" />
+              </Border>
 
               <Button
                 Grid.Column="2"
+                Height="32"
                 hc:BorderElement.CornerRadius="8"
                 hc:IconElement.Geometry="{StaticResource AddGeometry}"
                 hc:IconElement.Width="15"
-                Background="#2a2a2a"
-                BorderBrush="#505050"
+                BorderBrush="Transparent"
                 Command="{Binding IncreaseMinesCommand}"
                 FontWeight="Bold" />
             </Grid>
@@ -168,7 +173,7 @@
             FontSize="18"
             FontWeight="Bold"
             Foreground="White"
-            Text="Bet Amount" />
+            Text="Valor da Aposta" />
 
           <TextBox
             Name="BetAmountTextBox"
@@ -244,7 +249,7 @@
               BorderThickness="1"
               Command="{Binding SetBetPercentageCommand}"
               CommandParameter="100"
-              Content="Max"
+              Content="Máx"
               Foreground="White" />
 
           </Grid>
@@ -254,7 +259,7 @@
             Margin="0,0,0,25"
             FontSize="12"
             Foreground="#8b8b8b"
-            Text="Note: Maximum payout per game is capped at $2,000,000."
+            Text="Nota: O pagamento máximo por jogo é limitado a R$ 2.000.000."
             TextWrapping="Wrap" />
 
           <!--  Game Status  -->
@@ -288,7 +293,7 @@
             Background="#dc3545"
             BorderThickness="0"
             Command="{Binding StartGameCommand}"
-            Content="Start Game"
+            Content="Iniciar Jogo"
             FontSize="18"
             FontWeight="Bold"
             IsEnabled="{Binding CanStartGame}" />

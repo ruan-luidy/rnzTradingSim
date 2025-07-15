@@ -28,10 +28,10 @@ namespace rnzTradingSim.ViewModels.Games
     private decimal playerBalance;
 
     [ObservableProperty]
-    private string gameStatus = "WAITING";
+    private string gameStatus = "AGUARDANDO";
 
     [ObservableProperty]
-    private string gameStatusDescription = "Configure your bet";
+    private string gameStatusDescription = "Configure sua aposta";
 
     [ObservableProperty]
     private int revealedTiles = 0;
@@ -49,13 +49,13 @@ namespace rnzTradingSim.ViewModels.Games
     private bool canCollectWinnings = false;
 
     [ObservableProperty]
-    private string probabilityText = "You will get 1.08x per tile, probability of winning: 88.00%";
+    private string probabilityText = "Você receberá 1.08x por tile, probabilidade de ganhar: 88.00%";
 
     [ObservableProperty]
-    private string maxBetText = "Max bet: 1.000.000";
+    private string maxBetText = "Aposta máxima: R$ 1.000.000";
 
     [ObservableProperty]
-    private string collectButtonText = "Collect Winnings";
+    private string collectButtonText = "Sacar Ganhos";
 
     public ObservableCollection<MineButtonViewModel> MineButtons { get; }
     public ObservableCollection<GameResultViewModel> RecentGames { get; }
@@ -97,19 +97,19 @@ namespace rnzTradingSim.ViewModels.Games
       // Validações mais específicas
       if (IsGameActive)
       {
-        GameStatusDescription = "Game already in progress!";
+        GameStatusDescription = "Jogo já em andamento!";
         return;
       }
 
       if (BetAmount <= 0)
       {
-        GameStatusDescription = "Enter a valid bet amount!";
+        GameStatusDescription = "Digite um valor de aposta válido!";
         return;
       }
 
       if (BetAmount > PlayerBalance)
       {
-        GameStatusDescription = "Insufficient balance!";
+        GameStatusDescription = "Saldo insuficiente!";
         return;
       }
 
@@ -117,8 +117,8 @@ namespace rnzTradingSim.ViewModels.Games
       IsGameActive = true;
       CanStartGame = false;
       CanCollectWinnings = false;
-      GameStatus = "IN GAME";
-      GameStatusDescription = "Click the tiles";
+      GameStatus = "JOGANDO";
+      GameStatusDescription = "Clique nos tiles";
       RevealedTiles = 0;
       CurrentMultiplier = 1.00m;
 
@@ -199,7 +199,7 @@ namespace rnzTradingSim.ViewModels.Games
         CalculateCurrentMultiplier();
         CalculatePotentialWin();
         CanCollectWinnings = true;
-        CollectButtonText = $"Collect {PotentialWin:C}";
+        CollectButtonText = $"Sacar R$ {PotentialWin:F2}";
 
         // Check if all safe tiles are revealed
         int safeTiles = TotalTiles - NumberOfMines;
@@ -214,7 +214,7 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void IncreaseMines()
     {
-      if (NumberOfMines < 20 && !IsGameActive)
+      if (NumberOfMines < 25 && !IsGameActive)
       {
         NumberOfMines++;
         CalculateProbability();
@@ -225,7 +225,7 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void DecreaseMines()
     {
-      if (NumberOfMines > 1 && !IsGameActive)
+      if (NumberOfMines > 3 && !IsGameActive)
       {
         NumberOfMines--;
         CalculateProbability();
@@ -296,15 +296,15 @@ namespace rnzTradingSim.ViewModels.Games
       {
         if (BetAmount > PlayerBalance)
         {
-          GameStatusDescription = "Insufficient balance!";
+          GameStatusDescription = "Saldo insuficiente!";
         }
         else if (BetAmount <= 0)
         {
-          GameStatusDescription = "Enter a valid bet amount!";
+          GameStatusDescription = "Digite um valor de aposta válido!";
         }
         else
         {
-          GameStatusDescription = "Configure your bet";
+          GameStatusDescription = "Configure sua aposta";
         }
       }
     }
@@ -381,14 +381,14 @@ namespace rnzTradingSim.ViewModels.Games
       int safeTiles = TotalTiles - NumberOfMines;
       double probability = (double)safeTiles / TotalTiles * 100;
       double multiplierPerTile = (double)TotalTiles / safeTiles;
-      ProbabilityText = $"You will get {multiplierPerTile:F2}x per tile, probability of winning: {probability:F2}%";
+      ProbabilityText = $"Você receberá {multiplierPerTile:F2}x por tile, probabilidade de ganhar: {probability:F2}%";
     }
 
     private void UpdatePlayerData()
     {
       _currentPlayer = _playerService.GetCurrentPlayer();
       PlayerBalance = _currentPlayer.Balance;
-      MaxBetText = $"Max bet: {Math.Min(PlayerBalance, 100000):C}";
+      MaxBetText = $"Aposta máxima: R$ {Math.Min(PlayerBalance, 100000):N2}";
 
       // Debug: verificar se o saldo foi carregado corretamente
       System.Diagnostics.Debug.WriteLine($"Player Balance updated: {PlayerBalance}");
@@ -400,12 +400,12 @@ namespace rnzTradingSim.ViewModels.Games
       CanStartGame = true;
       CanCollectWinnings = false;
 
-      GameStatus = won ? "WON" : "LOST";
-      GameStatusDescription = won ? "Congratulations!" : "Try again";
+      GameStatus = won ? "GANHOU" : "PERDEU";
+      GameStatusDescription = won ? "Parabéns!" : "Tente novamente";
 
       CurrentMultiplier = 1.00m;
       RevealedTiles = 0;
-      CollectButtonText = "Collect Winnings";
+      CollectButtonText = "Sacar Ganhos";
       CalculatePotentialWin();
 
       // Trigger visual update for loss (to show all mines)
@@ -461,6 +461,6 @@ namespace rnzTradingSim.ViewModels.Games
     public bool IsWin { get; set; }
 
     public string DisplayText => $"{MineCount} Minas";
-    public string AmountText => IsWin ? $"+{Amount:C}" : $"-{Math.Abs(Amount):C}";
+    public string AmountText => IsWin ? $"+R$ {Amount:F2}" : $"-R$ {Math.Abs(Amount):F2}";
   }
 }
