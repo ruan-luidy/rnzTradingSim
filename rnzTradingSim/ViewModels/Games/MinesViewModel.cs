@@ -49,6 +49,12 @@ namespace rnzTradingSim.ViewModels.Games
     private bool canCollectWinnings = false;
 
     [ObservableProperty]
+    private string multiplierText = "1.08x";
+
+    [ObservableProperty]
+    private string probabilityPercentText = "88.00%";
+
+    [ObservableProperty]
     private string probabilityText = "Você receberá 1.08x por tile, probabilidade de ganhar: 88.00%";
 
     [ObservableProperty]
@@ -381,6 +387,12 @@ namespace rnzTradingSim.ViewModels.Games
       int safeTiles = TotalTiles - NumberOfMines;
       double probability = (double)safeTiles / TotalTiles * 100;
       double multiplierPerTile = (double)TotalTiles / safeTiles;
+
+      // Atualiza as propriedades separadas
+      MultiplierText = $"{multiplierPerTile:F2}x";
+      ProbabilityPercentText = $"{probability:F2}%";
+
+      // Mantém a propriedade original para compatibilidade
       ProbabilityText = $"Você receberá {multiplierPerTile:F2}x por tile, probabilidade de ganhar: {probability:F2}%";
     }
 
