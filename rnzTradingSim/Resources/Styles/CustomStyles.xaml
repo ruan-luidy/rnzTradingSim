@@ -8,9 +8,9 @@
     <Setter Property="Background" Value="#2a2a2a" />
     <Setter Property="BorderBrush" Value="#404040" />
     <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Width" Value="70" />
-    <Setter Property="Height" Value="70" />
-    <Setter Property="Margin" Value="3" />
+    <Setter Property="Width" Value="80" />
+    <Setter Property="Height" Value="80" />
+    <Setter Property="Margin" Value="4" />
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="Template">
       <Setter.Value>
@@ -115,8 +115,8 @@
                 <Grid>
                   <!--  Image for PNG files  -->
                   <Image
-                    Width="40"
-                    Height="40"
+                    Width="45"
+                    Height="45"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     RenderOptions.BitmapScalingMode="HighQuality"
@@ -138,7 +138,7 @@
                   <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="24"
+                    FontSize="28"
                     FontWeight="Bold"
                     Foreground="White"
                     Text="{Binding Path=Tag.FallbackText, RelativeSource={RelativeSource TemplatedParent}}">
