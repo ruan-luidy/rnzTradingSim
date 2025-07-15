@@ -10,12 +10,14 @@
   d:DesignWidth="1070"
   mc:Ignorable="d">
 
-  <Grid Margin="20">
+  <Grid Margin="20" HorizontalAlignment="Center">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
     </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
 
     <!--  Game Title  -->
     <StackPanel
@@ -36,93 +38,9 @@
         TextWrapping="Wrap" />
     </StackPanel>
 
-    <!--  Stats Row  -->
-    <Grid Grid.Row="1" Margin="0,0,0,30">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-
-      <!--  Balance Display  -->
-      <Border
-        Grid.Column="0"
-        Margin="0,0,10,0"
-        Padding="15"
-        Background="#0f0f0f"
-        BorderBrush="#2a2a2a"
-        BorderThickness="1"
-        CornerRadius="8">
-        <StackPanel HorizontalAlignment="Center">
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            FontSize="12"
-            Foreground="#8b8b8b"
-            Text="Balance" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="16"
-            FontWeight="Bold"
-            Foreground="White"
-            Text="{Binding PlayerBalance, StringFormat='{}{0:C}'}" />
-        </StackPanel>
-      </Border>
-
-      <!--  Current Multiplier  -->
-      <Border
-        Grid.Column="1"
-        Margin="5,0"
-        Padding="15"
-        Background="#0f0f0f"
-        BorderBrush="#2a2a2a"
-        BorderThickness="1"
-        CornerRadius="8">
-        <StackPanel HorizontalAlignment="Center">
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            FontSize="12"
-            Foreground="#8b8b8b"
-            Text="Current Multiplier" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="16"
-            FontWeight="Bold"
-            Foreground="#22c55e"
-            Text="{Binding CurrentMultiplier, StringFormat={}{0:F2}x}" />
-        </StackPanel>
-      </Border>
-
-      <!--  Potential Win Display  -->
-      <Border
-        Grid.Column="2"
-        Margin="10,0,0,0"
-        Padding="15"
-        Background="#0f0f0f"
-        BorderBrush="#2a2a2a"
-        BorderThickness="1"
-        CornerRadius="8">
-        <StackPanel HorizontalAlignment="Center">
-          <TextBlock
-            Margin="0,0,0,5"
-            HorizontalAlignment="Center"
-            FontSize="12"
-            Foreground="#8b8b8b"
-            Text="Potential Win" />
-          <TextBlock
-            HorizontalAlignment="Center"
-            FontSize="16"
-            FontWeight="Bold"
-            Foreground="#f59e0b"
-            Text="{Binding PotentialWin, StringFormat='{}{0:C}'}" />
-        </StackPanel>
-      </Border>
-    </Grid>
-
     <!--  Main Game Area  -->
     <Border
-      Grid.Row="2"
+      Grid.Row="1"
       Padding="20"
       HorizontalAlignment="Center"
       VerticalAlignment="Center"
@@ -140,12 +58,28 @@
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
           </Grid.RowDefinitions>
+
+          <!--  Balance Display  -->
+          <StackPanel
+            Grid.Row="0"
+            Margin="0,0,0,10"
+            HorizontalAlignment="Center">
+            <TextBlock
+              Margin="0,0,0,5"
+              HorizontalAlignment="Center"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Style="{StaticResource TextBlockSubTitle}"
+              Text="Balance" />
+            <TextBlock
+              HorizontalAlignment="Center"
+              Style="{StaticResource TextBlockTitleBold}"
+              Text="{Binding PlayerBalance, StringFormat='{}{0:C}'}" />
+          </StackPanel>
 
           <!--  Mine Grid  -->
           <Border
-            Grid.Row="2"
+            Grid.Row="1"
             Background="{DynamicResource RegionBrush}"
             CornerRadius="20"
             Style="{StaticResource BorderRegion}">
