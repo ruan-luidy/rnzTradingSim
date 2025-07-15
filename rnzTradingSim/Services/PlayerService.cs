@@ -44,6 +44,9 @@ public class PlayerService
       SavePlayer(_currentPlayer);
     }
 
+    // Garantir que o saldo está sempre com 2 casas decimais
+    _currentPlayer.Balance = Math.Round(_currentPlayer.Balance, 2);
+
     System.Diagnostics.Debug.WriteLine($"Current player balance: {_currentPlayer.Balance}");
     return _currentPlayer;
   }
@@ -52,6 +55,14 @@ public class PlayerService
   {
     try
     {
+      // Arredondar todos os valores decimais para 2 casas antes de salvar
+      player.Balance = Math.Round(player.Balance, 2);
+      player.TotalWagered = Math.Round(player.TotalWagered, 2);
+      player.TotalWon = Math.Round(player.TotalWon, 2);
+      player.TotalLost = Math.Round(player.TotalLost, 2);
+      player.BiggestWin = Math.Round(player.BiggestWin, 2);
+      player.BiggestLoss = Math.Round(player.BiggestLoss, 2);
+
       _context.Players.Update(player);
       _context.SaveChanges();
       System.Diagnostics.Debug.WriteLine($"Player saved with balance: {player.Balance}");
@@ -67,6 +78,12 @@ public class PlayerService
     try
     {
       result.PlayerId = _currentPlayer.Id;
+
+      // Arredondar valores do resultado do jogo
+      result.BetAmount = Math.Round(result.BetAmount, 2);
+      result.WinAmount = Math.Round(result.WinAmount, 2);
+      result.Multiplier = Math.Round(result.Multiplier, 2);
+
       _context.GameResults.Add(result);
       _context.SaveChanges();
 
@@ -131,6 +148,14 @@ public class PlayerService
 
       if (player != null)
       {
+        // Arredondar valores ao carregar do banco
+        player.Balance = Math.Round(player.Balance, 2);
+        player.TotalWagered = Math.Round(player.TotalWagered, 2);
+        player.TotalWon = Math.Round(player.TotalWon, 2);
+        player.TotalLost = Math.Round(player.TotalLost, 2);
+        player.BiggestWin = Math.Round(player.BiggestWin, 2);
+        player.BiggestLoss = Math.Round(player.BiggestLoss, 2);
+
         System.Diagnostics.Debug.WriteLine($"Loaded player with balance: {player.Balance}");
         return player;
       }
@@ -151,7 +176,7 @@ public class PlayerService
       var player = new Player
       {
         Name = "Player",
-        Balance = DEFAULT_BALANCE,
+        Balance = Math.Round(DEFAULT_BALANCE, 2),
         CreatedAt = DateTime.Now
       };
 
@@ -168,7 +193,7 @@ public class PlayerService
       return new Player
       {
         Name = "Player",
-        Balance = DEFAULT_BALANCE,
+        Balance = Math.Round(DEFAULT_BALANCE, 2),
         CreatedAt = DateTime.Now
       };
     }
@@ -178,25 +203,31 @@ public class PlayerService
   {
     try
     {
-      player.TotalWagered += result.BetAmount;
+      // Arredondar valores antes dos cálculos
+      var betAmount = Math.Round(result.BetAmount, 2);
+      var winAmount = Math.Round(result.WinAmount, 2);
+      var netResult = Math.Round(result.NetResult, 2);
+
+      player.TotalWagered = Math.Round(player.TotalWagered + betAmount, 2);
       player.GamesPlayed++;
 
       if (result.IsWin)
       {
         player.GamesWon++;
-        player.TotalWon += result.WinAmount;
-        player.Balance += result.NetResult;
+        player.TotalWon = Math.Round(player.TotalWon + winAmount, 2);
+        player.Balance = Math.Round(player.Balance + netResult, 2);
 
-        if (result.NetResult > player.BiggestWin)
-          player.BiggestWin = result.NetResult;
+        if (netResult > player.BiggestWin)
+          player.BiggestWin = Math.Round(netResult, 2);
       }
       else
       {
-        player.TotalLost += result.BetAmount;
-        player.Balance += result.NetResult; // NetResult é negativo para perdas
+        player.TotalLost = Math.Round(player.TotalLost + betAmount, 2);
+        player.Balance = Math.Round(player.Balance + netResult, 2); // NetResult é negativo para perdas
 
-        if (Math.Abs(result.NetResult) > player.BiggestLoss)
-          player.BiggestLoss = Math.Abs(result.NetResult);
+        var absNetResult = Math.Abs(netResult);
+        if (absNetResult > player.BiggestLoss)
+          player.BiggestLoss = Math.Round(absNetResult, 2);
       }
 
       // Garantir que o saldo nunca seja negativo
@@ -232,7 +263,7 @@ public class PlayerService
       }
 
       // Resetar estatísticas do player
-      _currentPlayer.Balance = DEFAULT_BALANCE;
+      _currentPlayer.Balance = Math.Round(DEFAULT_BALANCE, 2);
       _currentPlayer.TotalWagered = 0m;
       _currentPlayer.TotalWon = 0m;
       _currentPlayer.TotalLost = 0m;

@@ -186,10 +186,10 @@ namespace rnzTradingSim.ViewModels.Games
       var gameResult = new GameResult
       {
         GameType = "Mines",
-        BetAmount = BetAmount,
-        WinAmount = PotentialWin,
+        BetAmount = Math.Round(BetAmount, 2),
+        WinAmount = Math.Round(PotentialWin, 2),
         IsWin = true,
-        Multiplier = CurrentMultiplier,
+        Multiplier = Math.Round(CurrentMultiplier, 2),
         Details = $"{{\"mines\":{NumberOfMines},\"revealed\":{RevealedTiles}}}"
       };
 
@@ -197,12 +197,13 @@ namespace rnzTradingSim.ViewModels.Games
       UpdatePlayerData();
 
       // Mostrar card de resultado
-      ShowWinResultCard(PotentialWin - BetAmount);
+      decimal profit = Math.Round(PotentialWin - BetAmount, 2);
+      ShowWinResultCard(profit);
 
       RecentGames.Insert(0, new GameResultViewModel
       {
         MineCount = NumberOfMines,
-        Amount = PotentialWin - BetAmount,
+        Amount = profit,
         IsWin = true
       });
 
@@ -268,7 +269,7 @@ namespace rnzTradingSim.ViewModels.Games
       var gameResult = new GameResult
       {
         GameType = "Mines",
-        BetAmount = BetAmount,
+        BetAmount = Math.Round(BetAmount, 2),
         WinAmount = 0,
         IsWin = false,
         Multiplier = 0,
@@ -284,7 +285,7 @@ namespace rnzTradingSim.ViewModels.Games
       RecentGames.Insert(0, new GameResultViewModel
       {
         MineCount = NumberOfMines,
-        Amount = -BetAmount,
+        Amount = Math.Round(-BetAmount, 2),
         IsWin = false
       });
 
@@ -320,7 +321,10 @@ namespace rnzTradingSim.ViewModels.Games
       if (IsGameActive) return;
 
       var percent = int.Parse(percentage);
-      BetAmount = Math.Round(PlayerBalance * percent / 100, 2);
+      decimal calculatedAmount = PlayerBalance * percent / 100;
+
+      // Arredondar o resultado
+      BetAmount = Math.Round(calculatedAmount, 2);
 
       if (BetAmount < MIN_BET) BetAmount = MIN_BET;
       if (BetAmount > MAX_BET) BetAmount = MAX_BET;
@@ -343,6 +347,9 @@ namespace rnzTradingSim.ViewModels.Games
         return;
       }
 
+      // Arredondar para 2 casas decimais
+      BetAmount = Math.Round(value, 2);
+
       CalculatePotentialWin();
       UpdateGameStatusDescription();
       UpdateMainActionButton();
@@ -356,12 +363,12 @@ namespace rnzTradingSim.ViewModels.Games
       // Usar helper para parsing consistente
       decimal amount = CurrencyHelper.ParseCurrency(newValue);
 
-      // Aplicar limites
+      // Aplicar limites e arredondar
       if (amount < MIN_BET) amount = MIN_BET;
       if (amount > Math.Min(PlayerBalance, MAX_BET))
         amount = Math.Min(PlayerBalance, MAX_BET);
 
-      BetAmount = amount;
+      BetAmount = Math.Round(amount, 2);
     }
 
     partial void OnNumberOfMinesChanged(int value)
@@ -524,13 +531,13 @@ namespace rnzTradingSim.ViewModels.Games
         multiplier *= tileMultiplier;
       }
 
-      // Limitar multiplicador máximo
-      CurrentMultiplier = Math.Min(multiplier, 999999m);
+      // Limitar multiplicador máximo e arredondar para 2 casas decimais
+      CurrentMultiplier = Math.Round(Math.Min(multiplier, 999999m), 2);
     }
 
     private void CalculatePotentialWin()
     {
-      PotentialWin = BetAmount * CurrentMultiplier;
+      PotentialWin = Math.Round(BetAmount * CurrentMultiplier, 2);
 
       // Limitar ao pagamento máximo
       if (PotentialWin > MAX_PAYOUT)
