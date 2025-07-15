@@ -34,12 +34,12 @@ namespace rnzTradingSim.Data
       {
         entity.HasKey(e => e.Id);
         entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-        entity.Property(e => e.Balance).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.TotalWagered).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.TotalWon).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.TotalLost).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.BiggestWin).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.BiggestLoss).HasColumnType("decimal(18,2)");
+        entity.Property(e => e.Balance).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.TotalWagered).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.TotalWon).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.TotalLost).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.BiggestWin).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.BiggestLoss).HasColumnType("decimal(15,2)");
       });
 
       // Configuraçao da entidade GameResult
@@ -47,9 +47,9 @@ namespace rnzTradingSim.Data
       {
         entity.HasKey(e => e.Id);
         entity.Property(e => e.GameType).IsRequired().HasMaxLength(50);
-        entity.Property(e => e.BetAmount).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.WinAmount).HasColumnType("decimal(18,2)");
-        entity.Property(e => e.Multiplier).HasColumnType("decimal(18,2)");
+        entity.Property(e => e.BetAmount).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.WinAmount).HasColumnType("decimal(15,2)");
+        entity.Property(e => e.Multiplier).HasColumnType("decimal(15,2)");
         entity.Property(e => e.Details).HasMaxLength(1000);
 
         // Relacioanmento com o Player
