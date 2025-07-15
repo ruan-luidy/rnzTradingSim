@@ -74,7 +74,7 @@
             <TextBlock
               HorizontalAlignment="Center"
               Style="{StaticResource TextBlockTitleBold}"
-              Text="{Binding PlayerBalance, StringFormat='R$ {0:N2}'}" />
+              Text="{Binding PlayerBalance, Converter={StaticResource AbbreviatedCurrencyConverter}}" />
           </StackPanel>
 
           <!--  Mine Grid  -->

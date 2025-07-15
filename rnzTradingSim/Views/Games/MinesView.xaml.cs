@@ -35,16 +35,21 @@ namespace rnzTradingSim.Views.Games
       }
       else if (e.PropertyName == nameof(_viewModel.GameStatus))
       {
-        // When game status changes to "WON" (collected winnings), reset the grid
-        if (_viewModel.GameStatus == "WON")
+        // When game status changes to "GANHOU" (collected winnings), reset the grid
+        if (_viewModel.GameStatus == "GANHOU")
         {
           ResetGrid();
         }
-        // When game status is "LOST", reveal all mines but don't reset
-        else if (_viewModel.GameStatus == "LOST")
+        // When game status is "PERDEU", reveal all mines but don't reset
+        else if (_viewModel.GameStatus == "PERDEU")
         {
           RevealAllMines();
         }
+      }
+      else if (e.PropertyName == "GameWon")
+      {
+        // Trigger adicional para garantir que o grid seja resetado quando ganhar
+        ResetGrid();
       }
     }
 

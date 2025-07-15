@@ -18,6 +18,9 @@
 
       <!--  Global Converters  -->
       <converters:StringToDecimalConverter x:Key="StringToDecimalConverter" />
+      <converters:CurrencyConverter x:Key="CurrencyConverter" />
+      <converters:AbbreviatedCurrencyConverter x:Key="AbbreviatedCurrencyConverter" />
+      <converters:AbbreviatedValueConverter x:Key="AbbreviatedValueConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

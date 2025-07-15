@@ -162,7 +162,10 @@ namespace rnzTradingSim.ViewModels.Games
       });
 
       EndGame(true);
+
+      OnPropertyChanged("ForceGridReset");
     }
+
 
     [RelayCommand]
     private void RevealTile(MineButtonViewModel button)
@@ -369,6 +372,7 @@ namespace rnzTradingSim.ViewModels.Games
       if (RevealedTiles == 0)
       {
         CurrentMultiplier = 1.00m;
+        CollectButtonText = "Sacar Ganhos";
         return;
       }
 
@@ -377,6 +381,7 @@ namespace rnzTradingSim.ViewModels.Games
       if (safeTiles <= 0)
       {
         CurrentMultiplier = 1.00m;
+        CollectButtonText = "Sacar Ganhos";
         return;
       }
 
@@ -397,6 +402,9 @@ namespace rnzTradingSim.ViewModels.Games
 
       // Limitar multiplicador máximo
       CurrentMultiplier = (decimal)Math.Min(multiplier, 999999);
+
+      // Atualizar texto do botão com formatação correta
+      CollectButtonText = $"Sacar {FormatCurrency(PotentialWin)}";
     }
 
     private void CalculatePotentialWin()
@@ -442,10 +450,33 @@ namespace rnzTradingSim.ViewModels.Games
     {
       _currentPlayer = _playerService.GetCurrentPlayer();
       PlayerBalance = _currentPlayer.Balance;
-      MaxBetText = $"Aposta máxima: R$ {Math.Min(PlayerBalance, 100000):N2}";
+
+      // Formatação com K, M, B para aposta máxima
+      decimal maxBet = Math.Min(PlayerBalance, 100000);
+      MaxBetText = $"Aposta máxima: {FormatCurrency(maxBet)}";
 
       // Debug: verificar se o saldo foi carregado corretamente
       System.Diagnostics.Debug.WriteLine($"Player Balance updated: {PlayerBalance}");
+    }
+
+    private string FormatCurrency(decimal value)
+    {
+      if (value >= 1_000_000_000)
+      {
+        return $"R$ {(value / 1_000_000_000):F1}B";
+      }
+      else if (value >= 1_000_000)
+      {
+        return $"R$ {(value / 1_000_000):F1}M";
+      }
+      else if (value >= 1_000)
+      {
+        return $"R$ {(value / 1_000):F1}K";
+      }
+      else
+      {
+        return $"R$ {value:N2}";
+      }
     }
 
     private void EndGame(bool won)
@@ -462,8 +493,14 @@ namespace rnzTradingSim.ViewModels.Games
       CollectButtonText = "Sacar Ganhos";
       CalculatePotentialWin();
 
-      // Trigger visual update for loss (to show all mines)
-      if (!won)
+      // Forcar o reset do grid quando ganha (coleta ganhos)
+      if (won)
+      {
+        // Notifica que o jogo terminou com vitoria para resetar o grid
+        OnPropertyChanged(nameof(GameStatus));
+        OnPropertyChanged("GameWon"); // Aciona um novo trigger para reset
+      }
+      else
       {
         OnPropertyChanged(nameof(GameStatus));
       }
