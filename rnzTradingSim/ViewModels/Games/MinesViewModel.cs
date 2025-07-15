@@ -231,7 +231,7 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void DecreaseMines()
     {
-      if (NumberOfMines > 1 && !IsGameActive)
+      if (NumberOfMines > 3 && !IsGameActive)
       {
         NumberOfMines--;
         CalculateProbability();
