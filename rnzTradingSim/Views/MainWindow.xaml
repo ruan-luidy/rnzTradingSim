@@ -24,289 +24,632 @@
     <!--  Left Sidebar  -->
     <Border
       Grid.Column="0"
-      Background="#1a1a1a"
-      BorderBrush="{DynamicResource BorderBrush}"
+      Background="#111111"
+      BorderBrush="#222222"
       BorderThickness="0,0,1,0">
-      <ScrollViewer>
-        <StackPanel>
+      <StackPanel>
 
-          <!--  Logo/Brand  -->
-          <Border Padding="20,25,20,20">
-            <StackPanel Orientation="Horizontal">
-              <Border
-                Width="8"
-                Height="8"
-                Margin="0,0,8,0"
-                Background="{DynamicResource PrimaryBrush}"
-                CornerRadius="4" />
-              <TextBlock
-                Foreground="White"
-                Style="{StaticResource TextBlockTitleBold}"
-                Text="Rugplay" />
-            </StackPanel>
-          </Border>
-
-          <!--  Navigation Menu  -->
-          <StackPanel Margin="15,0">
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Home"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Market"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Hopium"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="#2a2a2a"
-              BorderThickness="0"
-              Content="Gambling"
-              Foreground="White"
-              Style="{StaticResource ButtonPrimary}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Leaderboard"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Portfolio"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Treemap"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Create coin"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,3"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="Notifications"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-            <Button
-              Margin="0,0,0,25"
-              HorizontalAlignment="Stretch"
-              HorizontalContentAlignment="Left"
-              Background="Transparent"
-              BorderThickness="0"
-              Content="About"
-              Foreground="#8b8b8b"
-              Style="{StaticResource ButtonDefault}" />
-
-          </StackPanel>
-
-          <!--  Live Trades Section  -->
-          <StackPanel Margin="15,0">
-            <Grid Margin="0,0,0,15">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock
-                Grid.Column="0"
-                Foreground="#8b8b8b"
-                Style="{StaticResource TextBlockDefaultBold}"
-                Text="Live Trades" />
-              <TextBlock
-                Grid.Column="1"
-                Foreground="{DynamicResource PrimaryBrush}"
-                Style="{StaticResource TextBlockDefault}"
-                Text="View All" />
-            </Grid>
-
-            <!--  Trade Items  -->
-            <StackPanel>
-              <Border Margin="0,0,0,3" Padding="0,8">
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <Border
-                    Grid.Column="0"
-                    Width="6"
-                    Height="6"
-                    Margin="0,0,8,0"
-                    Background="{DynamicResource SuccessBrush}"
-                    CornerRadius="3" />
-                  <TextBlock
-                    Grid.Column="1"
-                    Foreground="#8b8b8b"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="$1.22K +036k by @right_c" />
-                </Grid>
-              </Border>
-
-              <Border Margin="0,0,0,3" Padding="0,8">
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                  </Grid.ColumnDefinitions>
-                  <Border
-                    Grid.Column="0"
-                    Width="6"
-                    Height="6"
-                    Margin="0,0,8,0"
-                    Background="{DynamicResource DangerBrush}"
-                    CornerRadius="3" />
-                  <TextBlock
-                    Grid.Column="1"
-                    Foreground="#8b8b8b"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="$12.53K -WILLBEHERE by (" />
-                </Grid>
-              </Border>
-
-              <Border Margin="0,0,0,3" Padding="0,8">
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                  </Grid.ColumnDefinitions>
-                  <Border
-                    Grid.Column="0"
-                    Width="6"
-                    Height="6"
-                    Margin="0,0,8,0"
-                    Background="{DynamicResource SuccessBrush}"
-                    CornerRadius="3" />
-                  <TextBlock
-                    Grid.Column="1"
-                    Foreground="#8b8b8b"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="$1.06K +FRKO by @eight" />
-                </Grid>
-              </Border>
-            </StackPanel>
-          </StackPanel>
-
-          <!--  Portfolio Section  -->
-          <StackPanel Margin="15,30,15,0">
-            <TextBlock
-              Margin="0,0,0,15"
-              Foreground="#8b8b8b"
-              Style="{StaticResource TextBlockDefaultBold}"
-              Text="Portfolio" />
-
+        <!--  Logo/Brand  -->
+        <Border Padding="20,20,20,25">
+          <StackPanel Orientation="Horizontal">
             <Border
-              Padding="15"
-              Background="#2a2a2a"
-              CornerRadius="8">
-              <StackPanel>
-                <Grid Margin="0,0,0,10">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <TextBlock
-                    Grid.Column="0"
-                    Foreground="#8b8b8b"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="Total Value" />
-                  <TextBlock
-                    Grid.Column="1"
-                    Foreground="White"
-                    Style="{StaticResource TextBlockDefaultBold}"
-                    Text="$1,800.00" />
-                </Grid>
-
-                <Grid Margin="0,0,0,5">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <TextBlock
-                    Grid.Column="0"
-                    Foreground="#8b8b8b"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="Cash:" />
-                  <TextBlock
-                    Grid.Column="1"
-                    Foreground="White"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="$1,800.00" />
-                </Grid>
-
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <TextBlock
-                    Grid.Column="0"
-                    Foreground="#8b8b8b"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="Coins:" />
-                  <TextBlock
-                    Grid.Column="1"
-                    Foreground="White"
-                    Style="{StaticResource TextBlockDefault}"
-                    Text="$0.00" />
-                </Grid>
-              </StackPanel>
-            </Border>
+              Width="20"
+              Height="20"
+              Margin="0,0,8,0"
+              Background="#ff6b35"
+              CornerRadius="4" />
+            <TextBlock
+              FontSize="16"
+              FontWeight="SemiBold"
+              Foreground="White"
+              Text="Rugplay" />
           </StackPanel>
+        </Border>
+
+        <!--  Navigation Menu  -->
+        <StackPanel Margin="0,0,0,30">
+
+          <!--  Home  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE80F;" />
+              <TextBlock VerticalAlignment="Center" Text="Home" />
+            </StackPanel>
+          </Button>
+
+          <!--  Market  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE719;" />
+              <TextBlock VerticalAlignment="Center" Text="Market" />
+            </StackPanel>
+          </Button>
+
+          <!--  Hopium  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE915;" />
+              <TextBlock VerticalAlignment="Center" Text="Hopium" />
+            </StackPanel>
+          </Button>
+
+          <!--  Gambling - Active  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="#1a1a1a"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="White">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE8AB;" />
+              <TextBlock VerticalAlignment="Center" Text="Gambling" />
+            </StackPanel>
+          </Button>
+
+          <!--  Leaderboard  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE8D8;" />
+              <TextBlock VerticalAlignment="Center" Text="Leaderboard" />
+            </StackPanel>
+          </Button>
+
+          <!--  Portfolio  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE8B7;" />
+              <TextBlock VerticalAlignment="Center" Text="Portfolio" />
+            </StackPanel>
+          </Button>
+
+          <!--  Treemap  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE9D9;" />
+              <TextBlock VerticalAlignment="Center" Text="Treemap" />
+            </StackPanel>
+          </Button>
+
+          <!--  Create coin  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE710;" />
+              <TextBlock VerticalAlignment="Center" Text="Create coin" />
+            </StackPanel>
+          </Button>
+
+          <!--  Notifications  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,1"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE7E7;" />
+              <TextBlock VerticalAlignment="Center" Text="Notifications" />
+            </StackPanel>
+          </Button>
+
+          <!--  About  -->
+          <Button
+            Height="40"
+            Margin="0,0,0,20"
+            Padding="20,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Background="Transparent"
+            BorderThickness="0"
+            FontSize="14"
+            Foreground="#cccccc">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Style.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a1a1a" />
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="16"
+                Text="&#xE946;" />
+              <TextBlock VerticalAlignment="Center" Text="About" />
+            </StackPanel>
+          </Button>
 
         </StackPanel>
-      </ScrollViewer>
+
+        <!--  Next Game Timer  -->
+        <Border
+          Margin="20,0,20,20"
+          Padding="12"
+          Background="#1a1a1a"
+          BorderBrush="#333333"
+          BorderThickness="1"
+          CornerRadius="8">
+          <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <TextBlock
+              Margin="0,0,8,0"
+              VerticalAlignment="Center"
+              FontFamily="Segoe MDL2 Assets"
+              FontSize="14"
+              Foreground="#888888"
+              Text="&#xE2AD;" />
+            <TextBlock
+              FontSize="13"
+              Foreground="#888888"
+              Text="Next in 3h 40m" />
+          </StackPanel>
+        </Border>
+
+        <!--  Live Trades Section  -->
+        <StackPanel Margin="20,0,20,20">
+          <Grid Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+              <TextBlock
+                Margin="0,0,8,0"
+                VerticalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="14"
+                Foreground="#888888"
+                Text="&#xE915;" />
+              <TextBlock
+                FontSize="13"
+                FontWeight="Medium"
+                Foreground="#888888"
+                Text="Live Trades" />
+            </StackPanel>
+            <TextBlock
+              Grid.Column="1"
+              FontSize="12"
+              Foreground="#0080ff"
+              Text="View All" />
+          </Grid>
+
+          <!--  Trade Items  -->
+          <StackPanel>
+            <Border Margin="0,0,0,2" Padding="0,6">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  Grid.Column="0"
+                  Width="5"
+                  Height="5"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  Background="#00ff88"
+                  CornerRadius="3" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="$9.00K +$00B by @brave_c" />
+              </Grid>
+            </Border>
+
+            <Border Margin="0,0,0,2" Padding="0,6">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  Grid.Column="0"
+                  Width="5"
+                  Height="5"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  Background="#00ff88"
+                  CornerRadius="3" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="$9.00K +$00B by @calm_tq" />
+              </Grid>
+            </Border>
+
+            <Border Margin="0,0,0,2" Padding="0,6">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  Grid.Column="0"
+                  Width="5"
+                  Height="5"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  Background="#00ff88"
+                  CornerRadius="3" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="$1.80K +NYAAA by @somer" />
+              </Grid>
+            </Border>
+
+            <Border Margin="0,0,0,2" Padding="0,6">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  Grid.Column="0"
+                  Width="5"
+                  Height="5"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  Background="#00ff88"
+                  CornerRadius="3" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="$1.30K +VXNET by @clever." />
+              </Grid>
+            </Border>
+
+            <Border Margin="0,0,0,2" Padding="0,6">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  Grid.Column="0"
+                  Width="5"
+                  Height="5"
+                  Margin="0,0,10,0"
+                  VerticalAlignment="Center"
+                  Background="#00ff88"
+                  CornerRadius="3" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="$9.00K +$00B by @calm_ex" />
+              </Grid>
+            </Border>
+          </StackPanel>
+        </StackPanel>
+
+        <!--  Portfolio Section  -->
+        <StackPanel Margin="20,0,20,0">
+          <TextBlock
+            Margin="0,0,0,15"
+            FontSize="13"
+            FontWeight="Medium"
+            Foreground="#888888"
+            Text="Portfolio" />
+
+          <Border
+            Padding="15"
+            Background="#1a1a1a"
+            CornerRadius="8">
+            <StackPanel>
+              <!--  Total Value Header  -->
+              <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                <TextBlock
+                  Margin="0,0,8,0"
+                  VerticalAlignment="Center"
+                  FontFamily="Segoe MDL2 Assets"
+                  FontSize="14"
+                  Foreground="#888888"
+                  Text="&#xE8B7;" />
+                <TextBlock
+                  VerticalAlignment="Center"
+                  FontSize="13"
+                  Foreground="#888888"
+                  Text="Total Value" />
+                <TextBlock
+                  Margin="50,0,0,0"
+                  FontSize="13"
+                  FontWeight="Medium"
+                  Foreground="White"
+                  Text="$2.05" />
+              </StackPanel>
+
+              <Grid Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                  Grid.Column="0"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="Cash:" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="White"
+                  Text="$0.00" />
+              </Grid>
+
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                  Grid.Column="0"
+                  FontSize="12"
+                  Foreground="#888888"
+                  Text="Coins:" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="12"
+                  Foreground="White"
+                  Text="$2.05" />
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!--  Bottom User Profile  -->
+        <Border Margin="20,20,20,20">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Avatar  -->
+            <Border
+              Grid.Column="0"
+              Width="32"
+              Height="32"
+              Margin="0,0,10,0"
+              Background="#0080ff"
+              CornerRadius="16">
+              <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="R" />
+            </Border>
+
+            <!--  User Info  -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock
+                FontSize="13"
+                FontWeight="Medium"
+                Foreground="White"
+                Text="ruãbrabo" />
+              <TextBlock
+                FontSize="11"
+                Foreground="#888888"
+                Text="@shiblabl" />
+            </StackPanel>
+
+            <!--  Menu Icon  -->
+            <TextBlock
+              Grid.Column="2"
+              VerticalAlignment="Center"
+              FontFamily="Segoe MDL2 Assets"
+              FontSize="14"
+              Foreground="#888888"
+              Text="&#xE712;" />
+          </Grid>
+        </Border>
+
+      </StackPanel>
     </Border>
 
     <!--  Main Content Area  -->
