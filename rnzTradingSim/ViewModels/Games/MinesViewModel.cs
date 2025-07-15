@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using rnzTradingSim.Models;
 using rnzTradingSim.Services;
 using System.Globalization;
+using rnzTradingSim.Helpers;
+using System.ComponentModel;
 
 namespace rnzTradingSim.ViewModels.Games
 {
@@ -258,18 +260,20 @@ namespace rnzTradingSim.ViewModels.Games
 
     partial void OnBetAmountChanged(decimal value)
     {
-      // Remove validação que resetava valores negativos
-      // Apenas garante que seja positivo
-      if (value < 0)
+      // Garantir que seja sempre positivo e dentro dos limites
+      if (value < 0.01m)
       {
         BetAmount = 0.01m;
         return;
       }
 
-      // Atualiza o potencial win sempre que o bet amount muda
-      CalculatePotentialWin();
+      if (value > 1_000_000m) // Limite máximo
+      {
+        BetAmount = 1_000_000m;
+        return;
+      }
 
-      // Atualiza a descrição do status se necessário
+      CalculatePotentialWin();
       UpdateGameStatusDescription();
     }
 
@@ -278,19 +282,15 @@ namespace rnzTradingSim.ViewModels.Games
     {
       if (IsGameActive) return;
 
-      if (decimal.TryParse(newValue, NumberStyles.Any, CultureInfo.CurrentCulture, out decimal amount))
-      {
-        // Aplicar limites mínimos
-        if (amount < 0.01m) amount = 0.01m;
-        if (amount > 100000) amount = 100000;
+      // Usar helper para parsing consistente
+      decimal amount = CurrencyHelper.ParseCurrency(newValue);
 
-        BetAmount = amount;
-      }
-      else
-      {
-        // Se não conseguir converter, mantém valor anterior ou define mínimo
-        if (BetAmount <= 0) BetAmount = 0.01m;
-      }
+      // Aplicar limites
+      if (amount < 0.01m) amount = 0.01m;
+      if (amount > Math.Min(PlayerBalance, 1_000_000m))
+        amount = Math.Min(PlayerBalance, 1_000_000m);
+
+      BetAmount = amount;
     }
 
     partial void OnNumberOfMinesChanged(int value)
