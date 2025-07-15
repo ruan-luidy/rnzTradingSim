@@ -3,9 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using rnzTradingSim.Models;
 using rnzTradingSim.Services;
-using System.Globalization;
 using rnzTradingSim.Helpers;
-using System.ComponentModel;
 using static GameConstants;
 
 namespace rnzTradingSim.ViewModels.Games
@@ -16,7 +14,7 @@ namespace rnzTradingSim.ViewModels.Games
     private Player _currentPlayer;
 
     [ObservableProperty]
-    private decimal betAmount = 10.00m;
+    private decimal betAmount = 10m;
 
     [ObservableProperty]
     private int numberOfMines = 3;
