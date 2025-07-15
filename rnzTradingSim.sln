@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rnzTradingSim", "rnzTradingSim\rnzTradingSim.csproj", "{BB26F5CA-73B1-466F-8183-A5FD008F78F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebugTool", "DebugTool\DebugTool.csproj", "{0318F7F0-8A9C-452A-8F0E-6C17D55993D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BB26F5CA-73B1-466F-8183-A5FD008F78F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB26F5CA-73B1-466F-8183-A5FD008F78F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB26F5CA-73B1-466F-8183-A5FD008F78F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0318F7F0-8A9C-452A-8F0E-6C17D55993D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0318F7F0-8A9C-452A-8F0E-6C17D55993D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0318F7F0-8A9C-452A-8F0E-6C17D55993D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0318F7F0-8A9C-452A-8F0E-6C17D55993D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
