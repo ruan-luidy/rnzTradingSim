@@ -1,35 +1,53 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <DrawingImage x:Key="GraphDownGeometry">
+  <DrawingImage x:Key="trending_down">
     <DrawingImage.Drawing>
       <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
-        <GeometryDrawing Geometry="F1 M24,24z M0,0z M7,10L9.29289,12.2929C9.68342,12.6834,10.3166,12.6834,10.7071,12.2929L12.2929,10.7071C12.6834,10.3166,13.3166,10.3166,13.7071,10.7071L17,14 M17,14L17,11.5 M17,14L14.5,14">
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M16,17L22,17 22,11">
           <GeometryDrawing.Pen>
             <Pen
-              Brush="#FFFFFFFF"
+              Brush="#FF000000"
               EndLineCap="Round"
               LineJoin="Round"
-              MiterLimit="1"
               StartLineCap="Round"
-              Thickness="1.5" />
+              Thickness="2" />
+          </GeometryDrawing.Pen>
+        </GeometryDrawing>
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M22,17L13.5,8.5 8.5,13.5 2,7">
+          <GeometryDrawing.Pen>
+            <Pen
+              Brush="#FF000000"
+              EndLineCap="Round"
+              LineJoin="Round"
+              StartLineCap="Round"
+              Thickness="2" />
           </GeometryDrawing.Pen>
         </GeometryDrawing>
       </DrawingGroup>
     </DrawingImage.Drawing>
   </DrawingImage>
 
-  <DrawingImage x:Key="GraphUpGeometry">
+  <DrawingImage x:Key="trending_up">
     <DrawingImage.Drawing>
       <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
-        <GeometryDrawing Geometry="F1 M24,24z M0,0z M7,14L9.29289,11.7071C9.68342,11.3166,10.3166,11.3166,10.7071,11.7071L12.2929,13.2929C12.6834,13.6834,13.3166,13.6834,13.7071,13.2929L17,10 M17,10L17,12.5 M17,10L14.5,10">
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M16,7L22,7 22,13">
           <GeometryDrawing.Pen>
             <Pen
-              Brush="#FFFFFFFF"
+              Brush="#FF000000"
               EndLineCap="Round"
               LineJoin="Round"
-              MiterLimit="1"
               StartLineCap="Round"
-              Thickness="1.5" />
+              Thickness="2" />
+          </GeometryDrawing.Pen>
+        </GeometryDrawing>
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M22,7L13.5,15.5 8.5,10.5 2,17">
+          <GeometryDrawing.Pen>
+            <Pen
+              Brush="#FF000000"
+              EndLineCap="Round"
+              LineJoin="Round"
+              StartLineCap="Round"
+              Thickness="2" />
           </GeometryDrawing.Pen>
         </GeometryDrawing>
       </DrawingGroup>
