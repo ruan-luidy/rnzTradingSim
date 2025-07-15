@@ -1,173 +1,258 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using rnzTradingSim.Data;
 using rnzTradingSim.Models;
 
 namespace rnzTradingSim.Services;
 
 public class PlayerService
 {
-  private const string PlayerFileName = "player.json";
-  private const string HistoryFileName = "history.json";
+  private readonly TradingDbContext _context;
+  private Player _currentPlayer;
+
+  public PlayerService()
+  {
+    _context = new TradingDbContext();
+    InitializeDatabase();
+    _currentPlayer = LoadOrCreatePlayer();
+  }
+
+  private void InitializeDatabase()
+  {
+    try
+    {
+      _context.Database.EnsureCreated();
+      System.Diagnostics.Debug.WriteLine("Database initialized successfully");
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"Error initializing database: {ex.Message}");
+    }
+  }
 
   public Player GetCurrentPlayer()
   {
-    if (File.Exists(PlayerFileName))
+    if (_currentPlayer == null)
     {
-      try
-      {
-        var json = File.ReadAllText(PlayerFileName);
-        var player = JsonSerializer.Deserialize<Player>(json);
-
-        // Verificação adicional para garantir que o player tem saldo válido
-        if (player != null)
-        {
-          // Se o saldo for 0 ou negativo, resetar para o valor inicial
-          if (player.Balance <= 0)
-          {
-            player.Balance = 10000m;
-            SavePlayer(player);
-          }
-
-          System.Diagnostics.Debug.WriteLine($"Loaded player with balance: {player.Balance}");
-          return player;
-        }
-      }
-      catch (Exception ex)
-      {
-        System.Diagnostics.Debug.WriteLine($"Error loading player: {ex.Message}");
-      }
+      _currentPlayer = LoadOrCreatePlayer();
     }
 
-    System.Diagnostics.Debug.WriteLine("Creating new player");
-    return CreateNewPlayer();
+    // Verificação adicional para garantir que o player tem saldo válido
+    if (_currentPlayer.Balance <= 0)
+    {
+      _currentPlayer.Balance = 10000m;
+      SavePlayer(_currentPlayer);
+    }
+
+    System.Diagnostics.Debug.WriteLine($"Current player balance: {_currentPlayer.Balance}");
+    return _currentPlayer;
   }
 
   public void SavePlayer(Player player)
   {
     try
     {
-      var json = JsonSerializer.Serialize(player, new JsonSerializerOptions
-      {
-        WriteIndented = true
-      });
-      File.WriteAllText(PlayerFileName, json);
+      _context.Players.Update(player);
+      _context.SaveChanges();
       System.Diagnostics.Debug.WriteLine($"Player saved with balance: {player.Balance}");
     }
     catch (Exception ex)
     {
-      // Log error - for now just ignore
       System.Diagnostics.Debug.WriteLine($"Error saving player: {ex.Message}");
     }
   }
 
   public void AddGameResult(GameResult result)
   {
-    var history = GetGameHistory();
-    history.Add(result);
-
-    // Keep only last 1000 games
-    if (history.Count > 1000)
-    {
-      history = history.TakeLast(1000).ToList();
-    }
-
-    SaveGameHistory(history);
-  }
-
-  public List<GameResult> GetGameHistory()
-  {
-    if (File.Exists(HistoryFileName))
-    {
-      try
-      {
-        var json = File.ReadAllText(HistoryFileName);
-        return JsonSerializer.Deserialize<List<GameResult>>(json) ?? new List<GameResult>();
-      }
-      catch
-      {
-        return new List<GameResult>();
-      }
-    }
-
-    return new List<GameResult>();
-  }
-
-  private void SaveGameHistory(List<GameResult> history)
-  {
     try
     {
-      var json = JsonSerializer.Serialize(history, new JsonSerializerOptions
+      result.PlayerId = _currentPlayer.Id;
+      _context.GameResults.Add(result);
+      _context.SaveChanges();
+
+      // Manter apenas os últimos 1000 jogos por player
+      var oldResults = _context.GameResults
+          .Where(gr => gr.PlayerId == _currentPlayer.Id)
+          .OrderBy(gr => gr.PlayedAt)
+          .Take(_context.GameResults.Count(gr => gr.PlayerId == _currentPlayer.Id) - 1000)
+          .ToList();
+
+      if (oldResults.Any())
       {
-        WriteIndented = true
-      });
-      File.WriteAllText(HistoryFileName, json);
+        _context.GameResults.RemoveRange(oldResults);
+        _context.SaveChanges();
+      }
     }
     catch (Exception ex)
     {
-      System.Diagnostics.Debug.WriteLine($"Error saving history: {ex.Message}");
+      System.Diagnostics.Debug.WriteLine($"Error adding game result: {ex.Message}");
     }
+  }
+
+  public List<GameResult> GetGameHistory(int count = 50)
+  {
+    try
+    {
+      return _context.GameResults
+          .Where(gr => gr.PlayerId == _currentPlayer.Id)
+          .OrderByDescending(gr => gr.PlayedAt)
+          .Take(count)
+          .ToList();
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"Error getting game history: {ex.Message}");
+      return new List<GameResult>();
+    }
+  }
+
+  public List<GameResult> GetGameHistoryByType(string gameType, int count = 50)
+  {
+    try
+    {
+      return _context.GameResults
+          .Where(gr => gr.PlayerId == _currentPlayer.Id && gr.GameType == gameType)
+          .OrderByDescending(gr => gr.PlayedAt)
+          .Take(count)
+          .ToList();
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"Error getting game history by type: {ex.Message}");
+      return new List<GameResult>();
+    }
+  }
+
+  private Player LoadOrCreatePlayer()
+  {
+    try
+    {
+      var player = _context.Players.FirstOrDefault();
+
+      if (player != null)
+      {
+        System.Diagnostics.Debug.WriteLine($"Loaded player with balance: {player.Balance}");
+        return player;
+      }
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"Error loading player: {ex.Message}");
+    }
+
+    System.Diagnostics.Debug.WriteLine("Creating new player");
+    return CreateNewPlayer();
   }
 
   private Player CreateNewPlayer()
   {
-    var player = new Player
+    try
     {
-      Name = "Player",
-      Balance = 10000m,
-      CreatedAt = DateTime.Now
-    };
+      var player = new Player
+      {
+        Name = "Player",
+        Balance = 10000m,
+        CreatedAt = DateTime.Now
+      };
 
-    SavePlayer(player);
-    System.Diagnostics.Debug.WriteLine($"New player created with balance: {player.Balance}");
-    return player;
+      _context.Players.Add(player);
+      _context.SaveChanges();
+
+      System.Diagnostics.Debug.WriteLine($"New player created with balance: {player.Balance}");
+      return player;
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"Error creating new player: {ex.Message}");
+      // Retornar player padrão se falhar
+      return new Player
+      {
+        Name = "Player",
+        Balance = 10000m,
+        CreatedAt = DateTime.Now
+      };
+    }
   }
 
   public void UpdatePlayerStats(Player player, GameResult result)
   {
-    player.TotalWagered += result.BetAmount;
-    player.GamesPlayed++;
-
-    if (result.IsWin)
+    try
     {
-      player.GamesWon++;
-      player.TotalWon += result.WinAmount;
-      player.Balance += result.NetResult;
+      player.TotalWagered += result.BetAmount;
+      player.GamesPlayed++;
 
-      if (result.NetResult > player.BiggestWin)
-        player.BiggestWin = result.NetResult;
+      if (result.IsWin)
+      {
+        player.GamesWon++;
+        player.TotalWon += result.WinAmount;
+        player.Balance += result.NetResult;
+
+        if (result.NetResult > player.BiggestWin)
+          player.BiggestWin = result.NetResult;
+      }
+      else
+      {
+        player.TotalLost += result.BetAmount;
+        player.Balance += result.NetResult; // NetResult é negativo para perdas
+
+        if (Math.Abs(result.NetResult) > player.BiggestLoss)
+          player.BiggestLoss = Math.Abs(result.NetResult);
+      }
+
+      // Garantir que o saldo nunca seja negativo
+      if (player.Balance < 0)
+      {
+        player.Balance = 0;
+      }
+
+      SavePlayer(player);
+      AddGameResult(result);
+
+      System.Diagnostics.Debug.WriteLine($"Player stats updated. New balance: {player.Balance}");
     }
-    else
+    catch (Exception ex)
     {
-      player.TotalLost += result.BetAmount;
-      player.Balance += result.NetResult; // NetResult is negative for losses
-
-      if (Math.Abs(result.NetResult) > player.BiggestLoss)
-        player.BiggestLoss = Math.Abs(result.NetResult);
+      System.Diagnostics.Debug.WriteLine($"Error updating player stats: {ex.Message}");
     }
-
-    // Garantir que o saldo nunca seja negativo
-    if (player.Balance < 0)
-    {
-      player.Balance = 0;
-    }
-
-    SavePlayer(player);
-    AddGameResult(result);
-
-    System.Diagnostics.Debug.WriteLine($"Player stats updated. New balance: {player.Balance}");
   }
 
   // Método para resetar o player para debugging
   public void ResetPlayer()
   {
-    if (File.Exists(PlayerFileName))
+    try
     {
-      File.Delete(PlayerFileName);
+      // Remover histórico de jogos do player atual
+      var gameResults = _context.GameResults
+          .Where(gr => gr.PlayerId == _currentPlayer.Id)
+          .ToList();
+
+      if (gameResults.Any())
+      {
+        _context.GameResults.RemoveRange(gameResults);
+      }
+
+      // Resetar estatísticas do player
+      _currentPlayer.Balance = 10000m;
+      _currentPlayer.TotalWagered = 0m;
+      _currentPlayer.TotalWon = 0m;
+      _currentPlayer.TotalLost = 0m;
+      _currentPlayer.GamesPlayed = 0;
+      _currentPlayer.GamesWon = 0;
+      _currentPlayer.BiggestWin = 0m;
+      _currentPlayer.BiggestLoss = 0m;
+      _currentPlayer.CreatedAt = DateTime.Now;
+
+      SavePlayer(_currentPlayer);
+
+      System.Diagnostics.Debug.WriteLine("Player data reset");
     }
-    if (File.Exists(HistoryFileName))
+    catch (Exception ex)
     {
-      File.Delete(HistoryFileName);
+      System.Diagnostics.Debug.WriteLine($"Error resetting player: {ex.Message}");
     }
-    System.Diagnostics.Debug.WriteLine("Player data reset");
+  }
+
+  public void Dispose()
+  {
+    _context?.Dispose();
   }
 }

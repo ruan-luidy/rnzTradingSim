@@ -1,7 +1,11 @@
-﻿namespace rnzTradingSim.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace rnzTradingSim.Models
 {
   public class Player
   {
+    [Key]
+    public int Id { get; set; }
     public string Name { get; set; } = "Player";
     public decimal Balance { get; set; } = 10000m;
     public decimal TotalWagered { get; set; } = 0m;

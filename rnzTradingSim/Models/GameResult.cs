@@ -1,7 +1,12 @@
-﻿namespace rnzTradingSim.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace rnzTradingSim.Models;
 
 public class GameResult
 {
+  [Key]
+  public int Id { get; set; }
+  public int PlayerId { get; set; }
   public string GameType { get; set; } = string.Empty;
   public decimal BetAmount { get; set; }
   public decimal WinAmount { get; set; }
