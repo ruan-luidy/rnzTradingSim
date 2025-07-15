@@ -159,19 +159,19 @@
             HorizontalAlignment="Left">
             <TextBlock
               HorizontalAlignment="Left"
-              FontSize="14"
-              FontWeight="SemiBold"
+              FontSize="13"
               TextAlignment="Center"
               TextWrapping="Wrap">
-              <Run Foreground="#8b8b8b" Text="Você receberá " />
+
+              <Run Foreground="{DynamicResource SecondaryTextBrush}" Text="Você receberá " />
               <Run
                 FontWeight="Bold"
-                Foreground="#22c55e"
+                Foreground="{DynamicResource SuccessBrush}"
                 Text="{Binding MultiplierText}" />
-              <Run Foreground="#8b8b8b" Text=" por tile, probabilidade de ganhar: " />
+              <Run Foreground="{DynamicResource SecondaryTextBrush}" Text=" por tile, probabilidade de ganhar: " />
               <Run
                 FontWeight="Bold"
-                Foreground="#22c55e"
+                Foreground="{DynamicResource SuccessBrush}"
                 Text="{Binding ProbabilityPercentText}" />
             </TextBlock>
           </StackPanel>
@@ -181,7 +181,6 @@
             Margin="0,0,0,15"
             FontSize="18"
             FontWeight="Bold"
-            Foreground="White"
             Text="Valor da Aposta" />
 
           <TextBox
@@ -189,17 +188,14 @@
             Margin="0,0,0,15"
             Padding="15,12"
             hc:BorderElement.CornerRadius="8"
-            Background="#1f1f1f"
-            BorderBrush="#404040"
             BorderThickness="1"
             FontSize="16"
-            Foreground="White"
             Text="{Binding BetAmount, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}" />
 
           <TextBlock
             Margin="0,0,0,20"
-            FontSize="12"
-            Foreground="#8b8b8b"
+            FontSize="13"
+            Foreground="{DynamicResource SecondaryTextBrush}"
             Text="{Binding MaxBetText}" />
 
           <!--  Quick Bet Buttons  -->
@@ -228,9 +224,6 @@
               Width="80"
               Margin="5,0"
               hc:BorderElement.CornerRadius="8"
-              Background="#1f1f1f"
-              BorderBrush="#404040"
-              BorderThickness="1"
               Command="{Binding SetBetPercentageCommand}"
               CommandParameter="50"
               Content="50%" />
@@ -240,59 +233,28 @@
               Width="80"
               Margin="5,0"
               hc:BorderElement.CornerRadius="8"
-              Background="#1f1f1f"
-              BorderBrush="#404040"
-              BorderThickness="1"
               Command="{Binding SetBetPercentageCommand}"
               CommandParameter="75"
-              Content="75%"
-              Foreground="White" />
+              Content="75%" />
 
             <Button
               Grid.Column="3"
               Width="80"
               Margin="5,0,0,0"
               hc:BorderElement.CornerRadius="8"
-              Background="#1f1f1f"
-              BorderBrush="#404040"
-              BorderThickness="1"
               Command="{Binding SetBetPercentageCommand}"
               CommandParameter="100"
-              Content="Máx"
-              Foreground="White" />
+              Content="Máx" />
 
           </Grid>
 
           <!--  Note  -->
           <TextBlock
             Margin="0,0,0,25"
-            FontSize="12"
-            Foreground="#8b8b8b"
+            FontSize="13"
+            Foreground="{DynamicResource SecondaryTextBrush}"
             Text="Nota: O pagamento máximo por jogo é limitado a R$ 2.000.000."
             TextWrapping="Wrap" />
-
-          <!--  Game Status  -->
-          <Border
-            Margin="0,0,0,15"
-            Padding="15"
-            Background="#0f0f0f"
-            BorderBrush="#2a2a2a"
-            BorderThickness="1"
-            CornerRadius="8">
-            <StackPanel HorizontalAlignment="Center">
-              <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="16"
-                FontWeight="Bold"
-                Foreground="White"
-                Text="{Binding GameStatus}" />
-              <TextBlock
-                HorizontalAlignment="Center"
-                FontSize="12"
-                Foreground="#8b8b8b"
-                Text="{Binding GameStatusDescription}" />
-            </StackPanel>
-          </Border>
 
           <!--  Action Buttons  -->
           <Button
