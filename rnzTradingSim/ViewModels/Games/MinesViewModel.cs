@@ -16,7 +16,7 @@ namespace rnzTradingSim.ViewModels.Games
     private Player _currentPlayer;
 
     [ObservableProperty]
-    private decimal betAmount;
+    private decimal betAmount = 10.00m;
 
     [ObservableProperty]
     private int numberOfMines = 3;
@@ -46,7 +46,7 @@ namespace rnzTradingSim.ViewModels.Games
     private bool isGameActive = false;
 
     [ObservableProperty]
-    private bool canStartGame = true;
+    private bool canStartGame = false;
 
     [ObservableProperty]
     private bool canCollectWinnings = false;
@@ -65,6 +65,22 @@ namespace rnzTradingSim.ViewModels.Games
 
     [ObservableProperty]
     private string collectButtonText = "Sacar Ganhos";
+
+    // Novas propriedades para o card de resultado
+    [ObservableProperty]
+    private bool showResultCard = false;
+
+    [ObservableProperty]
+    private string resultCardTitle = "";
+
+    [ObservableProperty]
+    private string resultCardAmount = "";
+
+    [ObservableProperty]
+    private string resultCardDescription = "";
+
+    [ObservableProperty]
+    private bool isResultPositive = false;
 
     public ObservableCollection<MineButtonViewModel> MineButtons { get; }
     public ObservableCollection<GameResultViewModel> RecentGames { get; }
@@ -96,6 +112,7 @@ namespace rnzTradingSim.ViewModels.Games
 
       // Atualiza a descrição inicial baseada no saldo atual
       UpdateGameStatusDescription();
+      UpdateCanStartGame();
 
       System.Diagnostics.Debug.WriteLine($"MinesViewModel initialized with balance: {PlayerBalance}");
     }
@@ -103,6 +120,9 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void StartGame()
     {
+      // Ocultar o card de resultado anterior
+      ShowResultCard = false;
+
       // Validações mais específicas
       if (IsGameActive)
       {
@@ -157,6 +177,9 @@ namespace rnzTradingSim.ViewModels.Games
       _playerService.UpdatePlayerStats(_currentPlayer, gameResult);
       UpdatePlayerData();
 
+      // Mostrar card de resultado
+      ShowWinResultCard(PotentialWin - BetAmount);
+
       RecentGames.Insert(0, new GameResultViewModel
       {
         MineCount = NumberOfMines,
@@ -165,7 +188,6 @@ namespace rnzTradingSim.ViewModels.Games
       });
 
       EndGame(true);
-
       OnPropertyChanged("ForceGridReset");
     }
 
@@ -178,30 +200,7 @@ namespace rnzTradingSim.ViewModels.Games
 
       if (button.IsMine)
       {
-        // Game over - hit a mine
-        RevealAllMines();
-
-        var gameResult = new GameResult
-        {
-          GameType = "Mines",
-          BetAmount = BetAmount,
-          WinAmount = 0,
-          IsWin = false,
-          Multiplier = 0,
-          Details = $"{{\"mines\":{NumberOfMines},\"revealed\":{RevealedTiles}}}"
-        };
-
-        _playerService.UpdatePlayerStats(_currentPlayer, gameResult);
-        UpdatePlayerData();
-
-        RecentGames.Insert(0, new GameResultViewModel
-        {
-          MineCount = NumberOfMines,
-          Amount = -BetAmount,
-          IsWin = false
-        });
-
-        EndGame(false);
+        HandleGameLoss();
       }
       else
       {
@@ -220,6 +219,37 @@ namespace rnzTradingSim.ViewModels.Games
           CollectWinnings();
         }
       }
+    }
+
+    private void HandleGameLoss()
+    {
+      // Game over - hit a mine
+      RevealAllMines();
+
+      var gameResult = new GameResult
+      {
+        GameType = "Mines",
+        BetAmount = BetAmount,
+        WinAmount = 0,
+        IsWin = false,
+        Multiplier = 0,
+        Details = $"{{\"mines\":{NumberOfMines},\"revealed\":{RevealedTiles}}}"
+      };
+
+      _playerService.UpdatePlayerStats(_currentPlayer, gameResult);
+      UpdatePlayerData();
+
+      // Mostrar card de resultado negativo
+      ShowLossResultCard(BetAmount);
+
+      RecentGames.Insert(0, new GameResultViewModel
+      {
+        MineCount = NumberOfMines,
+        Amount = -BetAmount,
+        IsWin = false
+      });
+
+      EndGame(false);
     }
 
     [RelayCommand]
@@ -275,6 +305,7 @@ namespace rnzTradingSim.ViewModels.Games
 
       CalculatePotentialWin();
       UpdateGameStatusDescription();
+      UpdateCanStartGame();
     }
 
     [RelayCommand]
@@ -299,6 +330,11 @@ namespace rnzTradingSim.ViewModels.Games
       CalculatePotentialWin();
     }
 
+    private void UpdateCanStartGame()
+    {
+      CanStartGame = !IsGameActive && BetAmount > 0 && BetAmount <= PlayerBalance;
+    }
+
     private void UpdateGameStatusDescription()
     {
       if (!IsGameActive)
@@ -316,6 +352,24 @@ namespace rnzTradingSim.ViewModels.Games
           GameStatusDescription = "Configure sua aposta";
         }
       }
+    }
+
+    private void ShowWinResultCard(decimal profit)
+    {
+      ResultCardTitle = "Vitória!";
+      ResultCardAmount = $"+{profit.FormatAbbreviated()}";
+      ResultCardDescription = $"Você ganhou {profit.FormatAbbreviated()} com {RevealedTiles} tiles revelados";
+      IsResultPositive = true;
+      ShowResultCard = true;
+    }
+
+    private void ShowLossResultCard(decimal loss)
+    {
+      ResultCardTitle = "Derrota!";
+      ResultCardAmount = $"-{loss.FormatAbbreviated()}";
+      ResultCardDescription = $"Você perdeu {loss.FormatAbbreviated()} ao acertar uma mina";
+      IsResultPositive = false;
+      ShowResultCard = true;
     }
 
     private void InitializeMineGrid()
@@ -461,6 +515,9 @@ namespace rnzTradingSim.ViewModels.Games
       decimal maxBet = Math.Min(PlayerBalance, MAX_BET);
       MaxBetText = $"Aposta máxima: {maxBet.FormatAbbreviated()}";
 
+      // Atualizar estado do botão quando o saldo muda
+      UpdateCanStartGame();
+
       // Debug: verificar se o saldo foi carregado corretamente
       System.Diagnostics.Debug.WriteLine($"Player Balance updated: {PlayerBalance}");
     }
@@ -468,7 +525,7 @@ namespace rnzTradingSim.ViewModels.Games
     private void EndGame(bool won)
     {
       IsGameActive = false;
-      CanStartGame = true;
+      CanStartGame = BetAmount > 0 && BetAmount <= PlayerBalance;
       CanCollectWinnings = false;
 
       GameStatus = won ? "GANHOU" : "PERDEU";
@@ -479,12 +536,10 @@ namespace rnzTradingSim.ViewModels.Games
       CollectButtonText = "Sacar Ganhos";
       CalculatePotentialWin();
 
-      // Forcar o reset do grid quando ganha (coleta ganhos)
       if (won)
       {
-        // Notifica que o jogo terminou com vitoria para resetar o grid
         OnPropertyChanged(nameof(GameStatus));
-        OnPropertyChanged("GameWon"); // Aciona um novo trigger para reset
+        OnPropertyChanged("GameWon");
       }
       else
       {
@@ -503,7 +558,7 @@ namespace rnzTradingSim.ViewModels.Games
       {
         RecentGames.Add(new GameResultViewModel
         {
-          MineCount = NumberOfMines, // Could parse from Details JSON
+          MineCount = NumberOfMines,
           Amount = game.NetResult,
           IsWin = game.IsWin
         });

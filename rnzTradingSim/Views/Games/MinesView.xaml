@@ -261,13 +261,23 @@
             Height="50"
             HorizontalAlignment="Stretch"
             hc:BorderElement.CornerRadius="8"
-            Background="{DynamicResource DangerBrush}"
             BorderThickness="0"
             Command="{Binding StartGameCommand}"
             Content="Iniciar Jogo"
             FontSize="18"
             FontWeight="Bold"
-            IsEnabled="{Binding CanStartGame}" />
+            IsEnabled="{Binding CanStartGame}">
+            <Button.Style>
+              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
+                <Setter Property="Background" Value="#666666" />
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding CanStartGame}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Button.Style>
+          </Button>
 
           <Button
             Height="50"
@@ -283,6 +293,110 @@
             Visibility="{Binding CanCollectWinnings, Converter={StaticResource Boolean2VisibilityConverter}}">
             <TextBlock Text="{Binding CollectButtonText}" />
           </Button>
+
+          <!--  Result Card  -->
+          <Border
+            Margin="0,15,0,0"
+            Padding="20"
+            CornerRadius="12"
+            Visibility="{Binding ShowResultCard, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <Border.Style>
+              <Style BasedOn="{StaticResource BorderRegion}" TargetType="Border">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding IsResultPositive}" Value="True">
+                    <Setter Property="Background" Value="#1a4d3a" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding IsResultPositive}" Value="False">
+                    <Setter Property="Background" Value="#4d1a1a" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Border.Style>
+
+            <StackPanel>
+              <!--  Card Header  -->
+              <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!--  Icon  -->
+                <Border
+                  Grid.Column="0"
+                  Width="8"
+                  Height="8"
+                  Margin="0,0,8,0"
+                  CornerRadius="4">
+                  <Border.Style>
+                    <Style TargetType="Border">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsResultPositive}" Value="True">
+                          <Setter Property="Background" Value="{DynamicResource SuccessBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsResultPositive}" Value="False">
+                          <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </Border.Style>
+                </Border>
+
+                <!--  Title  -->
+                <TextBlock
+                  Grid.Column="1"
+                  VerticalAlignment="Center"
+                  FontWeight="Bold"
+                  Text="{Binding ResultCardTitle}">
+                  <TextBlock.Style>
+                    <Style BasedOn="{StaticResource TextBlockDefaultBold}" TargetType="TextBlock">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsResultPositive}" Value="True">
+                          <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsResultPositive}" Value="False">
+                          <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+
+                <!--  Amount  -->
+                <TextBlock
+                  Grid.Column="2"
+                  VerticalAlignment="Center"
+                  FontSize="16"
+                  FontWeight="Bold"
+                  Text="{Binding ResultCardAmount}">
+                  <TextBlock.Style>
+                    <Style BasedOn="{StaticResource TextBlockDefaultBold}" TargetType="TextBlock">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsResultPositive}" Value="True">
+                          <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsResultPositive}" Value="False">
+                          <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </Grid>
+
+              <!--  Description  -->
+              <TextBlock
+                FontSize="13"
+                Foreground="{DynamicResource SecondaryTextBrush}"
+                Text="{Binding ResultCardDescription}"
+                TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
 
         </StackPanel>
 
