@@ -220,7 +220,7 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void IncreaseMines()
     {
-      if (NumberOfMines < 25 && !IsGameActive)
+      if (NumberOfMines < 23 && !IsGameActive)
       {
         NumberOfMines++;
         CalculateProbability();
@@ -231,7 +231,7 @@ namespace rnzTradingSim.ViewModels.Games
     [RelayCommand]
     private void DecreaseMines()
     {
-      if (NumberOfMines > 3 && !IsGameActive)
+      if (NumberOfMines > 1 && !IsGameActive)
       {
         NumberOfMines--;
         CalculateProbability();
@@ -373,8 +373,30 @@ namespace rnzTradingSim.ViewModels.Games
       }
 
       int safeTiles = TotalTiles - NumberOfMines;
-      double baseMultiplier = (double)TotalTiles / safeTiles;
-      CurrentMultiplier = (decimal)Math.Pow(baseMultiplier, RevealedTiles / (double)safeTiles);
+
+      if (safeTiles <= 0)
+      {
+        CurrentMultiplier = 1.00m;
+        return;
+      }
+
+      // Cálculo mais preciso do multiplicador baseado em combinações
+      double multiplier = 1.0;
+
+      for (int i = 0; i < RevealedTiles; i++)
+      {
+        double currentSafeTiles = safeTiles - i;
+        double currentTotalTiles = TotalTiles - i;
+
+        if (currentTotalTiles <= 0) break;
+
+        // Multiplicador com house edge
+        double tileMultiplier = currentTotalTiles / currentSafeTiles * 0.97;
+        multiplier *= tileMultiplier;
+      }
+
+      // Limitar multiplicador máximo
+      CurrentMultiplier = (decimal)Math.Min(multiplier, 999999);
     }
 
     private void CalculatePotentialWin()
@@ -385,15 +407,35 @@ namespace rnzTradingSim.ViewModels.Games
     private void CalculateProbability()
     {
       int safeTiles = TotalTiles - NumberOfMines;
+
+      // Evitar divisão por zero e valores inválidos
+      if (safeTiles <= 0)
+      {
+        MultiplierText = "∞";
+        ProbabilityPercentText = "0.00%";
+        ProbabilityText = "Impossível ganhar com tantas minas!";
+        return;
+      }
+
+      // Probabilidade de acertar o primeiro tile seguro
       double probability = (double)safeTiles / TotalTiles * 100;
-      double multiplierPerTile = (double)TotalTiles / safeTiles;
 
-      // Atualiza as propriedades separadas
-      MultiplierText = $"{multiplierPerTile:F2}x";
-      ProbabilityPercentText = $"{probability:F2}%";
+      // Multiplicador base por tile (house edge de ~3%)
+      double multiplierPerTile = (double)TotalTiles / safeTiles * 0.97;
 
-      // Mantém a propriedade original para compatibilidade
-      ProbabilityText = $"Você receberá {multiplierPerTile:F2}x por tile, probabilidade de ganhar: {probability:F2}%";
+      // Limitar valores extremos
+      if (multiplierPerTile > 100)
+      {
+        MultiplierText = "99.99x";
+        ProbabilityPercentText = $"{probability:F2}%";
+        ProbabilityText = $"Multiplicador muito alto! Probabilidade: {probability:F2}%";
+      }
+      else
+      {
+        MultiplierText = $"{multiplierPerTile:F2}x";
+        ProbabilityPercentText = $"{probability:F2}%";
+        ProbabilityText = $"Você receberá {multiplierPerTile:F2}x por tile, probabilidade de ganhar: {probability:F2}%";
+      }
     }
 
     private void UpdatePlayerData()
