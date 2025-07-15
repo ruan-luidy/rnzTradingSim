@@ -63,10 +63,14 @@ namespace rnzTradingSim.ViewModels.Games
     [ObservableProperty]
     private string maxBetText = "Aposta máxima: R$ 1.000.000";
 
+    // Propriedades para o botão unificado
     [ObservableProperty]
-    private string collectButtonText = "Sacar Ganhos";
+    private string mainActionButtonText = "Iniciar Jogo";
 
-    // Novas propriedades para o card de resultado
+    [ObservableProperty]
+    private bool isMainActionEnabled = false;
+
+    // Propriedades para o card de resultado
     [ObservableProperty]
     private bool showResultCard = false;
 
@@ -112,12 +116,31 @@ namespace rnzTradingSim.ViewModels.Games
 
       // Atualiza a descrição inicial baseada no saldo atual
       UpdateGameStatusDescription();
-      UpdateCanStartGame();
+      UpdateMainActionButton();
 
       System.Diagnostics.Debug.WriteLine($"MinesViewModel initialized with balance: {PlayerBalance}");
     }
 
     [RelayCommand]
+    private void MainAction()
+    {
+      if (!IsGameActive && CanStartGame)
+      {
+        // Iniciar jogo
+        StartGame();
+      }
+      else if (CanCollectWinnings)
+      {
+        // Sacar ganhos
+        CollectWinnings();
+      }
+      else if (GameStatus == "PERDEU")
+      {
+        // Reiniciar após derrota
+        RestartGame();
+      }
+    }
+
     private void StartGame()
     {
       // Ocultar o card de resultado anterior
@@ -144,8 +167,6 @@ namespace rnzTradingSim.ViewModels.Games
 
       // Inicia o jogo
       IsGameActive = true;
-      CanStartGame = false;
-      CanCollectWinnings = false;
       GameStatus = "JOGANDO";
       GameStatusDescription = "Clique nos tiles";
       RevealedTiles = 0;
@@ -154,12 +175,12 @@ namespace rnzTradingSim.ViewModels.Games
       ResetMineGrid();
       PlaceMines();
       CalculatePotentialWin();
+      UpdateMainActionButton();
 
       // Trigger visual reset
       OnPropertyChanged(nameof(IsGameActive));
     }
 
-    [RelayCommand]
     private void CollectWinnings()
     {
       if (!CanCollectWinnings) return;
@@ -188,6 +209,26 @@ namespace rnzTradingSim.ViewModels.Games
       });
 
       EndGame(true);
+      UpdateMainActionButton();
+    }
+
+    private void RestartGame()
+    {
+      // Resetar estado do jogo
+      IsGameActive = false;
+      CanCollectWinnings = false;
+      GameStatus = "AGUARDANDO";
+      GameStatusDescription = "Configure sua aposta";
+      RevealedTiles = 0;
+      CurrentMultiplier = 1.00m;
+      ShowResultCard = false;
+
+      // Resetar grid visual
+      ResetMineGrid();
+      CalculatePotentialWin();
+      UpdateMainActionButton();
+
+      // Trigger para resetar o grid visual
       OnPropertyChanged("ForceGridReset");
     }
 
@@ -209,7 +250,7 @@ namespace rnzTradingSim.ViewModels.Games
         CalculateCurrentMultiplier();
         CalculatePotentialWin();
         CanCollectWinnings = true;
-        CollectButtonText = $"Sacar R$ {PotentialWin:F2}";
+        UpdateMainActionButton();
 
         // Check if all safe tiles are revealed
         int safeTiles = TotalTiles - NumberOfMines;
@@ -250,6 +291,7 @@ namespace rnzTradingSim.ViewModels.Games
       });
 
       EndGame(false);
+      UpdateMainActionButton();
     }
 
     [RelayCommand]
@@ -305,7 +347,7 @@ namespace rnzTradingSim.ViewModels.Games
 
       CalculatePotentialWin();
       UpdateGameStatusDescription();
-      UpdateCanStartGame();
+      UpdateMainActionButton();
     }
 
     [RelayCommand]
@@ -330,9 +372,41 @@ namespace rnzTradingSim.ViewModels.Games
       CalculatePotentialWin();
     }
 
-    private void UpdateCanStartGame()
+    private void UpdateMainActionButton()
     {
-      CanStartGame = !IsGameActive && BetAmount > 0 && BetAmount <= PlayerBalance;
+      if (!IsGameActive)
+      {
+        // Estado: Aguardando iniciar jogo
+        CanStartGame = BetAmount > 0 && BetAmount <= PlayerBalance;
+        CanCollectWinnings = false;
+
+        if (GameStatus == "PERDEU")
+        {
+          MainActionButtonText = "Reiniciar";
+          IsMainActionEnabled = true;
+        }
+        else
+        {
+          MainActionButtonText = "Iniciar Jogo";
+          IsMainActionEnabled = CanStartGame;
+        }
+      }
+      else
+      {
+        // Estado: Jogo ativo
+        CanStartGame = false;
+
+        if (CanCollectWinnings)
+        {
+          MainActionButtonText = $"Sacar {PotentialWin.FormatAbbreviated()}";
+          IsMainActionEnabled = true;
+        }
+        else
+        {
+          MainActionButtonText = "Aguardando...";
+          IsMainActionEnabled = false;
+        }
+      }
     }
 
     private void UpdateGameStatusDescription()
@@ -426,7 +500,6 @@ namespace rnzTradingSim.ViewModels.Games
       if (RevealedTiles == 0)
       {
         CurrentMultiplier = 1.00m;
-        CollectButtonText = "Sacar Ganhos";
         return;
       }
 
@@ -435,7 +508,6 @@ namespace rnzTradingSim.ViewModels.Games
       if (safeTiles <= 0)
       {
         CurrentMultiplier = 1.00m;
-        CollectButtonText = "Sacar Ganhos";
         return;
       }
 
@@ -456,9 +528,6 @@ namespace rnzTradingSim.ViewModels.Games
 
       // Limitar multiplicador máximo
       CurrentMultiplier = Math.Min(multiplier, 999999m);
-
-      // Atualizar texto do botão
-      CollectButtonText = $"Sacar {PotentialWin.FormatAbbreviated()}";
     }
 
     private void CalculatePotentialWin()
@@ -516,7 +585,7 @@ namespace rnzTradingSim.ViewModels.Games
       MaxBetText = $"Aposta máxima: {maxBet.FormatAbbreviated()}";
 
       // Atualizar estado do botão quando o saldo muda
-      UpdateCanStartGame();
+      UpdateMainActionButton();
 
       // Debug: verificar se o saldo foi carregado corretamente
       System.Diagnostics.Debug.WriteLine($"Player Balance updated: {PlayerBalance}");
@@ -525,7 +594,6 @@ namespace rnzTradingSim.ViewModels.Games
     private void EndGame(bool won)
     {
       IsGameActive = false;
-      CanStartGame = BetAmount > 0 && BetAmount <= PlayerBalance;
       CanCollectWinnings = false;
 
       GameStatus = won ? "GANHOU" : "PERDEU";
@@ -533,8 +601,8 @@ namespace rnzTradingSim.ViewModels.Games
 
       CurrentMultiplier = 1.00m;
       RevealedTiles = 0;
-      CollectButtonText = "Sacar Ganhos";
       CalculatePotentialWin();
+      UpdateMainActionButton();
 
       if (won)
       {
