@@ -82,13 +82,16 @@ namespace rnzTradingSim.ViewModels
     }
 
     [RelayCommand]
-    private void GoToPage(int page)
+    private void GoToPage(string pageString)
     {
-      if (page >= 1 && page <= TotalPages)
+      if (int.TryParse(pageString, out int page))
       {
-        CurrentPage = page;
-        UpdatePaginationState();
-        _ = LoadCoinsAsync();
+        if (page >= 1 && page <= TotalPages)
+        {
+          CurrentPage = page;
+          UpdatePaginationState();
+          _ = LoadCoinsAsync();
+        }
       }
     }
 
