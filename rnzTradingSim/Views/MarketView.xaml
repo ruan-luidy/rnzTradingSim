@@ -185,20 +185,16 @@
                       Text="{Binding Rank}"
                       TextAlignment="Center" />
 
-                    <!--  Coin Info  -->
+                    <!--  Coin Info com Gravatar  -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                      <Border
+                      <!--  Gravatar do HandyControl  -->
+                      <hc:Gravatar
                         Width="32"
                         Height="32"
                         Margin="0,0,12,0"
-                        Background="{Binding ImageColor}"
-                        CornerRadius="16">
-                        <Image
-                          Width="24"
-                          Height="24"
-                          Source="{Binding Image}"
-                          Stretch="UniformToFill" />
-                      </Border>
+                        VerticalAlignment="Center"
+                        Id="{Binding Symbol}" />
+
                       <StackPanel VerticalAlignment="Center">
                         <TextBlock
                           FontSize="16"

@@ -1,4 +1,6 @@
 ﻿using System.Windows.Media;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace rnzTradingSim.Models
 {
@@ -45,6 +47,9 @@ namespace rnzTradingSim.Models
 
     public SolidColorBrush ImageColor => new SolidColorBrush(GetCoinColor());
 
+    // Gravatar ID baseado no símbolo da moeda
+    public string GravatarId => GenerateGravatarId(Symbol);
+
     // Hot/Wild logic based on price change
     public bool IsHot => PriceChangePercentage24h >= 10 && PriceChangePercentage24h < 30;
     public bool IsWild => PriceChangePercentage24h >= 30 || PriceChangePercentage24h <= -30;
@@ -80,6 +85,26 @@ namespace rnzTradingSim.Models
       };
 
       return colors[Math.Abs(hash) % colors.Length];
+    }
+
+    private string GenerateGravatarId(string input)
+    {
+      // Usar o símbolo da moeda + um salt para gerar um hash MD5 único
+      var saltedInput = $"{input.ToLowerInvariant()}@crypto.coin";
+
+      using (var md5 = MD5.Create())
+      {
+        var inputBytes = Encoding.UTF8.GetBytes(saltedInput);
+        var hashBytes = md5.ComputeHash(inputBytes);
+
+        // Converter para string hexadecimal
+        var sb = new StringBuilder();
+        for (int i = 0; i < hashBytes.Length; i++)
+        {
+          sb.Append(hashBytes[i].ToString("x2"));
+        }
+        return sb.ToString();
+      }
     }
   }
 }
