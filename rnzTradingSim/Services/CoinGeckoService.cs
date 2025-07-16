@@ -30,12 +30,22 @@ namespace rnzTradingSim.Services
         }
 
         var json = await response.Content.ReadAsStringAsync();
+        System.Diagnostics.Debug.WriteLine($"API Response: {json}");
+
         var coinGeckoData = JsonSerializer.Deserialize<CoinGeckoResponse[]>(json, new JsonSerializerOptions
         {
           PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
         });
 
-        return coinGeckoData?.Select(MapToCoinData).ToList() ?? GetFallbackCoins();
+        var mappedCoins = coinGeckoData?.Select(MapToCoinData).ToList() ?? GetFallbackCoins();
+
+        // Debug para verificar os dados
+        foreach (var coin in mappedCoins.Take(3))
+        {
+          System.Diagnostics.Debug.WriteLine($"Coin: {coin.Name}, Change24h: {coin.PriceChangePercentage24h}%, Display: {coin.Change24h}");
+        }
+
+        return mappedCoins;
       }
       catch (Exception ex)
       {
@@ -64,6 +74,8 @@ namespace rnzTradingSim.Services
 
     private List<CoinData> GetFallbackCoins()
     {
+      var random = new Random();
+
       return new List<CoinData>
       {
         new CoinData
@@ -75,7 +87,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 42000m,
           MarketCapValue = 800_000_000_000m,
           Volume24h = 20_000_000_000m,
-          PriceChangePercentage24h = 2.5m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 10 - 5), // -5% a +5%
           MarketCapRank = 1,
           LastUpdated = DateTime.Now.AddMinutes(-5)
         },
@@ -88,7 +100,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 2500m,
           MarketCapValue = 300_000_000_000m,
           Volume24h = 15_000_000_000m,
-          PriceChangePercentage24h = -1.2m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 8 - 4), // -4% a +4%
           MarketCapRank = 2,
           LastUpdated = DateTime.Now.AddMinutes(-3)
         },
@@ -101,7 +113,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 95m,
           MarketCapValue = 40_000_000_000m,
           Volume24h = 2_000_000_000m,
-          PriceChangePercentage24h = 15.8m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 20 + 5), // +5% a +25%
           MarketCapRank = 5,
           LastUpdated = DateTime.Now.AddMinutes(-1)
         },
@@ -114,7 +126,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 0.45m,
           MarketCapValue = 15_000_000_000m,
           Volume24h = 500_000_000m,
-          PriceChangePercentage24h = -3.2m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * -6 - 1), // -7% a -1%
           MarketCapRank = 8,
           LastUpdated = DateTime.Now.AddMinutes(-2)
         },
@@ -127,7 +139,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 0.08m,
           MarketCapValue = 11_000_000_000m,
           Volume24h = 800_000_000m,
-          PriceChangePercentage24h = 35.4m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 40 + 15), // +15% a +55%
           MarketCapRank = 9,
           LastUpdated = DateTime.Now.AddMinutes(-4)
         },
@@ -140,7 +152,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 14.50m,
           MarketCapValue = 8_000_000_000m,
           Volume24h = 400_000_000m,
-          PriceChangePercentage24h = 8.7m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 12 - 2), // -2% a +10%
           MarketCapRank = 12,
           LastUpdated = DateTime.Now.AddMinutes(-6)
         },
@@ -153,7 +165,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 0.85m,
           MarketCapValue = 7_500_000_000m,
           Volume24h = 350_000_000m,
-          PriceChangePercentage24h = -5.1m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * -8 - 1), // -9% a -1%
           MarketCapRank = 15,
           LastUpdated = DateTime.Now.AddMinutes(-7)
         },
@@ -166,7 +178,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 35.20m,
           MarketCapValue = 13_000_000_000m,
           Volume24h = 600_000_000m,
-          PriceChangePercentage24h = 12.3m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 15 + 3), // +3% a +18%
           MarketCapRank = 11,
           LastUpdated = DateTime.Now.AddMinutes(-3)
         },
@@ -179,7 +191,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 0.000008m,
           MarketCapValue = 4_500_000_000m,
           Volume24h = 200_000_000m,
-          PriceChangePercentage24h = 42.8m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 60 + 20), // +20% a +80%
           MarketCapRank = 18,
           LastUpdated = DateTime.Now.AddMinutes(-5)
         },
@@ -192,7 +204,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 72.30m,
           MarketCapValue = 5_300_000_000m,
           Volume24h = 300_000_000m,
-          PriceChangePercentage24h = -2.1m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * -4 - 1), // -5% a -1%
           MarketCapRank = 16,
           LastUpdated = DateTime.Now.AddMinutes(-8)
         },
@@ -205,7 +217,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 6.20m,
           MarketCapValue = 4_700_000_000m,
           Volume24h = 180_000_000m,
-          PriceChangePercentage24h = 6.4m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * 8 + 1), // +1% a +9%
           MarketCapRank = 17,
           LastUpdated = DateTime.Now.AddMinutes(-4)
         },
@@ -218,7 +230,7 @@ namespace rnzTradingSim.Services
           CurrentPrice = 5.80m,
           MarketCapValue = 7_800_000_000m,
           Volume24h = 250_000_000m,
-          PriceChangePercentage24h = -1.8m,
+          PriceChangePercentage24h = (decimal)(random.NextDouble() * -3 - 0.5), // -3.5% a -0.5%
           MarketCapRank = 13,
           LastUpdated = DateTime.Now.AddMinutes(-6)
         }

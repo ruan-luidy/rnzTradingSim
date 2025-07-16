@@ -144,10 +144,9 @@
                       <ColumnDefinition Width="60" />
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="120" />
-                      <ColumnDefinition Width="120" />
-                      <ColumnDefinition Width="120" />
-                      <ColumnDefinition Width="120" />
-                      <ColumnDefinition Width="120" />
+                      <ColumnDefinition Width="140" />
+                      <ColumnDefinition Width="140" />
+                      <ColumnDefinition Width="140" />
                       <ColumnDefinition Width="80" />
                     </Grid.ColumnDefinitions>
 
@@ -197,10 +196,15 @@
                       Foreground="White"
                       Text="{Binding Price}" />
 
-                    <!--  24h Change  -->
+                    <!--  24h Change %  -->
                     <StackPanel Grid.Column="3" VerticalAlignment="Center">
                       <TextBlock
                         FontSize="14"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="24h Change" />
+                      <TextBlock
+                        FontSize="12"
                         FontWeight="Bold"
                         Text="{Binding Change24h}">
                         <TextBlock.Style>
@@ -244,21 +248,8 @@
                         Text="{Binding Volume24hFormatted}" />
                     </StackPanel>
 
-                    <!--  Created  -->
-                    <StackPanel Grid.Column="6" VerticalAlignment="Center">
-                      <TextBlock
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Foreground="White"
-                        Text="Created" />
-                      <TextBlock
-                        FontSize="12"
-                        Foreground="{DynamicResource SecondaryTextBrush}"
-                        Text="{Binding Created}" />
-                    </StackPanel>
-
                     <!--  Hot/Wild Badge  -->
-                    <StackPanel Grid.Column="7" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="6" VerticalAlignment="Center">
                       <Border
                         Padding="8,4"
                         Background="{Binding BadgeColor}"

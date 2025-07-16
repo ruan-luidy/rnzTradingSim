@@ -33,8 +33,6 @@ namespace rnzTradingSim.Models
 
     public string Volume24hFormatted => FormatLargeNumber(Volume24h);
 
-    public string Created => GetTimeAgo();
-
     public bool HasBadge => IsHot || IsWild;
 
     public string BadgeText => IsHot ? "HOT" : IsWild ? "WILD" : "";
@@ -61,20 +59,6 @@ namespace rnzTradingSim.Models
         return $"${value / 1_000:F1}K";
       else
         return $"${value:F2}";
-    }
-
-    private string GetTimeAgo()
-    {
-      var timeSpan = DateTime.Now - LastUpdated;
-
-      if (timeSpan.TotalDays >= 1)
-        return $"{(int)timeSpan.TotalDays}d";
-      else if (timeSpan.TotalHours >= 1)
-        return $"{(int)timeSpan.TotalHours}h";
-      else if (timeSpan.TotalMinutes >= 1)
-        return $"{(int)timeSpan.TotalMinutes}m";
-      else
-        return "1m";
     }
 
     private Color GetCoinColor()
