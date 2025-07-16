@@ -6,13 +6,16 @@ using System.Text.Json;
 using System.Windows.Media;
 using rnzTradingSim.Models;
 using rnzTradingSim.Services;
+using rnzTradingSim.Data;
 
 namespace rnzTradingSim.ViewModels
 {
   public partial class MarketViewModel : ObservableObject
   {
-    private readonly CoinCapService _coinCapService;
+    private readonly FakeCoinService _coinService;
+    private readonly TradingDbContext _db;
     private List<CoinData> _allCoins;
+    private System.Timers.Timer? _updateTimer;
 
     [ObservableProperty]
     private ObservableCollection<CoinData> filteredCoins;
@@ -39,15 +42,24 @@ namespace rnzTradingSim.ViewModels
     private bool canGoNextPage = true;
 
     [ObservableProperty]
-    private string apiStatusText = "Using CoinCap API - 100% Free, No Limits!";
+    private string apiStatusText = "Simulação de Criptomoedas - Dados 100% Fakes!";
 
     public MarketViewModel()
     {
-      _coinCapService = new CoinCapService();
+      _db = new TradingDbContext();
+      _coinService = new FakeCoinService(_db);
       _allCoins = new List<CoinData>();
       FilteredCoins = new ObservableCollection<CoinData>();
 
       _ = LoadCoinsAsync();
+
+      // Atualiza preços a cada 10 minutos
+      _updateTimer = new System.Timers.Timer(10 * 60 * 1000);
+      _updateTimer.Elapsed += (s, e) => {
+        _coinService.UpdateAllCoins();
+        _ = LoadCoinsAsync();
+      };
+      _updateTimer.Start();
     }
 
     [RelayCommand]
@@ -101,17 +113,13 @@ namespace rnzTradingSim.ViewModels
     private async Task LoadCoinsAsync()
     {
       IsLoading = true;
-      ApiStatusText = "Loading from CoinCap API...";
+      ApiStatusText = "Carregando dados simulados...";
 
       try
       {
-        System.Diagnostics.Debug.WriteLine($"Loading page {CurrentPage} from CoinCap API");
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        await Task.Delay(200); // Simula delay
 
-        var coins = await _coinCapService.GetCoinsAsync(CurrentPage, 12);
-
-        stopwatch.Stop();
-        System.Diagnostics.Debug.WriteLine($"API call completed in {stopwatch.ElapsedMilliseconds}ms, got {coins.Count} coins");
+        var coins = _coinService.GetCoins(CurrentPage, 12);
 
         _allCoins.Clear();
         _allCoins.AddRange(coins);
@@ -119,22 +127,19 @@ namespace rnzTradingSim.ViewModels
         FilterCoins();
         UpdateResultsText();
 
-        // Status baseado no resultado da API
         if (coins.Count > 0)
         {
-          ApiStatusText = $"✓ Live data from CoinCap API ({coins.Count} coins loaded) - 100% Free!";
+          ApiStatusText = $"✓ Dados simulados ({coins.Count} moedas carregadas)";
         }
         else
         {
-          ApiStatusText = "⚠ No data loaded - check internet connection";
+          ApiStatusText = "⚠ Nenhuma moeda cadastrada";
         }
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error loading coins: {ex.Message}");
-        ApiStatusText = "⚠ Error loading data - check internet connection";
-
-        // Limpar dados em caso de erro
+        System.Diagnostics.Debug.WriteLine($"Erro ao carregar moedas: {ex.Message}");
+        ApiStatusText = "⚠ Erro ao carregar dados simulados";
         _allCoins.Clear();
         FilterCoins();
         UpdateResultsText();
@@ -183,7 +188,8 @@ namespace rnzTradingSim.ViewModels
 
     public void Dispose()
     {
-      _coinCapService?.Dispose();
+      _updateTimer?.Dispose();
+      _db?.Dispose();
     }
   }
 }
