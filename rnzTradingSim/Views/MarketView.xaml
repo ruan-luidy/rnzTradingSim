@@ -46,13 +46,17 @@
             Height="40"
             Margin="0,0,10,0"
             hc:BorderElement.CornerRadius="8"
-            hc:IconElement.Geometry="{StaticResource RefreshGeometry}"
-            hc:IconElement.Width="16"
             Background="{DynamicResource RegionBrush}"
             BorderBrush="{DynamicResource BorderBrush}"
-            BorderThickness="1"
-            Command="{Binding RefreshCommand}"
-            ToolTip="Refresh" />
+            Command="{Binding RefreshCommand}">
+            <StackPanel Orientation="Horizontal">
+              <Image
+                Width="16"
+                Height="16"
+                VerticalAlignment="Center"
+                Source="{StaticResource Refresh}" />
+            </StackPanel>
+          </Button>
         </StackPanel>
       </Grid>
     </Border>
@@ -72,7 +76,6 @@
           HorizontalAlignment="Left"
           hc:BorderElement.CornerRadius="8"
           hc:InfoElement.Placeholder="Search coins by name or symbol..."
-          Style="{StaticResource SearchBarExtend}"
           Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
         <!--  Filters Button  -->
@@ -91,11 +94,11 @@
 
     <!--  Loading Indicator  -->
     <Grid Grid.Row="2" Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
-      <hc:LoadingIndicator
+      <hc:LoadingCircle
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
         IsRunning="{Binding IsLoading}"
-        Style="{StaticResource LoadingIndicatorArcsStyle}" />
+        Style="{StaticResource LoadingCircleLarge}" />
     </Grid>
 
     <!--  Market Data  -->
@@ -238,7 +241,7 @@
                       <TextBlock
                         FontSize="12"
                         Foreground="{DynamicResource SecondaryTextBrush}"
-                        Text="{Binding Volume24h}" />
+                        Text="{Binding Volume24hFormatted}" />
                     </StackPanel>
 
                     <!--  Created  -->

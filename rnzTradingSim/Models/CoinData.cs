@@ -1,6 +1,4 @@
-﻿
-
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace rnzTradingSim.Models
 {
@@ -22,12 +20,12 @@ namespace rnzTradingSim.Models
     public string Rank => $"#{MarketCapRank}";
 
     public string Price => CurrentPrice >= 1
-      ? $"{CurrentPrice:F2}"
-      : $"{CurrentPrice:F6}";
+      ? $"${CurrentPrice:F2}"
+      : $"${CurrentPrice:F6}";
 
     public string Change24h => PriceChangePercentage24h >= 0
-      ? $"+{PriceChangePercentage24h:F2}"
-      : $"{PriceChangePercentage24h:F2}";
+      ? $"+{PriceChangePercentage24h:F2}%"
+      : $"{PriceChangePercentage24h:F2}%";
 
     public bool IsPositiveChange => PriceChangePercentage24h >= 0;
 
@@ -39,6 +37,8 @@ namespace rnzTradingSim.Models
 
     public bool HasBadge => IsHot || IsWild;
 
+    public string BadgeText => IsHot ? "HOT" : IsWild ? "WILD" : "";
+
     public SolidColorBrush BadgeColor => IsHot
       ? new SolidColorBrush(Colors.Orange)
       : IsWild
@@ -47,20 +47,20 @@ namespace rnzTradingSim.Models
 
     public SolidColorBrush ImageColor => new SolidColorBrush(GetCoinColor());
 
-    // hot/wild logic based on price change
+    // Hot/Wild logic based on price change
     public bool IsHot => PriceChangePercentage24h >= 10 && PriceChangePercentage24h < 30;
     public bool IsWild => PriceChangePercentage24h >= 30 || PriceChangePercentage24h <= -30;
 
     private string FormatLargeNumber(decimal value)
     {
       if (value >= 1_000_000_000)
-        return $"{value / 1_000_000_000:F1}B";
+        return $"${value / 1_000_000_000:F1}B";
       else if (value >= 1_000_000)
-        return $"{value / 1_000_000:F1}M";
+        return $"${value / 1_000_000:F1}M";
       else if (value >= 1_000)
-        return $"{value / 1_000:F1}K";
+        return $"${value / 1_000:F1}K";
       else
-        return $"{value:F2}";
+        return $"${value:F2}";
     }
 
     private string GetTimeAgo()
@@ -79,6 +79,7 @@ namespace rnzTradingSim.Models
 
     private Color GetCoinColor()
     {
+      // Generate a color based on the coin symbol
       var hash = Symbol.GetHashCode();
       var colors = new[]
       {

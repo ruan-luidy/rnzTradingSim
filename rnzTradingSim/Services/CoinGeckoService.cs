@@ -64,9 +64,47 @@ namespace rnzTradingSim.Services
 
     private List<CoinData> GetFallbackCoins()
     {
-      // Fallback data when API is unavailable
       return new List<CoinData>
       {
+        new CoinData
+        {
+          Id = "bitcoin",
+          Name = "Bitcoin",
+          Symbol = "BTC",
+          Image = "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+          CurrentPrice = 42000m,
+          MarketCapValue = 800_000_000_000m,
+          Volume24h = 20_000_000_000m,
+          PriceChangePercentage24h = 2.5m,
+          MarketCapRank = 1,
+          LastUpdated = DateTime.Now.AddMinutes(-5)
+        },
+        new CoinData
+        {
+          Id = "ethereum",
+          Name = "Ethereum",
+          Symbol = "ETH",
+          Image = "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
+          CurrentPrice = 2500m,
+          MarketCapValue = 300_000_000_000m,
+          Volume24h = 15_000_000_000m,
+          PriceChangePercentage24h = -1.2m,
+          MarketCapRank = 2,
+          LastUpdated = DateTime.Now.AddMinutes(-3)
+        },
+        new CoinData
+        {
+          Id = "solana",
+          Name = "Solana",
+          Symbol = "SOL",
+          Image = "https://assets.coingecko.com/coins/images/4128/large/solana.png",
+          CurrentPrice = 95m,
+          MarketCapValue = 40_000_000_000m,
+          Volume24h = 2_000_000_000m,
+          PriceChangePercentage24h = 15.8m,
+          MarketCapRank = 5,
+          LastUpdated = DateTime.Now.AddMinutes(-1)
+        },
         new CoinData
         {
           Id = "cardano",
@@ -208,43 +246,3 @@ namespace rnzTradingSim.Services
     public DateTime LastUpdated { get; set; }
   }
 }
-d = "bitcoin",
-          Name = "Bitcoin",
-          Symbol = "BTC",
-          Image = "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
-          CurrentPrice = 42000m,
-          MarketCapValue = 800_000_000_000m,
-          Volume24h = 20_000_000_000m,
-          PriceChangePercentage24h = 2.5m,
-          MarketCapRank = 1,
-          LastUpdated = DateTime.Now.AddMinutes(-5)
-        },
-        new CoinData
-        {
-          Id = "ethereum",
-          Name = "Ethereum",
-          Symbol = "ETH",
-          Image = "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
-          CurrentPrice = 2500m,
-          MarketCapValue = 300_000_000_000m,
-          Volume24h = 15_000_000_000m,
-          PriceChangePercentage24h = -1.2m,
-          MarketCapRank = 2,
-          LastUpdated = DateTime.Now.AddMinutes(-3)
-        },
-        new CoinData
-        {
-          Id = "solana",
-          Name = "Solana",
-          Symbol = "SOL",
-          Image = "https://assets.coingecko.com/coins/images/4128/large/solana.png",
-          CurrentPrice = 95m,
-          MarketCapValue = 40_000_000_000m,
-          Volume24h = 2_000_000_000m,
-          PriceChangePercentage24h = 15.8m,
-          MarketCapRank = 5,
-          LastUpdated = DateTime.Now.AddMinutes(-1)
-        },
-        new CoinData
-        {
-          I
