@@ -42,7 +42,7 @@
               FontSize="16"
               FontWeight="SemiBold"
               Foreground="White"
-              Text="Rugplay" />
+              Text="rnzTradingSim" />
           </StackPanel>
         </Border>
 
@@ -71,12 +71,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE80F;" />
+                Source="{StaticResource House}" />
               <TextBlock VerticalAlignment="Center" Text="Home" />
             </StackPanel>
           </Button>
@@ -103,12 +103,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE719;" />
+                Source="{StaticResource Store}" />
               <TextBlock VerticalAlignment="Center" Text="Market" />
             </StackPanel>
           </Button>
@@ -135,12 +135,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE915;" />
+                Source="{StaticResource TrendingUpDown}" />
               <TextBlock VerticalAlignment="Center" Text="Hopium" />
             </StackPanel>
           </Button>
@@ -157,12 +157,12 @@
             FontSize="14"
             Foreground="White">
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE8AB;" />
+                Source="{StaticResource PiggyBank}" />
               <TextBlock VerticalAlignment="Center" Text="Gambling" />
             </StackPanel>
           </Button>
@@ -189,12 +189,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE8D8;" />
+                Source="{StaticResource Trophy}" />
               <TextBlock VerticalAlignment="Center" Text="Leaderboard" />
             </StackPanel>
           </Button>
@@ -221,12 +221,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE8B7;" />
+                Source="{StaticResource BriefcaseBusiness}" />
               <TextBlock VerticalAlignment="Center" Text="Portfolio" />
             </StackPanel>
           </Button>
@@ -253,12 +253,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE9D9;" />
+                Source="{StaticResource ChartColumn}" />
               <TextBlock VerticalAlignment="Center" Text="Treemap" />
             </StackPanel>
           </Button>
@@ -285,12 +285,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE710;" />
+                Source="{StaticResource Coins}" />
               <TextBlock VerticalAlignment="Center" Text="Create coin" />
             </StackPanel>
           </Button>
@@ -317,12 +317,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE7E7;" />
+                Source="{StaticResource Bell}" />
               <TextBlock VerticalAlignment="Center" Text="Notifications" />
             </StackPanel>
           </Button>
@@ -349,12 +349,12 @@
               </Style>
             </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="16"
-                Text="&#xE946;" />
+                Source="{StaticResource Info}" />
               <TextBlock VerticalAlignment="Center" Text="About" />
             </StackPanel>
           </Button>
@@ -370,13 +370,12 @@
           BorderThickness="1"
           CornerRadius="8">
           <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-            <TextBlock
+            <Image
+              Width="14"
+              Height="14"
               Margin="0,0,8,0"
               VerticalAlignment="Center"
-              FontFamily="Segoe MDL2 Assets"
-              FontSize="14"
-              Foreground="#888888"
-              Text="&#xE2AD;" />
+              Source="{StaticResource Clock}" />
             <TextBlock
               FontSize="13"
               Foreground="#888888"
@@ -392,13 +391,12 @@
               <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-              <TextBlock
+              <Image
+                Width="14"
+                Height="14"
                 Margin="0,0,8,0"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="14"
-                Foreground="#888888"
-                Text="&#xE915;" />
+                Source="{StaticResource Activity}" />
               <TextBlock
                 FontSize="13"
                 FontWeight="Medium"
@@ -542,13 +540,12 @@
             <StackPanel>
               <!--  Total Value Header  -->
               <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
-                <TextBlock
+                <Image
+                  Width="14"
+                  Height="14"
                   Margin="0,0,8,0"
                   VerticalAlignment="Center"
-                  FontFamily="Segoe MDL2 Assets"
-                  FontSize="14"
-                  Foreground="#888888"
-                  Text="&#xE8B7;" />
+                  Source="{StaticResource Wallet}" />
                 <TextBlock
                   VerticalAlignment="Center"
                   FontSize="13"
