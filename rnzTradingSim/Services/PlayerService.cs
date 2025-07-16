@@ -21,12 +21,23 @@ public class PlayerService
   {
     try
     {
-      _context.Database.EnsureCreated();
-      System.Diagnostics.Debug.WriteLine("Database initialized successfully");
+      // Usar o novo método de inicialização
+      _context.InitializeDatabase();
+      System.Diagnostics.Debug.WriteLine("Player database initialized successfully");
     }
     catch (Exception ex)
     {
-      System.Diagnostics.Debug.WriteLine($"Error initializing database: {ex.Message}");
+      System.Diagnostics.Debug.WriteLine($"Error initializing player database: {ex.Message}");
+
+      // Tentar forçar migração como fallback
+      try
+      {
+        _context.EnsureMigrated();
+      }
+      catch (Exception migrateEx)
+      {
+        System.Diagnostics.Debug.WriteLine($"Error during forced migration: {migrateEx.Message}");
+      }
     }
   }
 
