@@ -589,4 +589,51 @@
     </DrawingImage.Drawing>
   </DrawingImage>
 
+  <DrawingImage x:Key="Refresh">
+    <DrawingImage.Drawing>
+      <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M3,12A9,9,0,0,1,12,3A9.75,9.75,0,0,1,18.74,5.74L21,8">
+          <GeometryDrawing.Pen>
+            <Pen
+              Brush="#FF000000"
+              EndLineCap="Round"
+              LineJoin="Round"
+              StartLineCap="Round"
+              Thickness="2" />
+          </GeometryDrawing.Pen>
+        </GeometryDrawing>
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M21,3L21,8 16,8">
+          <GeometryDrawing.Pen>
+            <Pen
+              Brush="#FF000000"
+              EndLineCap="Round"
+              LineJoin="Round"
+              StartLineCap="Round"
+              Thickness="2" />
+          </GeometryDrawing.Pen>
+        </GeometryDrawing>
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M21,12A9,9,0,0,1,12,21A9.75,9.75,0,0,1,5.26,18.26L3,16">
+          <GeometryDrawing.Pen>
+            <Pen
+              Brush="#FF000000"
+              EndLineCap="Round"
+              LineJoin="Round"
+              StartLineCap="Round"
+              Thickness="2" />
+          </GeometryDrawing.Pen>
+        </GeometryDrawing>
+        <GeometryDrawing Geometry="F1 M24,24z M0,0z M8,16L3,16 3,21">
+          <GeometryDrawing.Pen>
+            <Pen
+              Brush="#FF000000"
+              EndLineCap="Round"
+              LineJoin="Round"
+              StartLineCap="Round"
+              Thickness="2" />
+          </GeometryDrawing.Pen>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingImage.Drawing>
+  </DrawingImage>
+
 </ResourceDictionary>
