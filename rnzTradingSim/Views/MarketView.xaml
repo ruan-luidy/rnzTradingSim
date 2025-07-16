@@ -17,6 +17,7 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
@@ -61,8 +62,32 @@
       </Grid>
     </Border>
 
+    <!--  API Status  -->
+    <Border Grid.Row="1" Padding="40,0,40,15">
+      <Border
+        Padding="12,8"
+        HorizontalAlignment="Left"
+        Background="#1a1a1a"
+        BorderBrush="#333333"
+        BorderThickness="1"
+        CornerRadius="6">
+        <StackPanel Orientation="Horizontal">
+          <Border
+            Width="8"
+            Height="8"
+            Margin="0,0,8,0"
+            Background="#00ff88"
+            CornerRadius="4" />
+          <TextBlock
+            FontSize="12"
+            Foreground="#cccccc"
+            Text="{Binding ApiStatusText}" />
+        </StackPanel>
+      </Border>
+    </Border>
+
     <!--  Search and Filters  -->
-    <Border Grid.Row="1" Padding="40,0,40,30">
+    <Border Grid.Row="2" Padding="40,0,40,30">
       <Grid>
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*" />
@@ -93,7 +118,7 @@
     </Border>
 
     <!--  Loading Indicator  -->
-    <Grid Grid.Row="2" Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
+    <Grid Grid.Row="3" Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
       <hc:LoadingCircle
         HorizontalAlignment="Center"
         VerticalAlignment="Center"
@@ -103,7 +128,7 @@
 
     <!--  Market Data  -->
     <Border
-      Grid.Row="2"
+      Grid.Row="3"
       Margin="40,0,40,40"
       Padding="20"
       Background="{DynamicResource RegionBrush}"
@@ -379,8 +404,8 @@
               Margin="2"
               hc:BorderElement.CornerRadius="8"
               Command="{Binding GoToPageCommand}"
-              CommandParameter="602"
-              Content="602" />
+              CommandParameter="5"
+              Content="5" />
           </StackPanel>
 
           <Button
