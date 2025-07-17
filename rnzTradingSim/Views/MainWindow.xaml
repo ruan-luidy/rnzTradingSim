@@ -516,8 +516,7 @@
                   Margin="50,0,0,0"
                   FontSize="13"
                   FontWeight="Medium"
-                  Foreground="White"
-                  Text="$2.05" />
+                  Text="{Binding TotalPortfolioValue}" />
               </StackPanel>
 
               <Grid Margin="0,0,0,5">
@@ -533,8 +532,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="White"
-                  Text="$0.00" />
+                  Text="{Binding CashBalance}" />
               </Grid>
 
               <Grid>
@@ -550,8 +548,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="White"
-                  Text="$2.05" />
+                  Text="{Binding CoinsValue}" />
               </Grid>
             </StackPanel>
           </Border>
@@ -579,7 +576,6 @@
                 VerticalAlignment="Center"
                 FontSize="16"
                 FontWeight="Bold"
-                Foreground="White"
                 Text="R" />
             </Border>
 
@@ -588,7 +584,6 @@
               <TextBlock
                 FontSize="13"
                 FontWeight="Medium"
-                Foreground="White"
                 Text="ruãbrabo" />
               <TextBlock
                 FontSize="11"

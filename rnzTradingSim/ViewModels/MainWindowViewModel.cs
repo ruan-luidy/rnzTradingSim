@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿// Views/MainWindow.xaml - Portfolio Section Update
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using rnzTradingSim.Services;
@@ -11,19 +12,29 @@ namespace rnzTradingSim.ViewModels
     private readonly PlayerService _playerService;
 
     [ObservableProperty]
-    private decimal playerBalance = 1000.00m;
+    private decimal playerBalance = 0.00m;
 
     [ObservableProperty]
-    private int gamesPlayedToday = 23;
+    private int gamesPlayedToday = 0;
 
     [ObservableProperty]
-    private decimal dailyProfitLoss = 245.50m;
+    private decimal dailyProfitLoss = 0.00m;
 
     [ObservableProperty]
     private string selectedView = "MarketView";
 
     [ObservableProperty]
     private bool isProfileVisible = false;
+
+    // Portfolio Properties
+    [ObservableProperty]
+    private decimal cashBalance = 0.00m;
+
+    [ObservableProperty]
+    private decimal coinsValue = 0.00m;
+
+    [ObservableProperty]
+    private decimal totalPortfolioValue = 0.00m;
 
     public MainWindowViewModel()
     {
@@ -39,6 +50,11 @@ namespace rnzTradingSim.ViewModels
         PlayerBalance = player.Balance;
         GamesPlayedToday = player.GamesPlayed;
         DailyProfitLoss = player.NetProfit;
+
+        // Portfolio calculations
+        CashBalance = player.Balance; // Por enquanto todo dinheiro é cash
+        CoinsValue = 0.00m; // Quando implementar trading, calcular aqui
+        TotalPortfolioValue = CashBalance + CoinsValue;
       }
       catch (Exception ex)
       {
@@ -121,6 +137,8 @@ namespace rnzTradingSim.ViewModels
     public void UpdateBalance(decimal newBalance)
     {
       PlayerBalance = newBalance;
+      CashBalance = newBalance;
+      TotalPortfolioValue = CashBalance + CoinsValue;
     }
 
     public void UpdateDailyStats(int games, decimal profitLoss)
