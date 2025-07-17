@@ -1,9 +1,9 @@
-﻿// Views/MainWindow.xaml - Portfolio Section Update
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using rnzTradingSim.Services;
 using rnzTradingSim.Models;
+using rnzTradingSim.Helpers;
 
 namespace rnzTradingSim.ViewModels
 {
@@ -151,5 +151,12 @@ namespace rnzTradingSim.ViewModels
     {
       LoadPlayerData();
     }
+
+    // Propriedades formatadas para exibição
+    public string FormattedBalance => PlayerBalance.FormatAbbreviated();
+    public string FormattedTotalValue => TotalPortfolioValue.FormatAbbreviated();
+    public string FormattedDailyProfitLoss => DailyProfitLoss >= 0
+      ? $"+{DailyProfitLoss.FormatAbbreviated()}"
+      : DailyProfitLoss.FormatAbbreviated();
   }
 }

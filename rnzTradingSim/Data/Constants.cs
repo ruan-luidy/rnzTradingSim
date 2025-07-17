@@ -8,4 +8,8 @@
   // House edge para diferentes jogos
   public const decimal MINES_HOUSE_EDGE = 0.97m; // 3% house edge
   public const decimal COINFLIP_HOUSE_EDGE = 0.95m; // 5% house edge
+
+  // Configurações de moeda
+  public const string CURRENCY_SYMBOL = "$";
+  public const string CURRENCY_CODE = "USD";
 }

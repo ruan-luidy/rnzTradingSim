@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace rnzTradingSim.Converters;
 
 public class StringToDecimalConverter : IValueConverter
 {
+  private static readonly CultureInfo UsdCulture = new CultureInfo("en-US");
+
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
     if (value is decimal decimalValue)
-      return decimalValue.ToString("F2", culture);
+      return decimalValue.ToString("F2", UsdCulture);
 
     return "0.00";
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    if (value is string stringValue && decimal.TryParse(stringValue, NumberStyles.Any, culture, out decimal result))
+    if (value is string stringValue && decimal.TryParse(stringValue, NumberStyles.Any, UsdCulture, out decimal result))
       return result;
 
     return 0m;
@@ -30,19 +28,26 @@ public class StringToDecimalConverter : IValueConverter
 // Converter para valores monetários com separador de milhares
 public class CurrencyConverter : IValueConverter
 {
+  private static readonly CultureInfo UsdCulture = new CultureInfo("en-US");
+
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
     if (value is decimal decimalValue)
     {
-      return decimalValue.ToString("N2", culture); // Formato com separador de milhares
+      return decimalValue.ToString("C2", UsdCulture); // Formato USD com $
     }
-    return "0,00";
+    return "$0.00";
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    if (value is string stringValue && decimal.TryParse(stringValue, NumberStyles.Any, culture, out decimal result))
-      return result;
+    if (value is string stringValue)
+    {
+      // Remove símbolos de moeda e parse
+      var cleanValue = stringValue.Replace("$", "").Replace(",", "").Trim();
+      if (decimal.TryParse(cleanValue, NumberStyles.Any, UsdCulture, out decimal result))
+        return result;
+    }
 
     return 0m;
   }
@@ -57,7 +62,7 @@ public class AbbreviatedCurrencyConverter : IValueConverter
     {
       return FormatAbbreviated(decimalValue);
     }
-    return "R$ 0";
+    return "$0";
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -70,19 +75,19 @@ public class AbbreviatedCurrencyConverter : IValueConverter
   {
     if (value >= 1_000_000_000)
     {
-      return $"R$ {(value / 1_000_000_000):F1}B";
+      return $"${(value / 1_000_000_000):F2}B";
     }
     else if (value >= 1_000_000)
     {
-      return $"R$ {(value / 1_000_000):F1}M";
+      return $"${(value / 1_000_000):F2}M";
     }
     else if (value >= 1_000)
     {
-      return $"R$ {(value / 1_000):F1}K";
+      return $"${(value / 1_000):F2}K";
     }
     else
     {
-      return $"R$ {value:N2}";
+      return $"${value:N2}";
     }
   }
 }
@@ -108,19 +113,46 @@ public class AbbreviatedValueConverter : IValueConverter
   {
     if (value >= 1_000_000_000)
     {
-      return $"{(value / 1_000_000_000):F1}B";
+      return $"{(value / 1_000_000_000):F2}B";
     }
     else if (value >= 1_000_000)
     {
-      return $"{(value / 1_000_000):F1}M";
+      return $"{(value / 1_000_000):F2}M";
     }
     else if (value >= 1_000)
     {
-      return $"{(value / 1_000):F1}K";
+      return $"{(value / 1_000):F2}K";
     }
     else
     {
       return $"{value:N2}";
     }
+  }
+}
+
+// Converter específico para percentuais
+public class PercentageConverter : IValueConverter
+{
+  private static readonly CultureInfo UsdCulture = new CultureInfo("en-US");
+
+  public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+  {
+    if (value is decimal decimalValue)
+    {
+      var sign = decimalValue >= 0 ? "+" : "";
+      return $"{sign}{decimalValue:F2}%";
+    }
+    return "0.00%";
+  }
+
+  public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+  {
+    if (value is string stringValue)
+    {
+      var cleanValue = stringValue.Replace("%", "").Replace("+", "").Trim();
+      if (decimal.TryParse(cleanValue, NumberStyles.Any, UsdCulture, out decimal result))
+        return result;
+    }
+    return 0m;
   }
 }

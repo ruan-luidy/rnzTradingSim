@@ -512,12 +512,14 @@
                   FontSize="13"
                   Foreground="#888888"
                   Text="Total Value" />
-                <TextBlock
-                  Margin="50,0,0,0"
-                  FontSize="13"
-                  FontWeight="Medium"
-                  Text="{Binding TotalPortfolioValue}" />
               </StackPanel>
+
+              <!--  Total Value Amount  -->
+              <TextBlock
+                Margin="0,0,0,15"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="{Binding TotalPortfolioValue, Converter={StaticResource FullCurrencyConverter}}" />
 
               <Grid Margin="0,0,0,5">
                 <Grid.ColumnDefinitions>
@@ -532,7 +534,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Text="{Binding CashBalance}" />
+                  Text="{Binding CashBalance, Converter={StaticResource FullCurrencyConverter}}" />
               </Grid>
 
               <Grid>
@@ -548,7 +550,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Text="{Binding CoinsValue}" />
+                  Text="{Binding CoinsValue, Converter={StaticResource FullCurrencyConverter}}" />
               </Grid>
             </StackPanel>
           </Border>
@@ -597,12 +599,12 @@
               Background="Transparent"
               BorderThickness="0"
               Command="{Binding NavigateToProfileCommand}">
-              <TextBlock
+              <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="14"
-                Foreground="#888888"
-                Text="&#xE712;" />
+                Source="{StaticResource ChevronsUpDown}" />
             </Button>
           </Grid>
         </Border>
@@ -611,7 +613,7 @@
     </Border>
 
     <!--  Main Content Area with ContentControl for Views  -->
-    <Grid Grid.Column="1" Background="#0f0f0f">
+    <Grid Grid.Column="1" Background="{StaticResource DarkOpacityBrush}">
       <ContentControl>
         <ContentControl.Style>
           <Style TargetType="ContentControl">

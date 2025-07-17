@@ -31,12 +31,12 @@
         HorizontalAlignment="Left"
         FontWeight="Bold"
         Style="{StaticResource TextBlockLargeBold}"
-        Text="Minas" />
+        Text="Mines" />
       <TextBlock
         HorizontalAlignment="Left"
         Foreground="{DynamicResource SecondaryTextBrush}"
         Style="{StaticResource TextBlockSubTitle}"
-        Text="Navegue pelo campo minado e retire seus ganhos antes de acertar uma mina!"
+        Text="Navigate the minefield and cash out your winnings before hitting a mine!"
         TextWrapping="Wrap" />
     </StackPanel>
 
@@ -72,7 +72,7 @@
               HorizontalAlignment="Center"
               Foreground="{DynamicResource SecondaryTextBrush}"
               Style="{StaticResource TextBlockSubTitle}"
-              Text="Saldo" />
+              Text="Balance" />
             <TextBlock
               HorizontalAlignment="Center"
               Style="{StaticResource TextBlockTitleBold}"
@@ -108,7 +108,7 @@
               Margin="0,0,0,10"
               HorizontalAlignment="Left"
               Style="{StaticResource TextBlockSubTitleBold}"
-              Text="Número de Minas" />
+              Text="Number of Mines" />
 
             <Grid>
               <Grid.ColumnDefinitions>
@@ -165,12 +165,12 @@
               TextAlignment="Center"
               TextWrapping="Wrap">
 
-              <Run Foreground="{DynamicResource SecondaryTextBrush}" Text="Você receberá " />
+              <Run Foreground="{DynamicResource SecondaryTextBrush}" Text="You will receive " />
               <Run
                 FontWeight="Bold"
                 Foreground="{DynamicResource SuccessBrush}"
                 Text="{Binding MultiplierText}" />
-              <Run Foreground="{DynamicResource SecondaryTextBrush}" Text=" por tile, probabilidade de ganhar: " />
+              <Run Foreground="{DynamicResource SecondaryTextBrush}" Text=" per tile, win probability: " />
               <Run
                 FontWeight="Bold"
                 Foreground="{DynamicResource SuccessBrush}"
@@ -183,7 +183,7 @@
             Margin="0,0,0,15"
             FontSize="18"
             FontWeight="Bold"
-            Text="Valor da Aposta" />
+            Text="Bet Amount" />
 
           <TextBox
             Name="BetAmountTextBox"
@@ -247,7 +247,7 @@
               hc:BorderElement.CornerRadius="8"
               Command="{Binding SetBetPercentageCommand}"
               CommandParameter="100"
-              Content="Máx" />
+              Content="Max" />
 
           </Grid>
 
@@ -256,7 +256,7 @@
             Margin="0,0,0,25"
             FontSize="13"
             Foreground="{DynamicResource SecondaryTextBrush}"
-            Text="Nota: O pagamento máximo por jogo é limitado a R$ 2.000.000."
+            Text="Note: Maximum payout per game is limited to $2,000,000."
             TextWrapping="Wrap" />
 
           <!--  Unified Action Button  -->
@@ -286,7 +286,7 @@
                     <Setter Property="Background" Value="{DynamicResource SuccessBrush}" />
                   </DataTrigger>
                   <!--  Estado: Game Over (perdeu)  -->
-                  <DataTrigger Binding="{Binding GameStatus}" Value="PERDEU">
+                  <DataTrigger Binding="{Binding GameStatus}" Value="LOST">
                     <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
                   </DataTrigger>
                 </Style.Triggers>

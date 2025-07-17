@@ -101,7 +101,6 @@ namespace rnzTradingSim.Data
         entity.Property(e => e.Id).IsRequired().HasMaxLength(100);
         entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
         entity.Property(e => e.Symbol).IsRequired().HasMaxLength(20);
-        entity.Property(e => e.Image).HasMaxLength(500);
 
         // Configurar preço com mais precisão para cryptos
         entity.Property(e => e.CurrentPrice)

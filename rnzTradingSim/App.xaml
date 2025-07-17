@@ -21,6 +21,8 @@
       <converters:CurrencyConverter x:Key="CurrencyConverter" />
       <converters:AbbreviatedCurrencyConverter x:Key="AbbreviatedCurrencyConverter" />
       <converters:AbbreviatedValueConverter x:Key="AbbreviatedValueConverter" />
+      <converters:PercentageConverter x:Key="PercentageConverter" />
+      <converters:FullCurrencyConverter x:Key="FullCurrencyConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

@@ -1,11 +1,14 @@
 ﻿using System.Windows.Media;
 using System.Security.Cryptography;
 using System.Text;
+using System.Globalization;
 
 namespace rnzTradingSim.Models
 {
   public class CoinData
   {
+    private static readonly CultureInfo UsdCulture = new CultureInfo("en-US");
+
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Symbol { get; set; } = string.Empty;
@@ -22,12 +25,12 @@ namespace rnzTradingSim.Models
     public string Rank => $"#{MarketCapRank}";
 
     public string Price => CurrentPrice >= 1
-      ? $"${CurrentPrice:F2}"
-      : $"${CurrentPrice:F6}";
+          ? CurrentPrice.ToString("C2", UsdCulture)
+          : CurrentPrice.ToString("C6", UsdCulture);
 
     public string Change24h => PriceChangePercentage24h >= 0
-      ? $"+{PriceChangePercentage24h:F2}%"
-      : $"{PriceChangePercentage24h:F2}%";
+              ? $"+{PriceChangePercentage24h:F2}%"
+              : $"{PriceChangePercentage24h:F2}%";
 
     public bool IsPositiveChange => PriceChangePercentage24h >= 0;
 
@@ -40,10 +43,10 @@ namespace rnzTradingSim.Models
     public string BadgeText => IsHot ? "HOT" : IsWild ? "WILD" : "";
 
     public SolidColorBrush BadgeColor => IsHot
-      ? new SolidColorBrush(Colors.Orange)
-      : IsWild
-        ? new SolidColorBrush(Colors.Red)
-        : new SolidColorBrush(Colors.Transparent);
+                            ? new SolidColorBrush(Colors.Orange)
+                            : IsWild
+                            ? new SolidColorBrush(Colors.Red)
+                            : new SolidColorBrush(Colors.Transparent);
 
     public SolidColorBrush ImageColor => new SolidColorBrush(GetCoinColor());
 
@@ -57,13 +60,13 @@ namespace rnzTradingSim.Models
     private string FormatLargeNumber(decimal value)
     {
       if (value >= 1_000_000_000)
-        return $"${value / 1_000_000_000:F1}B";
+        return $"${value / 1_000_000_000:F2}B";
       else if (value >= 1_000_000)
-        return $"${value / 1_000_000:F1}M";
+        return $"${value / 1_000_000:F2}M";
       else if (value >= 1_000)
-        return $"${value / 1_000:F1}K";
+        return $"${value / 1_000:F2}K";
       else
-        return $"${value:F2}";
+        return value.ToString("C2", UsdCulture);
     }
 
     private Color GetCoinColor()
@@ -72,17 +75,17 @@ namespace rnzTradingSim.Models
       var hash = Symbol.GetHashCode();
       var colors = new[]
       {
-        Colors.Orange,
-        Colors.Blue,
-        Colors.Green,
-        Colors.Purple,
-        Colors.Red,
-        Colors.Teal,
-        Colors.Pink,
-        Colors.Brown,
-        Colors.Cyan,
-        Colors.Lime
-      };
+                                          Colors.Orange,
+                                          Colors.Blue,
+                                          Colors.Green,
+                                          Colors.Purple,
+                                          Colors.Red,
+                                          Colors.Teal,
+                                          Colors.Pink,
+                                          Colors.Brown,
+                                          Colors.Cyan,
+                                          Colors.Lime
+                                          };
 
       return colors[Math.Abs(hash) % colors.Length];
     }
@@ -105,6 +108,28 @@ namespace rnzTradingSim.Models
         }
         return sb.ToString();
       }
+    }
+
+    // Propriedades formatadas para diferentes contextos
+    public string PriceFormatted => Price;
+    public string PriceChangeFormatted => Change24h;
+    public string MarketCapFormatted => MarketCap;
+    public string VolumeFormatted => Volume24hFormatted;
+
+    // Método para obter cor baseada na mudança de preço
+    public SolidColorBrush GetPriceChangeColor()
+    {
+      return IsPositiveChange
+      ? new SolidColorBrush(Color.FromRgb(34, 197, 94))  // Green-500
+      : new SolidColorBrush(Color.FromRgb(239, 68, 68)); // Red-500
+    }
+
+    // Método para obter o texto formatado da mudança de preço com símbolo
+    public string GetFormattedPriceChange()
+    {
+      var changeAmount = Math.Abs(PriceChange24h);
+      var sign = PriceChangePercentage24h >= 0 ? "+" : "-";
+      return $"{sign}{changeAmount.ToString("C6", UsdCulture)} ({Change24h})";
     }
   }
 }
