@@ -43,7 +43,6 @@
             <TextBlock
               FontSize="16"
               FontWeight="SemiBold"
-              Foreground="White"
               Text="rnzTradingSim" />
           </StackPanel>
         </Border>
@@ -60,15 +59,14 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToHomeCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="HomeView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
+
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -96,15 +94,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToMarketCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="MarketView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -123,42 +119,6 @@
             </StackPanel>
           </Button>
 
-          <!--  Hopium  -->
-          <Button
-            Height="40"
-            Margin="0,0,0,1"
-            Padding="20,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            BorderThickness="0"
-            Command="{Binding NavigateToHopiumCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
-            <Button.Style>
-              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding SelectedView}" Value="HopiumView">
-                    <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
-                  </DataTrigger>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
-                  </Trigger>
-                </Style.Triggers>
-              </Style>
-            </Button.Style>
-            <StackPanel Orientation="Horizontal">
-              <Image
-                Width="16"
-                Height="16"
-                Margin="0,0,12,0"
-                VerticalAlignment="Center"
-                Source="{StaticResource TrendingUpDown}" />
-              <TextBlock VerticalAlignment="Center" Text="Hopium" />
-            </StackPanel>
-          </Button>
-
           <!--  Gambling  -->
           <Button
             Height="40"
@@ -168,15 +128,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToGamblingCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="GamblingView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -204,15 +162,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToLeaderboardCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="LeaderboardView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -240,15 +196,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToPortfolioCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="PortfolioView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -276,15 +230,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToTreemapCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="TreemapView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -303,42 +255,6 @@
             </StackPanel>
           </Button>
 
-          <!--  Create coin  -->
-          <Button
-            Height="40"
-            Margin="0,0,0,1"
-            Padding="20,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            BorderThickness="0"
-            Command="{Binding NavigateToCreateCoinCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
-            <Button.Style>
-              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding SelectedView}" Value="CreateCoinView">
-                    <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
-                  </DataTrigger>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
-                  </Trigger>
-                </Style.Triggers>
-              </Style>
-            </Button.Style>
-            <StackPanel Orientation="Horizontal">
-              <Image
-                Width="16"
-                Height="16"
-                Margin="0,0,12,0"
-                VerticalAlignment="Center"
-                Source="{StaticResource Coins}" />
-              <TextBlock VerticalAlignment="Center" Text="Create coin" />
-            </StackPanel>
-          </Button>
-
           <!--  Notifications  -->
           <Button
             Height="40"
@@ -348,15 +264,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToNotificationsCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="NotificationsView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -384,15 +298,13 @@
             HorizontalContentAlignment="Left"
             BorderThickness="0"
             Command="{Binding NavigateToAboutCommand}"
-            FontSize="14"
-            Foreground="#cccccc">
+            FontSize="14">
             <Button.Style>
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="AboutView">
                     <Setter Property="Background" Value="#1a1a1a" />
-                    <Setter Property="Foreground" Value="White" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1a1a1a" />
@@ -428,10 +340,7 @@
               Margin="0,0,8,0"
               VerticalAlignment="Center"
               Source="{StaticResource Clock}" />
-            <TextBlock
-              FontSize="13"
-              Foreground="#888888"
-              Text="Next in 3h 40m" />
+            <TextBlock FontSize="13" Text="Next in 3h 40m" />
           </StackPanel>
         </Border>
 
