@@ -170,49 +170,20 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                   </Grid.RowDefinitions>
 
-                  <!--  Header com Badge apenas (rank movido para coin info)  -->
-                  <Grid Grid.Row="0" Margin="0,0,0,15">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="*" />
-                      <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <!--  Hot/Wild Badge  -->
-                    <Border
-                      Grid.Column="1"
-                      Padding="8,4"
-                      Background="{Binding BadgeColor}"
-                      CornerRadius="6"
-                      Visibility="{Binding HasBadge, Converter={StaticResource Boolean2VisibilityConverter}}">
-                      <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                          FontSize="10"
-                          FontWeight="Bold"
-                          Foreground="White"
-                          Text="⚡" />
-                        <TextBlock
-                          Margin="2,0,0,0"
-                          FontSize="10"
-                          FontWeight="Bold"
-                          Foreground="White"
-                          Text="{Binding BadgeText}" />
-                      </StackPanel>
-                    </Border>
-                  </Grid>
-
-                  <!--  Coin Info com Rank na mesma linha  -->
-                  <StackPanel Grid.Row="1" Margin="0,0,0,15">
+                  <!--  Coin Info com Rank  -->
+                  <StackPanel Grid.Row="0" Margin="0,0,0,15">
                     <StackPanel Orientation="Horizontal">
                       <!--  Gravatar do HandyControl  -->
                       <hc:Gravatar
-                        Width="28"
-                        Height="28"
+                        Width="50"
+                        Height="50"
                         Margin="0,0,10,0"
                         VerticalAlignment="Center"
+                        hc:BorderElement.CornerRadius="50"
+                        Background="{DynamicResource DarkOpacityBrush}"
                         Id="{Binding Symbol}" />
 
                       <!--  Nome, Symbol e Rank na mesma área  -->
@@ -251,53 +222,79 @@
                   </StackPanel>
 
                   <!--  Price  -->
-                  <StackPanel Grid.Row="2" Margin="0,0,0,12">
+                  <StackPanel Grid.Row="1" Margin="0,0,0,12">
                     <TextBlock
                       FontSize="24"
                       FontWeight="Bold"
                       Foreground="White"
                       Text="{Binding Price}" />
 
-                    <!--  24h Change  -->
-                    <Border
-                      Padding="6,3"
-                      HorizontalAlignment="Left"
-                      CornerRadius="4">
-                      <Border.Style>
-                        <Style TargetType="Border">
-                          <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsPositiveChange}" Value="True">
-                              <Setter Property="Background" Value="#1a4d3a" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsPositiveChange}" Value="False">
-                              <Setter Property="Background" Value="#4d1a1a" />
-                            </DataTrigger>
-                          </Style.Triggers>
-                        </Style>
-                      </Border.Style>
-
-                      <TextBlock
-                        FontSize="12"
-                        FontWeight="Bold"
-                        Text="{Binding Change24h}">
-                        <TextBlock.Style>
-                          <Style BasedOn="{StaticResource TextBlockDefault}" TargetType="TextBlock">
+                    <!--  24h Change com HOT/WILD Badge  -->
+                    <StackPanel Orientation="Horizontal">
+                      <!--  Badge de % de mudança  -->
+                      <Border
+                        Padding="6,3"
+                        HorizontalAlignment="Left"
+                        CornerRadius="4">
+                        <Border.Style>
+                          <Style TargetType="Border">
                             <Style.Triggers>
                               <DataTrigger Binding="{Binding IsPositiveChange}" Value="True">
-                                <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                                <Setter Property="Background" Value="{DynamicResource SuccessBrush}" />
                               </DataTrigger>
                               <DataTrigger Binding="{Binding IsPositiveChange}" Value="False">
-                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
                               </DataTrigger>
                             </Style.Triggers>
                           </Style>
-                        </TextBlock.Style>
-                      </TextBlock>
-                    </Border>
+                        </Border.Style>
+
+                        <TextBlock
+                          FontSize="12"
+                          FontWeight="Medium"
+                          Foreground="{DynamicResource PrimaryTextBrush}"
+                          Text="{Binding Change24h}">
+                          <TextBlock.Style>
+                            <Style BasedOn="{StaticResource TextBlockDefault}" TargetType="TextBlock">
+                              <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPositiveChange}" Value="True">
+                                  <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsPositiveChange}" Value="False">
+                                  <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                </DataTrigger>
+                              </Style.Triggers>
+                            </Style>
+                          </TextBlock.Style>
+                        </TextBlock>
+                      </Border>
+
+                      <!--  Hot/Wild Badge ao lado  -->
+                      <Border
+                        Margin="8,0,0,0"
+                        Padding="6,3"
+                        Background="{Binding BadgeColor}"
+                        CornerRadius="4"
+                        Visibility="{Binding HasBadge, Converter={StaticResource Boolean2VisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                          <TextBlock
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="⚡" />
+                          <TextBlock
+                            Margin="2,0,0,0"
+                            FontSize="10"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="{Binding BadgeText}" />
+                        </StackPanel>
+                      </Border>
+                    </StackPanel>
                   </StackPanel>
 
                   <!--  Market Data  -->
-                  <StackPanel Grid.Row="3" Margin="0,0,0,8">
+                  <StackPanel Grid.Row="2" Margin="0,0,0,8">
                     <!--  Market Cap  -->
                     <Grid Margin="0,0,0,8">
                       <Grid.ColumnDefinitions>
