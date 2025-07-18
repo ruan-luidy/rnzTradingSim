@@ -145,6 +145,13 @@ namespace rnzTradingSim.ViewModels
       }
     }
 
+    // Método para reagir automaticamente às mudanças de página da paginação do HandyControl
+    partial void OnCurrentPageChanged(int oldValue, int newValue)
+    {
+      UpdatePaginationState();
+      _ = LoadCoinsAsync();
+    }
+
     private async Task LoadCoinsAsync()
     {
       IsLoading = true;
@@ -246,6 +253,10 @@ namespace rnzTradingSim.ViewModels
 
       CanGoPreviousPage = CurrentPage > 1;
       CanGoNextPage = CurrentPage < TotalPages;
+
+      // Garantir que CurrentPage está dentro dos limites
+      if (CurrentPage < 1) CurrentPage = 1;
+      if (CurrentPage > TotalPages) CurrentPage = TotalPages;
     }
 
     partial void OnSearchTextChanged(string value)
