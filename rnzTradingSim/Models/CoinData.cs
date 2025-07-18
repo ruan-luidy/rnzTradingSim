@@ -42,12 +42,6 @@ namespace rnzTradingSim.Models
 
     public string BadgeText => IsHot ? "HOT" : IsWild ? "WILD" : "";
 
-    public SolidColorBrush BadgeColor => IsHot
-                            ? new SolidColorBrush(Colors.Orange)
-                            : IsWild
-                            ? new SolidColorBrush(Colors.Red)
-                            : new SolidColorBrush(Colors.Transparent);
-
     public SolidColorBrush ImageColor => new SolidColorBrush(GetCoinColor());
 
     // Gravatar ID baseado no símbolo da moeda
