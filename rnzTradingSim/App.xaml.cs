@@ -16,6 +16,9 @@ public partial class App : Application
 
       // Verificar integridade após inicialização
       DatabaseInitializer.VerifyDatabaseIntegrity();
+
+      // TEMPORÁRIO: Forçar recriação das moedas se não existirem
+      DatabaseInitializer.RecreateCoins();
     }
     catch (Exception ex)
     {

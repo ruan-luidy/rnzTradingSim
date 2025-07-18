@@ -23,19 +23,30 @@ namespace rnzTradingSim.Services
 
           System.Diagnostics.Debug.WriteLine($"Players table populated: {playersExist}");
           System.Diagnostics.Debug.WriteLine($"Coins table populated: {coinsExist}");
+
+          // Se não há moedas, criar
+          if (!coinsExist)
+          {
+            System.Diagnostics.Debug.WriteLine("No coins found, creating fake coins...");
+            var coinService = new FakeCoinService(context);
+            coinService.RecreateAllCoins();
+          }
         }
 
-        // Inicializar o serviço de moedas fake
+        // Verificar o serviço de moedas fake
         using (var coinContext = new TradingDbContext())
         {
           var coinService = new FakeCoinService(coinContext);
           var coinCount = coinService.GetTotalCoinsCount();
           System.Diagnostics.Debug.WriteLine($"Total coins available: {coinCount}");
 
-          // Se não há moedas, algo deu errado na inicialização
+          // Se ainda não há moedas, forçar criação
           if (coinCount == 0)
           {
-            System.Diagnostics.Debug.WriteLine("No coins found, there might be an issue with coin initialization");
+            System.Diagnostics.Debug.WriteLine("Force creating coins...");
+            coinService.RecreateAllCoins();
+            coinCount = coinService.GetTotalCoinsCount();
+            System.Diagnostics.Debug.WriteLine($"After force creation - Total coins: {coinCount}");
           }
         }
 
@@ -62,9 +73,14 @@ namespace rnzTradingSim.Services
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             System.Diagnostics.Debug.WriteLine("Database recreated successfully");
+
+            // Criar moedas após recriar o banco
+            var coinService = new FakeCoinService(context);
+            coinService.RecreateAllCoins();
+            System.Diagnostics.Debug.WriteLine("Coins created after database recreation");
           }
 
-          // Tentar inicializar novamente
+          // Verificar novamente
           using (var context = new TradingDbContext())
           {
             var coinService = new FakeCoinService(context);
@@ -93,6 +109,11 @@ namespace rnzTradingSim.Services
           context.Database.EnsureCreated();
 
           System.Diagnostics.Debug.WriteLine("Database reset and recreated");
+
+          // Criar moedas fake imediatamente após recriar
+          var coinService = new FakeCoinService(context);
+          coinService.RecreateAllCoins();
+          System.Diagnostics.Debug.WriteLine("Fake coins created after reset");
         }
 
         // Reinicializar tudo
@@ -142,6 +163,29 @@ namespace rnzTradingSim.Services
       catch (Exception ex)
       {
         System.Diagnostics.Debug.WriteLine($"Error during integrity check: {ex.Message}");
+      }
+    }
+
+    // Método específico para recriar apenas as moedas
+    public static void RecreateCoins()
+    {
+      try
+      {
+        System.Diagnostics.Debug.WriteLine("Recreating coins only...");
+
+        using (var context = new TradingDbContext())
+        {
+          var coinService = new FakeCoinService(context);
+          coinService.RecreateAllCoins();
+
+          var coinCount = coinService.GetTotalCoinsCount();
+          System.Diagnostics.Debug.WriteLine($"Recreated {coinCount} coins successfully!");
+        }
+      }
+      catch (Exception ex)
+      {
+        System.Diagnostics.Debug.WriteLine($"Error recreating coins: {ex.Message}");
+        throw;
       }
     }
   }

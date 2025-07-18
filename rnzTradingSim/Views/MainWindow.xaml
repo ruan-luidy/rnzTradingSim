@@ -12,7 +12,7 @@
   Width="1400"
   Height="800"
   d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-  Background="{DynamicResource RegionBrush}"
+  Background="{DynamicResource DarkMaskBrush}"
   Style="{StaticResource WindowWin10}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
@@ -26,7 +26,7 @@
     <!--  Left Sidebar  -->
     <Border
       Grid.Column="0"
-      Background="{DynamicResource DarkOpacityBrush}"
+      Background="{DynamicResource RegionBrush}"
       BorderThickness="0,0,1,0"
       CornerRadius="0"
       Style="{StaticResource BorderRegion}">
@@ -67,11 +67,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="HomeView">
-                    <Setter Property="Background" Value="#1a1a1a" />
-
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -103,10 +102,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="MarketView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -138,10 +137,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="GamblingView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -173,10 +172,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="LeaderboardView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -208,10 +207,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="PortfolioView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -243,10 +242,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="TreemapView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -278,10 +277,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="NotificationsView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -313,10 +312,10 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                   <DataTrigger Binding="{Binding SelectedView}" Value="AboutView">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1a1a1a" />
+                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </Trigger>
                 </Style.Triggers>
               </Style>
@@ -337,7 +336,8 @@
         <!--  Next Game Timer  -->
         <Border
           Margin="20,0,20,20"
-          Padding="12"
+          Padding="5"
+          Background="{DynamicResource SecondaryRegionBrush}"
           BorderThickness="1"
           CornerRadius="8"
           Style="{StaticResource BorderRegion}">
@@ -375,7 +375,7 @@
             <TextBlock
               Grid.Column="1"
               FontSize="12"
-              Foreground="{DynamicResource PrimaryBrush}"
+              Foreground="{DynamicResource PrimaryTextBrush}"
               Text="View All" />
           </Grid>
 
@@ -398,7 +398,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="#888888"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
                   Text="$9.00K *B00B by @jessinhoplay" />
               </Grid>
             </Border>
@@ -420,7 +420,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="#888888"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
                   Text="$9.00K *WEG3 by @jeanzinhoplay" />
               </Grid>
             </Border>
@@ -442,7 +442,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="#888888"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
                   Text="$1.80K *NYAAAN by @mathezinho" />
               </Grid>
             </Border>
@@ -464,7 +464,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="#888888"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
                   Text="$1.30K *FRTN by @shiblabi" />
               </Grid>
             </Border>
@@ -486,7 +486,7 @@
                 <TextBlock
                   Grid.Column="1"
                   FontSize="12"
-                  Foreground="#888888"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
                   Text="$9.00K *JAVS by @abner" />
               </Grid>
             </Border>
@@ -504,6 +504,7 @@
 
           <Border
             Padding="15"
+            Background="{DynamicResource DarkMaskBrush}"
             CornerRadius="8"
             Style="{StaticResource BorderRegion}">
             <StackPanel>
@@ -529,14 +530,14 @@
               <Border
                 Margin="0,0,0,12"
                 Padding="2"
-                Background="{DynamicResource DarkOpacityBrush}"
+                Background="{DynamicResource SecondaryRegionBrush}"
                 BorderThickness="0"
                 CornerRadius="8"
                 Style="{StaticResource BorderRegion}">
                 <TextBlock
                   HorizontalAlignment="Center"
                   FontSize="16"
-                  FontWeight="Bold"
+                  FontWeight="Medium"
                   Text="{Binding TotalPortfolioValue, Converter={StaticResource FullCurrencyConverter}}" />
               </Border>
 
@@ -632,7 +633,7 @@
     </Border>
 
     <!--  Main Content Area with ContentControl for Views  -->
-    <Grid Grid.Column="1" Background="{StaticResource DarkOpacityBrush}">
+    <Grid Grid.Column="1" Background="{StaticResource DarkMaskBrush}">
       <ContentControl>
         <ContentControl.Style>
           <Style TargetType="ContentControl">

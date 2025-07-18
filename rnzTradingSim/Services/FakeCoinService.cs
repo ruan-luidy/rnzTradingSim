@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using rnzTradingSim.Data;
 using rnzTradingSim.Models;
-using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace rnzTradingSim.Services
 {
@@ -9,112 +11,194 @@ namespace rnzTradingSim.Services
   {
     private readonly TradingDbContext _context;
     private readonly Random _random;
-    private static readonly List<string> CoinNames = new()
-    {
-      "Bitcoin", "Ethereum", "Binance Coin", "Cardano", "Solana", "XRP", "Polkadot", "Dogecoin",
-      "Avalanche", "Polygon", "Shiba Inu", "Cosmos", "Near Protocol", "Algorand", "VeChain",
-      "Internet Computer", "Hedera", "Filecoin", "Sandbox", "Decentraland", "Chainlink", "Uniswap",
-      "Aave", "Compound", "Maker", "Sushi", "PancakeSwap", "1inch", "Curve", "Yearn Finance",
-      "Synthetix", "Ren", "Loopring", "OMG Network", "Bancor", "Kyber Network", "0x Protocol",
-      "Basic Attention Token", "Status", "District0x", "Golem", "Augur", "Gnosis", "Aragon",
-      "Civic", "Storj", "Metal", "TenX", "OmiseGO", "Qtum", "Lisk", "Waves", "Stratis", "Ark",
-      "Komodo", "Zcash", "Monero", "Dash", "Litecoin", "Bitcoin Cash", "Ethereum Classic",
-      "Stellar", "NEO", "IOTA", "Tron", "EOS", "Tezos", "Cosmos", "Chainlink", "Polkadot"
-    };
-
-    private static readonly List<string> CoinSymbols = new()
-    {
-      "BTC", "ETH", "BNB", "ADA", "SOL", "XRP", "DOT", "DOGE", "AVAX", "MATIC", "SHIB", "ATOM",
-      "NEAR", "ALGO", "VET", "ICP", "HBAR", "FIL", "SAND", "MANA", "LINK", "UNI", "AAVE", "COMP",
-      "MKR", "SUSHI", "CAKE", "1INCH", "CRV", "YFI", "SNX", "REN", "LRC", "OMG", "BNT", "KNC",
-      "ZRX", "BAT", "SNT", "DNT", "GNT", "REP", "GNO", "ANT", "CVC", "STORJ", "MTL", "PAY",
-      "OMG", "QTUM", "LSK", "WAVES", "STRAT", "ARK", "KMD", "ZEC", "XMR", "DASH", "LTC", "BCH",
-      "ETC", "XLM", "NEO", "IOTA", "TRX", "EOS", "XTZ", "ATOM", "LINK", "DOT"
-    };
+    private readonly List<string> _coinNames;
+    private readonly List<string> _coinSymbols;
 
     public FakeCoinService(TradingDbContext context)
     {
       _context = context;
       _random = new Random();
-      InitializeCoins();
+
+      // Lista de nomes e símbolos de moedas fake
+      _coinNames = new List<string>
+      {
+        "Bitcoin", "Ethereum", "Binance Coin", "Cardano", "Solana",
+        "XRP", "Polkadot", "Dogecoin", "Avalanche", "Chainlink",
+        "Polygon", "Uniswap", "Litecoin", "Internet Computer", "Bitcoin Cash",
+        "Stellar", "VeChain", "Filecoin", "TRON", "Ethereum Classic",
+        "Monero", "Hedera", "Cosmos", "Cronos", "Near Protocol",
+        "Flow", "Elrond", "Tezos", "Mina", "Zcash",
+        "Decentraland", "The Sandbox", "Axie Infinity", "Enjin Coin", "Gala",
+        "ApeCoin", "Shiba Inu", "Floki Inu", "SafeMoon", "Baby Doge",
+        "PancakeSwap", "SushiSwap", "Compound", "Aave", "MakerDAO",
+        "Yearn Finance", "Curve DAO", "1inch", "0x Protocol", "Balancer",
+        "Synthetix", "REN", "Band Protocol", "Kyber Network", "Loopring",
+        "Zilliqa", "Ontology", "Qtum", "Waves", "NEM",
+        "Verge", "DigiByte", "Siacoin", "Nano", "IOTA",
+        "Theta Network", "Helium", "Arweave", "The Graph", "Livepeer",
+        "Basic Attention Token", "Brave", "Golem", "Status", "OmiseGO",
+        "Augur", "Gnosis", "iExec RLC", "Storj", "Civic",
+        "PowerLedger", "WazirX", "Holo", "Fetch.ai", "Ocean Protocol",
+        "SingularityNET", "Numeraire", "Cortex", "DeepBrain Chain", "Matrix AI",
+        "ChainGuardian", "Moonbeam", "Kusama", "Acala", "Karura",
+        "Parallel Finance", "Bifrost", "Centrifuge", "HydraDX", "Basilisk",
+        "Kintsugi", "Shiden", "Astar", "Phala Network", "Khala",
+        "Clover Finance", "Sakura", "Calamari", "Robonomics", "KILT Protocol",
+        "SubDAO", "Darwinia", "Crab Network", "Moonriver", "SolarBeam",
+        "RenzoMoon", "GoldenCrypto", "DiamondHands", "SatoshiVision", "CryptoKing"
+      };
+
+      _coinSymbols = new List<string>
+      {
+        "BTC", "ETH", "BNB", "ADA", "SOL",
+        "XRP", "DOT", "DOGE", "AVAX", "LINK",
+        "MATIC", "UNI", "LTC", "ICP", "BCH",
+        "XLM", "VET", "FIL", "TRX", "ETC",
+        "XMR", "HBAR", "ATOM", "CRO", "NEAR",
+        "FLOW", "EGLD", "XTZ", "MINA", "ZEC",
+        "MANA", "SAND", "AXS", "ENJ", "GALA",
+        "APE", "SHIB", "FLOKI", "SFM", "BABYDOGE",
+        "CAKE", "SUSHI", "COMP", "AAVE", "MKR",
+        "YFI", "CRV", "1INCH", "ZRX", "BAL",
+        "SNX", "REN", "BAND", "KNC", "LRC",
+        "ZIL", "ONT", "QTUM", "WAVES", "XEM",
+        "XVG", "DGB", "SC", "NANO", "MIOTA",
+        "THETA", "HNT", "AR", "GRT", "LPT",
+        "BAT", "BRAVE", "GNT", "SNT", "OMG",
+        "REP", "GNO", "RLC", "STORJ", "CVC",
+        "POWR", "WRX", "HOT", "FET", "OCEAN",
+        "AGIX", "NMR", "CTXC", "DBC", "MAN",
+        "CGG", "GLMR", "KSM", "ACA", "KAR",
+        "PARA", "BNC", "CFG", "HDX", "BSX",
+        "KINT", "SDN", "ASTR", "PHA", "KPHA",
+        "CLV", "SKU", "KMA", "XRT", "KILT",
+        "GOV", "RING", "CRAB", "MOVR", "SOLAR",
+        "RENZO", "GOLD", "DIAMOND", "SATOSHI", "KING"
+      };
+
+      // Inicializar moedas se o banco estiver vazio
+      InitializeCoinsIfEmpty();
     }
 
-    private void InitializeCoins()
+    private void InitializeCoinsIfEmpty()
     {
       try
       {
         if (!_context.Coins.Any())
         {
           System.Diagnostics.Debug.WriteLine("Initializing fake coins...");
-          GenerateFakeCoins();
+          CreateFakeCoins();
         }
         else
         {
-          System.Diagnostics.Debug.WriteLine($"Found {_context.Coins.Count()} existing coins");
+          System.Diagnostics.Debug.WriteLine($"Coins already exist: {_context.Coins.Count()} coins found");
         }
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error initializing coins: {ex.Message}");
+        System.Diagnostics.Debug.WriteLine($"Error checking/initializing coins: {ex.Message}");
       }
     }
 
-    private void GenerateFakeCoins()
+    private void CreateFakeCoins()
     {
-      var coins = new List<Coin>();
-
-      for (int i = 0; i < Math.Min(CoinNames.Count, CoinSymbols.Count); i++)
+      try
       {
-        // Preços realistas baseados no ranking
-        decimal basePrice = i switch
+        var coins = new List<Coin>();
+
+        // Criar moedas principais primeiro (Bitcoin, Ethereum, etc.)
+        for (int i = 0; i < Math.Min(_coinNames.Count, _coinSymbols.Count); i++)
         {
-          0 => _random.Next(45000, 65000), // BTC
-          1 => _random.Next(2500, 4000),   // ETH
-          < 5 => _random.Next(50, 500),    // Top 5
-          < 10 => _random.Next(5, 50),     // Top 10
-          < 20 => _random.Next(1, 10),     // Top 20
-          < 50 => (decimal)_random.NextDouble() * 5, // Top 50
-          _ => (decimal)_random.NextDouble() * 1      // Others
-        };
+          var coin = new Coin
+          {
+            Id = Guid.NewGuid().ToString(),
+            Name = _coinNames[i],
+            Symbol = _coinSymbols[i],
+            Image = $"https://via.placeholder.com/32x32?text={_coinSymbols[i]}",
+            CurrentPrice = GeneratePrice(i + 1),
+            MarketCapRank = i + 1,
+            LastUpdated = DateTime.Now
+          };
 
-        var priceChange = (decimal)(_random.NextDouble() * 20 - 10); // -10% a +10%
-        var volume = (decimal)(_random.NextDouble() * 1000000000); // Up to 1B volume
+          // Calcular market cap baseado no rank
+          coin.MarketCapValue = coin.CurrentPrice * GenerateSupply(coin.MarketCapRank);
+          coin.Volume24h = coin.MarketCapValue * ((decimal)_random.NextSingle() * 0.3m + 0.05m); // 5-35% do market cap
 
-        var coin = new Coin
-        {
-          Id = CoinSymbols[i].ToLower(),
-          Name = CoinNames[i],
-          Symbol = CoinSymbols[i],
-          CurrentPrice = Math.Round(basePrice, 8),
-          MarketCapRank = i + 1,
-          PriceChange24h = Math.Round(basePrice * priceChange / 100, 8),
-          PriceChangePercentage24h = Math.Round(priceChange, 4),
-          Volume24h = Math.Round(volume, 2),
-          MarketCapValue = Math.Round(basePrice * _random.Next(1000000, 100000000), 2),
-          LastUpdated = DateTime.Now
-        };
+          // Gerar mudanças de preço realistas
+          var changePercent = (_random.NextSingle() - 0.5f) * 40; // -20% a +20%
+          coin.PriceChangePercentage24h = (decimal)changePercent;
+          coin.PriceChange24h = coin.CurrentPrice * (coin.PriceChangePercentage24h / 100);
 
-        coins.Add(coin);
+          coins.Add(coin);
+        }
+
+        // Adicionar ao banco
+        _context.Coins.AddRange(coins);
+        _context.SaveChanges();
+
+        System.Diagnostics.Debug.WriteLine($"Created {coins.Count} fake coins successfully!");
       }
+      catch (Exception ex)
+      {
+        System.Diagnostics.Debug.WriteLine($"Error creating fake coins: {ex.Message}");
+        throw;
+      }
+    }
 
-      _context.Coins.AddRange(coins);
-      _context.SaveChanges();
+    private decimal GeneratePrice(int rank)
+    {
+      // Preços mais realistas baseados no rank
+      return rank switch
+      {
+        1 => 45000m + (_random.Next(-5000, 5000)), // Bitcoin ~$45k
+        2 => 2800m + (_random.Next(-300, 300)),    // Ethereum ~$2.8k
+        3 => 320m + (_random.Next(-30, 30)),       // BNB ~$320
+        4 => 0.45m + (_random.Next(-5, 5) / 100m), // ADA ~$0.45
+        5 => 55m + (_random.Next(-10, 10)),        // SOL ~$55
+        _ when rank <= 10 => (decimal)(_random.NextDouble() * 50 + 5), // Top 10: $5-55
+        _ when rank <= 50 => (decimal)(_random.NextDouble() * 10 + 0.5), // Top 50: $0.5-10.5
+        _ when rank <= 100 => (decimal)(_random.NextDouble() * 2 + 0.1), // Top 100: $0.1-2.1
+        _ => (decimal)(_random.NextDouble() * 0.5 + 0.001) // Outros: $0.001-0.501
+      };
+    }
 
-      System.Diagnostics.Debug.WriteLine($"Generated {coins.Count} fake coins");
+    private decimal GenerateSupply(int rank)
+    {
+      // Supply baseado no rank (maior rank = menor supply geralmente)
+      return rank switch
+      {
+        1 => 21_000_000m, // Bitcoin
+        2 => 120_000_000m, // Ethereum
+        _ when rank <= 10 => (decimal)(_random.NextDouble() * 500_000_000 + 100_000_000),
+        _ when rank <= 50 => (decimal)(_random.NextDouble() * 5_000_000_000 + 500_000_000),
+        _ => (decimal)(_random.NextDouble() * 100_000_000_000 + 1_000_000_000)
+      };
     }
 
     public List<CoinData> GetCoins(int page = 1, int pageSize = 12)
     {
       try
       {
-        var skip = (page - 1) * pageSize;
         var coins = _context.Coins
-            .OrderBy(c => c.MarketCapRank)
-            .Skip(skip)
-            .Take(pageSize)
-            .ToList();
+          .OrderBy(c => c.MarketCapRank)
+          .Skip((page - 1) * pageSize)
+          .Take(pageSize)
+          .ToList();
 
-        return coins.Select(MapToCoinData).ToList();
+        return coins.Select(c => new CoinData
+        {
+          Id = c.Id,
+          Name = c.Name,
+          Symbol = c.Symbol,
+          Image = c.Image,
+          CurrentPrice = c.CurrentPrice,
+          MarketCapValue = c.MarketCapValue,
+          Volume24h = c.Volume24h,
+          PriceChange24h = c.PriceChange24h,
+          PriceChangePercentage24h = c.PriceChangePercentage24h,
+          MarketCapRank = c.MarketCapRank,
+          LastUpdated = c.LastUpdated
+        }).ToList();
       }
       catch (Exception ex)
       {
@@ -131,7 +215,7 @@ namespace rnzTradingSim.Services
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error getting coin count: {ex.Message}");
+        System.Diagnostics.Debug.WriteLine($"Error getting coins count: {ex.Message}");
         return 0;
       }
     }
@@ -145,22 +229,21 @@ namespace rnzTradingSim.Services
         foreach (var coin in coins)
         {
           // Simular mudanças de preço pequenas (-5% a +5%)
-          var priceChangePercent = (decimal)(_random.NextDouble() * 10 - 5);
-          var priceChange = coin.CurrentPrice * priceChangePercent / 100;
+          var priceChangePercent = (_random.NextSingle() - 0.5f) * 10; // -5% a +5%
+          var newPrice = coin.CurrentPrice * (1 + (decimal)priceChangePercent / 100);
 
-          coin.CurrentPrice = Math.Max(0.00000001m, coin.CurrentPrice + priceChange);
-          coin.PriceChange24h = priceChange;
-          coin.PriceChangePercentage24h = priceChangePercent;
+          // Garantir que o preço não seja negativo
+          coin.CurrentPrice = Math.Max(newPrice, 0.0001m);
+
+          // Atualizar mudança de 24h (acumular)
+          coin.PriceChangePercentage24h += (decimal)priceChangePercent * 0.1m; // Pequena acumulação
+          coin.PriceChange24h = coin.CurrentPrice * (coin.PriceChangePercentage24h / 100);
+
+          // Atualizar market cap
+          coin.MarketCapValue = coin.CurrentPrice * GenerateSupply(coin.MarketCapRank);
+          coin.Volume24h = coin.MarketCapValue * ((decimal)_random.NextSingle() * 0.3m + 0.05m); 
+
           coin.LastUpdated = DateTime.Now;
-
-          // Atualizar market cap baseado no novo preço
-          var marketCapChange = coin.MarketCapValue * priceChangePercent / 100;
-          coin.MarketCapValue = Math.Max(1, coin.MarketCapValue + marketCapChange);
-
-          // Simular mudanças no volume
-          var volumeChangePercent = (decimal)(_random.NextDouble() * 20 - 10);
-          var volumeChange = coin.Volume24h * volumeChangePercent / 100;
-          coin.Volume24h = Math.Max(1000, coin.Volume24h + volumeChange);
         }
 
         _context.SaveChanges();
@@ -172,60 +255,23 @@ namespace rnzTradingSim.Services
       }
     }
 
-    private CoinData MapToCoinData(Coin coin)
-    {
-      return new CoinData
-      {
-        Id = coin.Id,
-        Name = coin.Name,
-        Symbol = coin.Symbol,
-        Image = coin.Image,
-        CurrentPrice = coin.CurrentPrice,
-        MarketCapValue = coin.MarketCapValue,
-        Volume24h = coin.Volume24h,
-        PriceChange24h = coin.PriceChange24h,
-        PriceChangePercentage24h = coin.PriceChangePercentage24h,
-        MarketCapRank = coin.MarketCapRank,
-        LastUpdated = coin.LastUpdated
-      };
-    }
-
-    public CoinData GetCoinById(string id)
+    public void RecreateAllCoins()
     {
       try
       {
-        var coin = _context.Coins.FirstOrDefault(c => c.Id == id);
-        return coin != null ? MapToCoinData(coin) : null;
+        // Deletar todas as moedas existentes
+        _context.Coins.RemoveRange(_context.Coins);
+        _context.SaveChanges();
+
+        // Recriar moedas
+        CreateFakeCoins();
+        System.Diagnostics.Debug.WriteLine("All coins recreated successfully!");
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error getting coin by id: {ex.Message}");
-        return null;
+        System.Diagnostics.Debug.WriteLine($"Error recreating coins: {ex.Message}");
+        throw;
       }
-    }
-
-    public List<CoinData> SearchCoins(string searchTerm)
-    {
-      try
-      {
-        var coins = _context.Coins
-            .Where(c => c.Name.Contains(searchTerm) || c.Symbol.Contains(searchTerm))
-            .OrderBy(c => c.MarketCapRank)
-            .Take(20)
-            .ToList();
-
-        return coins.Select(MapToCoinData).ToList();
-      }
-      catch (Exception ex)
-      {
-        System.Diagnostics.Debug.WriteLine($"Error searching coins: {ex.Message}");
-        return new List<CoinData>();
-      }
-    }
-
-    public void Dispose()
-    {
-      _context?.Dispose();
     }
   }
 }
