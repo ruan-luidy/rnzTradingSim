@@ -174,30 +174,16 @@
                     <RowDefinition Height="*" />
                   </Grid.RowDefinitions>
 
-                  <!--  Header com Rank, Nome e Badge  -->
+                  <!--  Header com Badge apenas (rank movido para coin info)  -->
                   <Grid Grid.Row="0" Margin="0,0,0,15">
                     <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="Auto" />
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <!--  Rank  -->
-                    <Border
-                      Grid.Column="0"
-                      Padding="6,2"
-                      Background="#333333"
-                      CornerRadius="8">
-                      <TextBlock
-                        FontSize="11"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource SecondaryTextBrush}"
-                        Text="{Binding Rank}" />
-                    </Border>
-
                     <!--  Hot/Wild Badge  -->
                     <Border
-                      Grid.Column="2"
+                      Grid.Column="1"
                       Padding="8,4"
                       Background="{Binding BadgeColor}"
                       CornerRadius="6"
@@ -218,7 +204,7 @@
                     </Border>
                   </Grid>
 
-                  <!--  Coin Info  -->
+                  <!--  Coin Info com Rank na mesma linha  -->
                   <StackPanel Grid.Row="1" Margin="0,0,0,15">
                     <StackPanel Orientation="Horizontal">
                       <!--  Gravatar do HandyControl  -->
@@ -229,13 +215,33 @@
                         VerticalAlignment="Center"
                         Id="{Binding Symbol}" />
 
+                      <!--  Nome, Symbol e Rank na mesma área  -->
                       <StackPanel VerticalAlignment="Center">
-                        <TextBlock
-                          FontSize="16"
-                          FontWeight="Bold"
-                          Foreground="White"
-                          Text="{Binding Name}"
-                          TextTrimming="CharacterEllipsis" />
+                        <!--  Nome e Rank na mesma linha  -->
+                        <StackPanel Margin="0,0,0,2" Orientation="Horizontal">
+                          <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Text="{Binding Name}"
+                            TextTrimming="CharacterEllipsis" />
+
+                          <!--  Rank Badge  -->
+                          <Border
+                            Margin="8,0,0,0"
+                            Padding="6,2"
+                            VerticalAlignment="Center"
+                            Background="#333333"
+                            CornerRadius="8">
+                            <TextBlock
+                              FontSize="10"
+                              FontWeight="Bold"
+                              Foreground="{DynamicResource SecondaryTextBrush}"
+                              Text="{Binding Rank}" />
+                          </Border>
+                        </StackPanel>
+
+                        <!--  Symbol  -->
                         <TextBlock
                           FontSize="11"
                           Foreground="{DynamicResource SecondaryTextBrush}"
