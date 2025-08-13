@@ -1,0 +1,156 @@
+<UserControl x:Class="rnzTradingSim.Views.LiveTradesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:hc="https://handyorg.github.io/handycontrol">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{DynamicResource RegionBrush}" CornerRadius="10" Margin="0,0,0,20" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Live Trades" FontSize="24" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBlock Text="Real-time trading activity across all markets" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <hc:Shield Status="{Binding ConnectionStatus}" Content="{Binding ConnectionStatusText}" Margin="0,0,10,0"/>
+                    <hc:Button Content="🔄" Command="{Binding RefreshCommand}" Style="{StaticResource ButtonPrimary}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Market Stats -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <hc:Card Grid.Column="0" Margin="0,0,10,0">
+                <StackPanel>
+                    <TextBlock Text="Active Traders" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding ActiveTraders}" FontSize="20" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryBrush}"/>
+                </StackPanel>
+            </hc:Card>
+            
+            <hc:Card Grid.Column="1" Margin="5,0,5,0">
+                <StackPanel>
+                    <TextBlock Text="24h Volume" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding DayVolume, StringFormat=C0}" FontSize="20" HorizontalAlignment="Center" Foreground="{DynamicResource SuccessBrush}"/>
+                </StackPanel>
+            </hc:Card>
+            
+            <hc:Card Grid.Column="2" Margin="5,0,5,0">
+                <StackPanel>
+                    <TextBlock Text="Trades/min" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding TradesPerMinute}" FontSize="20" HorizontalAlignment="Center" Foreground="{DynamicResource InfoBrush}"/>
+                </StackPanel>
+            </hc:Card>
+            
+            <hc:Card Grid.Column="3" Margin="10,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Biggest Trade" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding BiggestTrade, StringFormat=C0}" FontSize="20" HorizontalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
+                </StackPanel>
+            </hc:Card>
+        </Grid>
+
+        <!-- Trades Feed -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Live Trades List -->
+            <Border Grid.Column="0" Background="{DynamicResource RegionBrush}" CornerRadius="10" Margin="0,0,10,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Recent Trades" FontSize="18" FontWeight="Bold" Margin="20,15,20,10"/>
+                    
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding LiveTrades}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource CardBackground}" CornerRadius="5" Margin="10,5" 
+                                           BorderBrush="{Binding TradeTypeColor}" BorderThickness="0,0,3,0">
+                                        <Grid Margin="15,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <TextBlock Grid.Column="0" Text="{Binding Symbol}" FontWeight="Bold" FontSize="14" 
+                                                     Foreground="{DynamicResource PrimaryBrush}" VerticalAlignment="Center"/>
+                                            
+                                            <StackPanel Grid.Column="1" Margin="15,0">
+                                                <TextBlock Text="{Binding Amount, StringFormat='{0:N4} tokens'}" FontSize="12"/>
+                                                <TextBlock Text="{Binding Timestamp, StringFormat=HH:mm:ss}" FontSize="10" 
+                                                         Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                            </StackPanel>
+                                            
+                                            <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat=C4}" FontSize="14" 
+                                                     VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            
+                                            <Border Grid.Column="3" Background="{Binding TradeTypeColor}" CornerRadius="3" Padding="8,3">
+                                                <TextBlock Text="{Binding Type}" FontSize="10" FontWeight="Bold" Foreground="White"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Market Events -->
+            <Border Grid.Column="1" Background="{DynamicResource RegionBrush}" CornerRadius="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Market Events" FontSize="18" FontWeight="Bold" Margin="20,15,20,10"/>
+                    
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding MarketEvents}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource CardBackground}" CornerRadius="5" Margin="10,5" Padding="10">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12" 
+                                                     Foreground="{Binding EventTypeColor}" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Description}" FontSize="10" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                            <TextBlock Text="{Binding Timestamp, StringFormat=HH:mm}" FontSize="9" 
+                                                     Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

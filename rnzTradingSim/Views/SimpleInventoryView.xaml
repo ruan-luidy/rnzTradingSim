@@ -1,0 +1,150 @@
+<UserControl x:Class="rnzTradingSim.Views.SimpleInventoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="450" d:DesignWidth="800"
+             mc:Ignorable="d">
+    <Grid>
+        <!-- Inventory Interface -->
+        <Border Background="LightGray" CornerRadius="10" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="250"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Items Grid -->
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="🎒 Inventory" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+                    
+                    <!-- Items Display -->
+                    <Border Background="White" CornerRadius="5" Padding="15">
+                        <WrapPanel>
+                            <!-- Lucky Coin -->
+                            <Border Background="Gold" CornerRadius="8" Width="100" Height="120" Margin="5" Padding="10" BorderBrush="Orange" BorderThickness="2" Cursor="Hand">
+                                <StackPanel>
+                                    <TextBlock Text="💰" FontSize="28" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Lucky Coin" FontSize="10" FontWeight="Bold" TextAlignment="Center" Margin="0,5,0,0"/>
+                                    <TextBlock Text="x3" FontSize="9" HorizontalAlignment="Center" Foreground="DarkGray"/>
+                                    <TextBlock Text="+10% luck" FontSize="8" TextAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Shield -->
+                            <Border Background="LightBlue" CornerRadius="8" Width="100" Height="120" Margin="5" Padding="10" BorderBrush="Blue" BorderThickness="2" Cursor="Hand">
+                                <StackPanel>
+                                    <TextBlock Text="🛡️" FontSize="28" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Stop Loss Shield" FontSize="10" FontWeight="Bold" TextAlignment="Center" Margin="0,5,0,0"/>
+                                    <TextBlock Text="x1" FontSize="9" HorizontalAlignment="Center" Foreground="DarkGray"/>
+                                    <TextBlock Text="Protects from crash" FontSize="8" TextAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Speed Boost -->
+                            <Border Background="LightCoral" CornerRadius="8" Width="100" Height="120" Margin="5" Padding="10" BorderBrush="Red" BorderThickness="2" Cursor="Hand">
+                                <StackPanel>
+                                    <TextBlock Text="⚡" FontSize="28" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Speed Boost" FontSize="10" FontWeight="Bold" TextAlignment="Center" Margin="0,5,0,0"/>
+                                    <TextBlock Text="x2" FontSize="9" HorizontalAlignment="Center" Foreground="DarkGray"/>
+                                    <TextBlock Text="Faster trades" FontSize="8" TextAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Market Vision -->
+                            <Border Background="LightGreen" CornerRadius="8" Width="100" Height="120" Margin="5" Padding="10" BorderBrush="Green" BorderThickness="2" Cursor="Hand">
+                                <StackPanel>
+                                    <TextBlock Text="👁️" FontSize="28" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Market Vision" FontSize="10" FontWeight="Bold" TextAlignment="Center" Margin="0,5,0,0"/>
+                                    <TextBlock Text="x1" FontSize="9" HorizontalAlignment="Center" Foreground="DarkGray"/>
+                                    <TextBlock Text="See future prices" FontSize="8" TextAlignment="Center" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Empty Slots -->
+                            <Border Background="LightGray" CornerRadius="8" Width="100" Height="120" Margin="5" Padding="10" BorderBrush="Gray" BorderThickness="1">
+                                <TextBlock Text="Empty" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+                            </Border>
+
+                            <Border Background="LightGray" CornerRadius="8" Width="100" Height="120" Margin="5" Padding="10" BorderBrush="Gray" BorderThickness="1">
+                                <TextBlock Text="Empty" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Gray"/>
+                            </Border>
+                        </WrapPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Item Details Panel -->
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Item Details" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                    
+                    <!-- Selected Item -->
+                    <Border Background="Gold" CornerRadius="5" Padding="15" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="💰 Lucky Coin" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Legendary" FontSize="12" HorizontalAlignment="Center" Foreground="Orange" Margin="0,3,0,0"/>
+                            <TextBlock Text="Quantity: 3" FontSize="11" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <TextBlock Text="Increases your luck in all gambling games. Duration: 5 minutes." TextWrapping="Wrap" FontSize="11" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="Effects:" FontWeight="Bold" FontSize="12" Margin="0,0,0,5"/>
+                    <TextBlock Text="• +10% win chance" FontSize="10" Margin="5,0,0,2"/>
+                    <TextBlock Text="• Works on all games" FontSize="10" Margin="5,0,0,2"/>
+                    <TextBlock Text="• 5 minute duration" FontSize="10" Margin="5,0,0,2"/>
+                    
+                    <Button Content="USE ITEM" Background="Blue" Foreground="White" Margin="0,15,0,0"/>
+
+                    <!-- Active Effects -->
+                    <Border Background="White" CornerRadius="5" Padding="10" Margin="0,20,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Active Effects" FontWeight="Bold" FontSize="12" Margin="0,0,0,10"/>
+                            
+                            <Border Background="LightGreen" CornerRadius="3" Padding="8" Margin="0,0,0,5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Grid.Column="0" Text="💰" FontSize="14" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="Lucky Coin" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0"/>
+                                    <TextBlock Grid.Column="2" Text="3:24" FontSize="9" VerticalAlignment="Center" Foreground="Orange"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Inventory Stats -->
+                    <Border Background="White" CornerRadius="5" Padding="10" Margin="0,15,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Inventory Stats" FontWeight="Bold" FontSize="12" Margin="0,0,0,10"/>
+                            
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Items:" FontSize="10"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Text="7/20" FontSize="10" HorizontalAlignment="Right"/>
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" FontSize="10"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="$1,250" FontSize="10" HorizontalAlignment="Right"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Rarest:" FontSize="10"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="Legendary" FontSize="10" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
