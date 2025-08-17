@@ -10,7 +10,7 @@
   d:DataContext="{d:DesignInstance Type=vm:MarketViewModel}"
   d:DesignHeight="800"
   d:DesignWidth="1150"
-  Background="{DynamicResource DarkOpacityBrush}"
+  Background="{StaticResource DarkBackgroundBrush}"
   mc:Ignorable="d">
 
   <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
@@ -150,20 +150,17 @@
         <ItemsControl Grid.Row="1" ItemsSource="{Binding FilteredCoins}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <UniformGrid Columns="4" />
+              <UniformGrid Columns="3" />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <Border
-                Width="260"
-                Height="240"
-                Margin="7.5"
-                Padding="20"
-                Background="{DynamicResource RegionBrush}"
-                CornerRadius="12"
-                Effect="{StaticResource EffectShadow5}"
-                Style="{StaticResource BorderRegion}">
+                Width="320"
+                Height="180"
+                Style="{StaticResource CoinCardBoard}"
+                MouseLeftButtonUp="CoinCard_Click"
+                Tag="{Binding}">
                 <Grid>
                   <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

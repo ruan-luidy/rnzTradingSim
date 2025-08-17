@@ -11,8 +11,11 @@
       <ResourceDictionary.MergedDictionaries>
         <!--  HandyControl Dark Theme  -->
         <hc:Theme Skin="Dark" />
+        <!--  Rugplay Theme  -->
+        <ResourceDictionary Source="Resources/Styles/RugplayTheme.xaml" />
         <!--  Custom Styles  -->
         <ResourceDictionary Source="Resources/Styles/CustomStyles.xaml" />
+        <ResourceDictionary Source="Resources/Styles/BoardStyles.xaml" />
         <ResourceDictionary Source="/Resources/Styles/Geometries.xaml" />
       </ResourceDictionary.MergedDictionaries>
 
@@ -23,6 +26,7 @@
       <converters:AbbreviatedValueConverter x:Key="AbbreviatedValueConverter" />
       <converters:PercentageConverter x:Key="PercentageConverter" />
       <converters:FullCurrencyConverter x:Key="FullCurrencyConverter" />
+      <converters:HalfValueConverter x:Key="HalfValueConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

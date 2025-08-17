@@ -98,22 +98,36 @@ public class PlayerService
       _context.GameResults.Add(result);
       _context.SaveChanges();
 
-      // Manter apenas os últimos 1000 jogos por player
-      var oldResults = _context.GameResults
-          .Where(gr => gr.PlayerId == _currentPlayer.Id)
-          .OrderBy(gr => gr.PlayedAt)
-          .Take(_context.GameResults.Count(gr => gr.PlayerId == _currentPlayer.Id) - 1000)
-          .ToList();
-
-      if (oldResults.Any())
+      // Limpeza otimizada - executar apenas ocasionalmente
+      if (_currentPlayer.GamesPlayed % 100 == 0) // A cada 100 jogos
       {
-        _context.GameResults.RemoveRange(oldResults);
-        _context.SaveChanges();
+        CleanupOldGameResults();
       }
     }
     catch (Exception ex)
     {
       System.Diagnostics.Debug.WriteLine($"Error adding game result: {ex.Message}");
+    }
+  }
+
+  private void CleanupOldGameResults()
+  {
+    try
+    {
+      // Query mais eficiente usando SQL direto
+      var cutoffDate = DateTime.Now.AddDays(-30); // Manter apenas últimos 30 dias
+      var deletedCount = _context.Database.ExecuteSqlRaw(
+        "DELETE FROM GameResults WHERE PlayerId = {0} AND PlayedAt < {1}",
+        _currentPlayer.Id, cutoffDate);
+
+      if (deletedCount > 0)
+      {
+        System.Diagnostics.Debug.WriteLine($"Cleaned up {deletedCount} old game results");
+      }
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"Error cleaning up game results: {ex.Message}");
     }
   }
 

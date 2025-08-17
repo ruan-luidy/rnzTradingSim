@@ -7,15 +7,18 @@ using System.Windows.Media;
 using rnzTradingSim.Models;
 using rnzTradingSim.Services;
 using rnzTradingSim.Data;
+using static UIConstants;
 
 namespace rnzTradingSim.ViewModels
 {
-  public partial class MarketViewModel : ObservableObject
+  public partial class MarketViewModel : ObservableObject, IDisposable
   {
     private readonly FakeCoinService _coinService;
     private readonly TradingDbContext _db;
     private List<CoinData> _allCoins;
     private System.Timers.Timer? _updateTimer;
+    private DateTime _lastCacheUpdate = DateTime.MinValue;
+    private bool _disposed = false;
 
     [ObservableProperty]
     private ObservableCollection<CoinData> filteredCoins;
@@ -30,10 +33,10 @@ namespace rnzTradingSim.ViewModels
     private int currentPage = 1;
 
     [ObservableProperty]
-    private int totalPages = 100; // CoinCap tem muitas moedas
+    private int totalPages = 100;
 
     [ObservableProperty]
-    private string resultsText = "Showing 1-12 of 1200+ coins";
+    private string resultsText = $"Showing 1-{DEFAULT_PAGE_SIZE} of 1200+ coins";
 
     [ObservableProperty]
     private bool canGoPreviousPage = false;
@@ -55,26 +58,13 @@ namespace rnzTradingSim.ViewModels
 
         _ = LoadCoinsAsync();
 
-        // Atualiza preços a cada 2 minutos para testes (pode aumentar depois)
-        _updateTimer = new System.Timers.Timer(2 * 60 * 1000);
-        _updateTimer.Elapsed += async (s, e) => {
-          try
-          {
-            _coinService.UpdateAllCoins();
-            await LoadCoinsAsync();
-          }
-          catch (Exception ex)
-          {
-            System.Diagnostics.Debug.WriteLine($"Error in timer update: {ex.Message}");
-          }
-        };
-        _updateTimer.Start();
+        InitializeTimer();
 
-        System.Diagnostics.Debug.WriteLine("MarketViewModel initialized successfully");
+        LoggingService.Info("MarketViewModel initialized successfully");
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error initializing MarketViewModel: {ex.Message}");
+        LoggingService.Error("Error initializing MarketViewModel", ex);
 
         // Tentar inicialização de fallback
         try
@@ -90,10 +80,37 @@ namespace rnzTradingSim.ViewModels
         }
         catch (Exception fallbackEx)
         {
-          System.Diagnostics.Debug.WriteLine($"Fallback initialization failed: {fallbackEx.Message}");
+          LoggingService.Error("Fallback initialization failed", fallbackEx);
           ApiStatusText = "⚠ Erro ao carregar dados - Reinicie a aplicação";
           FilteredCoins = new ObservableCollection<CoinData>();
         }
+      }
+    }
+
+    private void InitializeTimer()
+    {
+      try
+      {
+        _updateTimer = new System.Timers.Timer(MARKET_UPDATE_INTERVAL_MS);
+        _updateTimer.Elapsed += async (s, e) => {
+          if (_disposed) return;
+
+          try
+          {
+            _coinService?.UpdateAllCoins();
+            await LoadCoinsAsync();
+          }
+          catch (Exception ex)
+          {
+            LoggingService.Error("Error in market timer update", ex);
+          }
+        };
+        _updateTimer.AutoReset = true;
+        _updateTimer.Start();
+      }
+      catch (Exception ex)
+      {
+        LoggingService.Error("Error initializing market timer", ex);
       }
     }
 
@@ -154,6 +171,14 @@ namespace rnzTradingSim.ViewModels
 
     private async Task LoadCoinsAsync()
     {
+      if (_disposed) return;
+
+      // Verificar cache antes de carregar
+      if (DateTime.Now.Subtract(_lastCacheUpdate).TotalMinutes < COIN_CACHE_DURATION_MINUTES)
+      {
+        return; // Usar dados em cache
+      }
+
       IsLoading = true;
       ApiStatusText = "Carregando dados simulados...";
 
@@ -166,13 +191,14 @@ namespace rnzTradingSim.ViewModels
           throw new InvalidOperationException("Coin service not initialized");
         }
 
-        var coins = _coinService.GetCoins(CurrentPage, 12);
+        var coins = _coinService.GetCoins(CurrentPage, DEFAULT_PAGE_SIZE);
 
         _allCoins.Clear();
         _allCoins.AddRange(coins);
 
         FilterCoins();
         UpdateResultsText();
+        _lastCacheUpdate = DateTime.Now;
 
         if (coins.Count > 0)
         {
@@ -189,7 +215,7 @@ namespace rnzTradingSim.ViewModels
             DatabaseInitializer.Initialize();
 
             // Tentar carregar novamente
-            coins = _coinService.GetCoins(CurrentPage, 12);
+            coins = _coinService.GetCoins(CurrentPage, DEFAULT_PAGE_SIZE);
             _allCoins.Clear();
             _allCoins.AddRange(coins);
             FilterCoins();
@@ -208,7 +234,7 @@ namespace rnzTradingSim.ViewModels
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Erro ao carregar moedas: {ex.Message}");
+        LoggingService.Error("Erro ao carregar moedas", ex);
         ApiStatusText = "⚠ Erro ao carregar dados simulados";
         _allCoins.Clear();
         FilterCoins();
@@ -241,15 +267,15 @@ namespace rnzTradingSim.ViewModels
     private void UpdateResultsText()
     {
       var totalCoins = _coinService?.GetTotalCoinsCount() ?? 0;
-      int startIndex = (CurrentPage - 1) * 12 + 1;
-      int endIndex = Math.Min(CurrentPage * 12, totalCoins);
+      int startIndex = (CurrentPage - 1) * DEFAULT_PAGE_SIZE + 1;
+      int endIndex = Math.Min(CurrentPage * DEFAULT_PAGE_SIZE, totalCoins);
       ResultsText = $"Showing {startIndex}-{endIndex} of {totalCoins} coins";
     }
 
     private void UpdatePaginationState()
     {
       var totalCoins = _coinService?.GetTotalCoinsCount() ?? 0;
-      TotalPages = Math.Max(1, (int)Math.Ceiling(totalCoins / 12.0));
+      TotalPages = Math.Max(1, (int)Math.Ceiling(totalCoins / (double)DEFAULT_PAGE_SIZE));
 
       CanGoPreviousPage = CurrentPage > 1;
       CanGoNextPage = CurrentPage < TotalPages;
@@ -266,16 +292,43 @@ namespace rnzTradingSim.ViewModels
 
     public void Dispose()
     {
-      try
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!_disposed && disposing)
       {
-        _updateTimer?.Stop();
-        _updateTimer?.Dispose();
-        _db?.Dispose();
+        try
+        {
+          _disposed = true;
+
+          if (_updateTimer != null)
+          {
+            _updateTimer.Stop();
+            _updateTimer.Elapsed -= async (s, e) => { };
+            _updateTimer.Dispose();
+            _updateTimer = null;
+          }
+
+          _db?.Dispose();
+
+          _allCoins?.Clear();
+          FilteredCoins?.Clear();
+
+          LoggingService.Info("MarketViewModel disposed successfully");
+        }
+        catch (Exception ex)
+        {
+          LoggingService.Error("Error disposing MarketViewModel", ex);
+        }
       }
-      catch (Exception ex)
-      {
-        System.Diagnostics.Debug.WriteLine($"Error disposing MarketViewModel: {ex.Message}");
-      }
+    }
+
+    ~MarketViewModel()
+    {
+      Dispose(false);
     }
   }
 }

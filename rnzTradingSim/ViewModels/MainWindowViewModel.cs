@@ -24,6 +24,9 @@ namespace rnzTradingSim.ViewModels
     private string selectedView = "MarketView";
 
     [ObservableProperty]
+    private string selectedCoinId = string.Empty;
+
+    [ObservableProperty]
     private bool isProfileVisible = false;
 
     // Portfolio Properties
@@ -132,6 +135,12 @@ namespace rnzTradingSim.ViewModels
     private void ShowProfile()
     {
       IsProfileVisible = !IsProfileVisible;
+    }
+
+    public void NavigateToCoinDetail(string coinId)
+    {
+      SelectedCoinId = coinId;
+      SelectedView = "CoinDetailView";
     }
 
     public void UpdateBalance(decimal newBalance)

@@ -12,7 +12,7 @@
   Width="1400"
   Height="800"
   d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-  Background="{DynamicResource DarkMaskBrush}"
+  Background="{StaticResource DarkBackgroundBrush}"
   Style="{StaticResource WindowWin10}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
@@ -26,10 +26,10 @@
     <!--  Left Sidebar  -->
     <Border
       Grid.Column="0"
-      Background="{DynamicResource RegionBrush}"
+      Background="{StaticResource CardBackgroundBrush}"
+      BorderBrush="{StaticResource BorderBrush}"
       BorderThickness="0,0,1,0"
-      CornerRadius="0"
-      Style="{StaticResource BorderRegion}">
+      CornerRadius="0">
       <StackPanel>
 
         <!--  Logo/Brand  -->
@@ -39,7 +39,7 @@
               Width="20"
               Height="20"
               Margin="0,0,8,0"
-              Background="#ff6b35"
+              Background="{StaticResource RugplayPrimaryBrush}"
               CornerRadius="4" />
             <TextBlock
               FontSize="16"
@@ -670,6 +670,13 @@
                 <Setter Property="Content">
                   <Setter.Value>
                     <views:ProfileView />
+                  </Setter.Value>
+                </Setter>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding SelectedView}" Value="CoinDetailView">
+                <Setter Property="Content">
+                  <Setter.Value>
+                    <views:CoinDetailView />
                   </Setter.Value>
                 </Setter>
               </DataTrigger>

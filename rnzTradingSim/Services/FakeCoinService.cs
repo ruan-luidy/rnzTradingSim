@@ -4,22 +4,30 @@ using rnzTradingSim.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static UIConstants;
+using static NetworkConstants;
 
 namespace rnzTradingSim.Services
 {
-  public class FakeCoinService
+  public class FakeCoinService : IDisposable
   {
     private readonly TradingDbContext _context;
     private readonly Random _random;
     private readonly List<string> _coinNames;
     private readonly List<string> _coinSymbols;
+    
+    // Cache para melhorar performance
+    private List<CoinData>? _cachedCoins;
+    private DateTime _lastCacheUpdate = DateTime.MinValue;
+    private int _cachedTotalCount = 0;
+    private bool _disposed = false;
 
     public FakeCoinService(TradingDbContext context)
     {
       _context = context;
       _random = new Random();
 
-      // Lista de nomes e sÌmbolos de moedas fake
+      // Lista de nomes e s√≠mbolos de criptomoedas populares (dados simulados)
       _coinNames = new List<string>
       {
         "Bitcoin", "Ethereum", "Binance Coin", "Cardano", "Solana",
@@ -86,17 +94,19 @@ namespace rnzTradingSim.Services
       {
         if (!_context.Coins.Any())
         {
-          System.Diagnostics.Debug.WriteLine("Initializing fake coins...");
+          LoggingService.Info("Initializing simulated coin data...");
           CreateFakeCoins();
         }
         else
         {
-          System.Diagnostics.Debug.WriteLine($"Coins already exist: {_context.Coins.Count()} coins found");
+          var count = _context.Coins.Count();
+          LoggingService.Debug($"Coins already exist: {count} coins found");
+          _cachedTotalCount = count;
         }
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error checking/initializing coins: {ex.Message}");
+        LoggingService.Error("Error checking/initializing coins", ex);
       }
     }
 
@@ -124,7 +134,7 @@ namespace rnzTradingSim.Services
           coin.MarketCapValue = coin.CurrentPrice * GenerateSupply(coin.MarketCapRank);
           coin.Volume24h = coin.MarketCapValue * ((decimal)_random.NextSingle() * 0.3m + 0.05m); // 5-35% do market cap
 
-          // Gerar mudanÁas de preÁo realistas
+          // Gerar mudanÔøΩas de preÔøΩo realistas
           var changePercent = (_random.NextSingle() - 0.5f) * 40; // -20% a +20%
           coin.PriceChangePercentage24h = (decimal)changePercent;
           coin.PriceChange24h = coin.CurrentPrice * (coin.PriceChangePercentage24h / 100);
@@ -132,22 +142,25 @@ namespace rnzTradingSim.Services
           coins.Add(coin);
         }
 
-        // Adicionar ao banco
+        // Adicionar ao banco em lotes para melhor performance
         _context.Coins.AddRange(coins);
         _context.SaveChanges();
+        
+        _cachedTotalCount = coins.Count;
+        InvalidateCache(); // Limpar cache ap√≥s mudan√ßas
 
-        System.Diagnostics.Debug.WriteLine($"Created {coins.Count} fake coins successfully!");
+        LoggingService.Info($"Created {coins.Count} simulated coins successfully!");
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error creating fake coins: {ex.Message}");
+        LoggingService.Error("Error creating simulated coins", ex);
         throw;
       }
     }
 
     private decimal GeneratePrice(int rank)
     {
-      // PreÁos mais realistas baseados no rank
+      // PreÔøΩos mais realistas baseados no rank
       return rank switch
       {
         1 => 45000m + (_random.Next(-5000, 5000)), // Bitcoin ~$45k
@@ -175,17 +188,29 @@ namespace rnzTradingSim.Services
       };
     }
 
-    public List<CoinData> GetCoins(int page = 1, int pageSize = 12)
+    public List<CoinData> GetCoins(int page = 1, int pageSize = DEFAULT_PAGE_SIZE)
     {
+      if (_disposed) return new List<CoinData>();
+
       try
       {
+        // Verificar se o cache ainda √© v√°lido
+        if (IsCacheValid())
+        {
+          return GetFromCache(page, pageSize);
+        }
+
+        // Simular delay de rede para realismo
+        Thread.Sleep(_random.Next(MIN_NETWORK_DELAY_MS, MAX_NETWORK_DELAY_MS));
+
         var coins = _context.Coins
           .OrderBy(c => c.MarketCapRank)
           .Skip((page - 1) * pageSize)
           .Take(pageSize)
+          .AsNoTracking() // Melhor performance para read-only
           .ToList();
 
-        return coins.Select(c => new CoinData
+        var coinData = coins.Select(c => new CoinData
         {
           Id = c.Id,
           Name = c.Name,
@@ -199,44 +224,92 @@ namespace rnzTradingSim.Services
           MarketCapRank = c.MarketCapRank,
           LastUpdated = c.LastUpdated
         }).ToList();
+
+        // Atualizar cache se for a primeira p√°gina
+        if (page == 1)
+        {
+          UpdateCache(coinData);
+        }
+
+        return coinData;
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error getting coins: {ex.Message}");
+        LoggingService.Error("Error getting coins", ex);
         return new List<CoinData>();
       }
     }
 
+    private bool IsCacheValid()
+    {
+      return _cachedCoins != null && 
+             DateTime.Now.Subtract(_lastCacheUpdate).TotalMinutes < COIN_CACHE_DURATION_MINUTES;
+    }
+
+    private List<CoinData> GetFromCache(int page, int pageSize)
+    {
+      if (_cachedCoins == null) return new List<CoinData>();
+
+      return _cachedCoins
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToList();
+    }
+
+    private void UpdateCache(List<CoinData> coins)
+    {
+      _cachedCoins = new List<CoinData>(coins);
+      _lastCacheUpdate = DateTime.Now;
+    }
+
+    private void InvalidateCache()
+    {
+      _cachedCoins = null;
+      _lastCacheUpdate = DateTime.MinValue;
+    }
+
     public int GetTotalCoinsCount()
     {
+      if (_disposed) return 0;
+
       try
       {
-        return _context.Coins.Count();
+        // Usar cache se dispon√≠vel
+        if (_cachedTotalCount > 0)
+        {
+          return _cachedTotalCount;
+        }
+
+        var count = _context.Coins.Count();
+        _cachedTotalCount = count;
+        return count;
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error getting coins count: {ex.Message}");
+        LoggingService.Error("Error getting coins count", ex);
         return 0;
       }
     }
 
     public void UpdateAllCoins()
     {
+      if (_disposed) return;
+
       try
       {
-        var coins = _context.Coins.ToList();
+        var coins = _context.Coins.AsNoTracking().ToList();
 
         foreach (var coin in coins)
         {
-          // Simular mudanÁas de preÁo pequenas (-5% a +5%)
+          // Simular mudan√ßas de pre√ßo pequenas (-5% a +5%)
           var priceChangePercent = (_random.NextSingle() - 0.5f) * 10; // -5% a +5%
           var newPrice = coin.CurrentPrice * (1 + (decimal)priceChangePercent / 100);
 
-          // Garantir que o preÁo n„o seja negativo
+          // Garantir que o pre√ßo n√£o seja negativo
           coin.CurrentPrice = Math.Max(newPrice, 0.0001m);
 
-          // Atualizar mudanÁa de 24h (acumular)
-          coin.PriceChangePercentage24h += (decimal)priceChangePercent * 0.1m; // Pequena acumulaÁ„o
+          // Atualizar mudan√ßa de 24h (acumular)
+          coin.PriceChangePercentage24h += (decimal)priceChangePercent * 0.1m; // Pequena acumula√ß√£o
           coin.PriceChange24h = coin.CurrentPrice * (coin.PriceChangePercentage24h / 100);
 
           // Atualizar market cap
@@ -246,32 +319,65 @@ namespace rnzTradingSim.Services
           coin.LastUpdated = DateTime.Now;
         }
 
+        // Usar bulk update para melhor performance
+        _context.Coins.UpdateRange(coins);
         _context.SaveChanges();
-        System.Diagnostics.Debug.WriteLine($"Updated {coins.Count} coins");
+        
+        // Invalidar cache ap√≥s atualiza√ß√£o
+        InvalidateCache();
+
+        LoggingService.Debug($"Updated {coins.Count} coins");
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error updating coins: {ex.Message}");
+        LoggingService.Error("Error updating coins", ex);
       }
     }
 
     public void RecreateAllCoins()
     {
+      if (_disposed) return;
+
       try
       {
         // Deletar todas as moedas existentes
         _context.Coins.RemoveRange(_context.Coins);
         _context.SaveChanges();
 
+        // Limpar cache
+        InvalidateCache();
+        _cachedTotalCount = 0;
+
         // Recriar moedas
         CreateFakeCoins();
-        System.Diagnostics.Debug.WriteLine("All coins recreated successfully!");
+        LoggingService.Info("All coins recreated successfully!");
       }
       catch (Exception ex)
       {
-        System.Diagnostics.Debug.WriteLine($"Error recreating coins: {ex.Message}");
+        LoggingService.Error("Error recreating coins", ex);
         throw;
       }
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!_disposed && disposing)
+      {
+        _disposed = true;
+        InvalidateCache();
+        LoggingService.Debug("FakeCoinService disposed");
+      }
+    }
+
+    ~FakeCoinService()
+    {
+      Dispose(false);
     }
   }
 }

@@ -1,0 +1,145 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:hc="https://handyorg.github.io/handycontrol">
+
+    <!-- Base Board Style -->
+    <Style x:Key="BaseBoard" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Margin" Value="8"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#fb2c36" 
+                                  Opacity="0.1" 
+                                  BlurRadius="10" 
+                                  ShadowDepth="2" 
+                                  Direction="270"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="#fb2c36" 
+                                          Opacity="0.3" 
+                                          BlurRadius="15" 
+                                          ShadowDepth="4" 
+                                          Direction="270"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderBrush" Value="{StaticResource RugplayPrimaryBrush}"/>
+                <Setter Property="Background" Value="{StaticResource HoverBackgroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Coin Card Style -->
+    <Style x:Key="CoinCardBoard" TargetType="Border" BasedOn="{StaticResource BaseBoard}">
+        <Setter Property="MinHeight" Value="140"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1" ScaleY="1"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                         To="1.02" Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                         To="1.02" Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                         To="1.0" Duration="0:0:0.2"/>
+                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                         To="1.0" Duration="0:0:0.2"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Info Board Style -->
+    <Style x:Key="InfoBoard" TargetType="Border" BasedOn="{StaticResource BaseBoard}">
+        <Setter Property="Background" Value="{DynamicResource SecondRegionBrush}"/>
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <!-- Trading Board Style -->
+    <Style x:Key="TradingBoard" TargetType="Border" BasedOn="{StaticResource BaseBoard}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{DynamicResource SecondaryRegionColor}" Offset="0"/>
+                    <GradientStop Color="{DynamicResource RegionColor}" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Padding" Value="24"/>
+        <Setter Property="MinHeight" Value="200"/>
+    </Style>
+
+    <!-- Chart Board Style -->
+    <Style x:Key="ChartBoard" TargetType="Border" BasedOn="{StaticResource BaseBoard}">
+        <Setter Property="Background" Value="{DynamicResource ThirdlyRegionBrush}"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="MinHeight" Value="300"/>
+    </Style>
+
+    <!-- Header Text Style -->
+    <Style x:Key="BoardHeaderText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,12"/>
+    </Style>
+
+    <!-- Subheader Text Style -->
+    <Style x:Key="BoardSubheaderText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <!-- Value Text Style -->
+    <Style x:Key="BoardValueText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource RugplayPrimaryBrush}"/>
+    </Style>
+
+    <!-- Price Up Style -->
+    <Style x:Key="PriceUpText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource BuyGreenBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <!-- Price Down Style -->
+    <Style x:Key="PriceDownText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource SellRedBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <!-- Rug Warning Style -->
+    <Style x:Key="RugWarningBorder" TargetType="Border">
+        <Setter Property="Background" Value="#FEE2E2"/>
+        <Setter Property="BorderBrush" Value="#EF4444"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Margin" Value="0,8"/>
+    </Style>
+
+</ResourceDictionary>
