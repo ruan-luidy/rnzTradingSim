@@ -72,7 +72,7 @@ namespace rnzTradingSim.ViewModels
     }
 
     [RelayCommand]
-    private void NavigateToMarket()
+    public void NavigateToMarket()
     {
       SelectedView = "MarketView";
     }
@@ -98,14 +98,9 @@ namespace rnzTradingSim.ViewModels
     [RelayCommand]
     private void NavigateToPortfolio()
     {
-      SelectedView = "PortfolioView";
+      SelectedView = "SimplePortfolioView";
     }
 
-    [RelayCommand]
-    private void NavigateToTreemap()
-    {
-      SelectedView = "TreemapView";
-    }
 
     [RelayCommand]
     private void NavigateToCreateCoin()
@@ -113,17 +108,7 @@ namespace rnzTradingSim.ViewModels
       SelectedView = "CreateCoinView";
     }
 
-    [RelayCommand]
-    private void NavigateToNotifications()
-    {
-      SelectedView = "NotificationsView";
-    }
 
-    [RelayCommand]
-    private void NavigateToAbout()
-    {
-      SelectedView = "AboutView";
-    }
 
     [RelayCommand]
     private void NavigateToProfile()
@@ -135,6 +120,25 @@ namespace rnzTradingSim.ViewModels
     private void ShowProfile()
     {
       IsProfileVisible = !IsProfileVisible;
+    }
+
+    [RelayCommand]
+    private void TestNotifications()
+    {
+      // Test different types of notifications
+      NotificationService.ShowNotification("🚀 Welcome to rnzTradingSim!", NotificationService.NotificationType.Info);
+      
+      Task.Run(async () =>
+      {
+        await Task.Delay(1000);
+        NotificationService.NotifyTradingSuccess("Successfully bought 1,000 DOGE for $500!");
+        
+        await Task.Delay(2000);
+        NotificationService.NotifyBigTrade("SELL", "SHIB", 50000, 7500);
+        
+        await Task.Delay(3000);
+        NotificationService.NotifyRugPull("SCAM", "Total Scam Coin", 85.5m, 15000);
+      });
     }
 
     public void NavigateToCoinDetail(string coinId)

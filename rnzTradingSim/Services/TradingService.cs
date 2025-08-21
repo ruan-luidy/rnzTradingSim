@@ -120,6 +120,12 @@ namespace rnzTradingSim.Services
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
         
+        // Detectar trade grande (> $5000)
+        if (usdAmount > 5000)
+        {
+          NotificationService.NotifyBigTrade("BUY", coin.Symbol, actualTokensOut, usdAmount);
+        }
+        
         LoggingService.Info($"Player {player.Id} bought {actualTokensOut:N2} {coin.Symbol} for ${usdAmount:N2}");
         
         return (true, $"Bought {actualTokensOut:N2} {coin.Symbol}", trade);
@@ -173,6 +179,13 @@ namespace rnzTradingSim.Services
         var fee = usdOut * TRADING_FEE;
         var actualUsdOut = usdOut - fee;
         
+        // Detectar rug pull automático (crash > 20% e volume > $1000)
+        bool isRugPull = priceImpact > 20 && actualUsdOut > 1000;
+        if (isRugPull)
+        {
+          NotificationService.NotifyRugPull(coin.Symbol, coin.Name, priceImpact, actualUsdOut);
+        }
+        
         // Atualizar pool
         coin.PoolTokenAmount += tokenAmount;
         coin.PoolBaseAmount -= actualUsdOut;
@@ -224,6 +237,12 @@ namespace rnzTradingSim.Services
         
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
+        
+        // Detectar trade grande (> $5000)
+        if (actualUsdOut > 5000)
+        {
+          NotificationService.NotifyBigTrade("SELL", coin.Symbol, tokenAmount, actualUsdOut);
+        }
         
         LoggingService.Info($"Player {player.Id} sold {tokenAmount:N2} {coin.Symbol} for ${actualUsdOut:N2}");
         
@@ -293,6 +312,9 @@ namespace rnzTradingSim.Services
         
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
+        
+        // Notificar rug pull manual
+        NotificationService.NotifyRugPull(coin.Symbol, coin.Name, 100, stolenAmount);
         
         LoggingService.Warning($"RUG PULL! Player {player.Id} rugged {coin.Symbol} stealing ${stolenAmount:N2}");
         

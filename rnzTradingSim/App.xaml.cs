@@ -1,10 +1,13 @@
 ﻿using System.Windows;
 using rnzTradingSim.Services;
+using rnzTradingSim.Data;
 
 namespace rnzTradingSim;
 
 public partial class App : Application
 {
+  private static MarketSimulationService? _marketSimulation;
+  
   protected override void OnStartup(StartupEventArgs e)
   {
     base.OnStartup(e);
@@ -19,6 +22,11 @@ public partial class App : Application
 
       // TEMPORÁRIO: Forçar recriação das moedas se não existirem
       DatabaseInitializer.RecreateCoins();
+      
+      // Inicializar simulação de mercado
+      var context = new TradingDbContext();
+      _marketSimulation = new MarketSimulationService(context);
+      LoggingService.Info("Market simulation initialized");
     }
     catch (Exception ex)
     {
@@ -61,7 +69,10 @@ public partial class App : Application
 
   protected override void OnExit(ExitEventArgs e)
   {
-    // Cleanup if needed
+    // Cleanup market simulation
+    _marketSimulation?.Dispose();
+    LoggingService.Info("Application shutdown - market simulation disposed");
+    
     base.OnExit(e);
   }
 }

@@ -61,17 +61,27 @@
 
         <Button
           Width="70"
+          Margin="0,0,10,0"
           hc:BorderElement.CornerRadius="8"
           BorderThickness="0"
           Content="Dice"
           FontWeight="Bold" />
+
+        <Button
+          Width="70"
+          hc:BorderElement.CornerRadius="8"
+          Background="#f59e0b"
+          BorderThickness="0"
+          Content="🚀 Crash"
+          FontWeight="Bold"
+          Foreground="White" />
 
       </StackPanel>
     </Border>
 
     <!--  Game Content Area  -->
     <Border Grid.Row="2" Margin="40,0,40,40">
-      <games:MinesView />
+      <games:CrashView />
     </Border>
 
   </Grid>

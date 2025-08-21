@@ -48,6 +48,13 @@ namespace rnzTradingSim.ViewModels
     [ObservableProperty]
     private ObservableCollection<Trade> recentTrades = new();
 
+    // Computed property for UI binding
+    public bool IsSellMode 
+    { 
+      get => TradingMode == "Sell";
+      set => TradingMode = value ? "Sell" : "Buy";
+    }
+
     public CoinDetailViewModel()
     {
       var context = new rnzTradingSim.Data.TradingDbContext();
@@ -107,6 +114,7 @@ namespace rnzTradingSim.ViewModels
     partial void OnTradingModeChanged(string value)
     {
       UpdateTradeEstimates();
+      OnPropertyChanged(nameof(IsSellMode));
     }
 
     private void UpdateTradeEstimates()

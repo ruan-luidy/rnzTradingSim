@@ -47,6 +47,18 @@ namespace rnzTradingSim.ViewModels
     [ObservableProperty]
     private string apiStatusText = "Simulação de Criptomoedas - Dados 100% Fakes!";
 
+    [ObservableProperty]
+    private ObservableCollection<CoinData> topCoins;
+
+    [ObservableProperty]
+    private string greetingText = "Welcome to Rugplay!";
+
+    [ObservableProperty]
+    private string subtitleText = "Here's the market overview for today.";
+
+    [ObservableProperty]
+    private int sortBy = 0; // 0=Market Cap, 1=Price, 2=24h Change, 3=Volume, 4=Name
+
     public MarketViewModel()
     {
       try
@@ -55,6 +67,7 @@ namespace rnzTradingSim.ViewModels
         _coinService = new FakeCoinService(_db);
         _allCoins = new List<CoinData>();
         FilteredCoins = new ObservableCollection<CoinData>();
+        TopCoins = new ObservableCollection<CoinData>();
 
         _ = LoadCoinsAsync();
 
@@ -197,6 +210,7 @@ namespace rnzTradingSim.ViewModels
         _allCoins.AddRange(coins);
 
         FilterCoins();
+        UpdateTopCoins();
         UpdateResultsText();
         _lastCacheUpdate = DateTime.Now;
 
@@ -250,6 +264,7 @@ namespace rnzTradingSim.ViewModels
     {
       var filtered = _allCoins.AsEnumerable();
 
+      // Apply search filter
       if (!string.IsNullOrWhiteSpace(SearchText))
       {
         filtered = filtered.Where(c =>
@@ -257,11 +272,31 @@ namespace rnzTradingSim.ViewModels
           c.Symbol.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
       }
 
+      // Apply sorting
+      filtered = SortBy switch
+      {
+        0 => filtered.OrderByDescending(c => c.MarketCapValue), // Market Cap
+        1 => filtered.OrderByDescending(c => c.CurrentPrice), // Price
+        2 => filtered.OrderByDescending(c => c.PriceChangePercentage24h), // 24h Change
+        3 => filtered.OrderByDescending(c => c.Volume24h), // Volume
+        4 => filtered.OrderBy(c => c.Name), // Name
+        _ => filtered.OrderByDescending(c => c.MarketCapValue)
+      };
+
+      // Pagination
+      var totalCount = filtered.Count();
+      var pagedCoins = filtered.Skip((CurrentPage - 1) * DEFAULT_PAGE_SIZE).Take(DEFAULT_PAGE_SIZE);
+
       FilteredCoins.Clear();
-      foreach (var coin in filtered)
+      foreach (var coin in pagedCoins)
       {
         FilteredCoins.Add(coin);
       }
+
+      // Update pagination info
+      TotalPages = (int)Math.Ceiling((double)totalCount / DEFAULT_PAGE_SIZE);
+      CanGoPreviousPage = CurrentPage > 1;
+      CanGoNextPage = CurrentPage < TotalPages;
     }
 
     private void UpdateResultsText()
@@ -289,6 +324,22 @@ namespace rnzTradingSim.ViewModels
     {
       FilterCoins();
     }
+
+    partial void OnSortByChanged(int value)
+    {
+      FilterCoins();
+    }
+
+    private void UpdateTopCoins()
+    {
+      TopCoins.Clear();
+      var topCoins = _allCoins.OrderByDescending(c => c.MarketCapValue).Take(6);
+      foreach (var coin in topCoins)
+      {
+        TopCoins.Add(coin);
+      }
+    }
+
 
     public void Dispose()
     {

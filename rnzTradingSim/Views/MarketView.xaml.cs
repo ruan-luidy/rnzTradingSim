@@ -17,14 +17,27 @@ namespace rnzTradingSim.Views
     {
       if (sender is Border border && border.Tag is CoinData coin)
       {
-        // Navegar para a página de detalhes da moeda
-        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        if (mainWindow?.DataContext is MainWindowViewModel mainVM)
-        {
-          // Navegar para CoinDetail - temporariamente usando o ID da moeda fake
-          // Quando tivermos UserCoins, vamos usar o ID correto
-          mainVM.NavigateToCoinDetail(coin.Id);
-        }
+        NavigateToCoinDetail(coin);
+      }
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      if (sender is DataGrid dataGrid && dataGrid.SelectedItem is CoinData coin)
+      {
+        NavigateToCoinDetail(coin);
+      }
+    }
+
+    private void NavigateToCoinDetail(CoinData coin)
+    {
+      // Navegar para a página de detalhes da moeda
+      var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+      if (mainWindow?.DataContext is MainWindowViewModel mainVM)
+      {
+        // Navegar para CoinDetail - temporariamente usando o ID da moeda fake
+        // Quando tivermos UserCoins, vamos usar o ID correto
+        mainVM.NavigateToCoinDetail(coin.Id);
       }
     }
   }

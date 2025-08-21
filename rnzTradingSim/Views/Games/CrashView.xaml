@@ -1,0 +1,233 @@
+<UserControl x:Class="rnzTradingSim.Views.Games.CrashView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:rnzTradingSim.ViewModels.Games"
+             d:DataContext="{d:DesignInstance Type=vm:CrashViewModel}"
+             mc:Ignorable="d">
+
+    <Grid Background="{DynamicResource RegionBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Padding="30,20" Background="{DynamicResource CardBackgroundBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="🚀 Crash Game" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="Cash out before it crashes!" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right">
+                    <TextBlock Text="Balance" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Right"/>
+                    <TextBlock Text="{Binding PlayerBalance, StringFormat=\${0:N2}}" FontSize="16" FontWeight="SemiBold" Foreground="#22c55e" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Game Area -->
+        <Grid Grid.Row="1" Margin="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Game Display -->
+            <Border Grid.Column="0" Background="#0f0f0f" BorderBrush="#333" BorderThickness="2" CornerRadius="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Status Bar -->
+                    <Border Grid.Row="0" Padding="20,15" Background="#1a1a1a">
+                        <TextBlock Text="{Binding GameStatusText}" FontSize="14" Foreground="White" HorizontalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Multiplier Display -->
+                    <Viewbox Grid.Row="1" Margin="40">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <!-- Main Multiplier -->
+                            <TextBlock Text="{Binding CurrentMultiplier, StringFormat=\{0:F2\}x}" 
+                                       FontSize="120" 
+                                       FontWeight="Bold" 
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Foreground>
+                                    <SolidColorBrush x:Name="MultiplierBrush" Color="#22c55e"/>
+                                </TextBlock.Foreground>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsGameActive}" Value="False">
+                                                <Setter Property="Foreground" Value="#ef4444"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Potential Payout -->
+                            <TextBlock Text="{Binding PotentialPayout, StringFormat=\${0:N2}}" 
+                                       FontSize="24" 
+                                       Foreground="#a1a1aa" 
+                                       HorizontalAlignment="Center"
+                                       Margin="0,10,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasBet}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Countdown -->
+                            <TextBlock Text="{Binding NextGameCountdown}" 
+                                       FontSize="60" 
+                                       FontWeight="Bold"
+                                       Foreground="#f59e0b" 
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsWaitingForNextGame}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Viewbox>
+
+                    <!-- Last Result -->
+                    <Border Grid.Row="2" Padding="20,10">
+                        <TextBlock Text="{Binding LastResultText}" 
+                                   FontSize="12" 
+                                   Foreground="{DynamicResource SecondaryTextBrush}" 
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LastResultText}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Control Panel -->
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12">
+                <StackPanel Margin="25,20">
+                    
+                    <!-- Bet Amount -->
+                    <TextBlock Text="Bet Amount" FontSize="14" FontWeight="Medium" Margin="0,0,0,8"/>
+                    <hc:NumericUpDown Height="40" 
+                                      hc:BorderElement.CornerRadius="8"
+                                      Value="{Binding BetAmount}"
+                                      Minimum="1"
+                                      Maximum="{Binding PlayerBalance}"
+                                      DecimalPlaces="2"
+                                      Margin="0,0,0,20"/>
+
+                    <!-- Quick Bet Buttons -->
+                    <TextBlock Text="Quick Bets" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,8"/>
+                    <UniformGrid Columns="2" Margin="0,0,0,20">
+                        <Button Content="$5" Height="30" Margin="0,0,2,2" Command="{Binding SetBetCommand}" CommandParameter="5"/>
+                        <Button Content="$10" Height="30" Margin="2,0,0,2" Command="{Binding SetBetCommand}" CommandParameter="10"/>
+                        <Button Content="$25" Height="30" Margin="0,2,2,2" Command="{Binding SetBetCommand}" CommandParameter="25"/>
+                        <Button Content="$50" Height="30" Margin="2,2,0,2" Command="{Binding SetBetCommand}" CommandParameter="50"/>
+                        <Button Content="$100" Height="30" Margin="0,2,2,0" Command="{Binding SetBetCommand}" CommandParameter="100"/>
+                        <Button Content="Max" Height="30" Margin="2,2,0,0" Command="{Binding SetBetCommand}" CommandParameter="{Binding PlayerBalance}"/>
+                    </UniformGrid>
+
+                    <!-- Action Buttons -->
+                    <Button Height="50" 
+                            Content="PLACE BET" 
+                            Command="{Binding PlaceBetCommand}"
+                            IsEnabled="{Binding CanPlaceBet}"
+                            Background="#22c55e"
+                            BorderBrush="#22c55e"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            FontSize="14"
+                            hc:BorderElement.CornerRadius="8"
+                            Margin="0,0,0,10">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource ButtonDefault}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasBet}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Height="50" 
+                            Content="CASH OUT" 
+                            Command="{Binding CashOutCommand}"
+                            IsEnabled="{Binding CanCashOut}"
+                            Background="#f59e0b"
+                            BorderBrush="#f59e0b"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            FontSize="14"
+                            hc:BorderElement.CornerRadius="8"
+                            Margin="0,0,0,20">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource ButtonDefault}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasBet}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <!-- Statistics -->
+                    <Border Padding="15,10" Background="#1a1a1a" CornerRadius="6">
+                        <StackPanel>
+                            <TextBlock Text="Recent Crashes" FontSize="12" FontWeight="Medium" Margin="0,0,0,5"/>
+                            <TextBlock Text="{Binding RecentCrashes}" FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Instructions -->
+                    <Border Padding="15,10" Background="#1a1a1a" CornerRadius="6" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="How to Play" FontSize="12" FontWeight="Medium" Margin="0,0,0,5"/>
+                            <TextBlock FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap">
+                                <Run Text="1. Place your bet"/>
+                                <LineBreak/>
+                                <Run Text="2. Watch the multiplier grow"/>
+                                <LineBreak/>
+                                <Run Text="3. Cash out before it crashes!"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,28 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using rnzTradingSim.ViewModels;
+using rnzTradingSim.Models;
 
 namespace rnzTradingSim.Views
 {
-  /// <summary>
-  /// Interaction logic for HomeView.xaml
-  /// </summary>
   public partial class HomeView : UserControl
   {
     public HomeView()
     {
       InitializeComponent();
+      DataContext = new HomeViewModel();
+    }
+
+    private void CoinCard_Click(object sender, MouseButtonEventArgs e)
+    {
+      if (sender is Border border && border.Tag is CoinData coin)
+      {
+        NavigateToCoinDetail(coin);
+      }
+    }
+
+    private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      if (sender is DataGrid dataGrid && dataGrid.SelectedItem is CoinData coin)
+      {
+        NavigateToCoinDetail(coin);
+      }
+    }
+
+    private void NavigateToCoinDetail(CoinData coin)
+    {
+      var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+      if (mainWindow?.DataContext is MainWindowViewModel mainVM)
+      {
+        mainVM.NavigateToCoinDetail(coin.Id);
+      }
     }
   }
 }

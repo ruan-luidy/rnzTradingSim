@@ -14,81 +14,78 @@
   mc:Ignorable="d">
 
   <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-    <Grid Margin="50">
+    <Grid Margin="24">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
 
       <!--  Header  -->
-      <Border Grid.Row="0" Padding="40,30,40,20">
+      <Border Grid.Row="0" Padding="0,0,0,32">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
-
+          
           <StackPanel Grid.Column="0">
             <TextBlock
+              FontSize="30"
+              FontWeight="Bold"
               Foreground="White"
-              Style="{StaticResource TextBlockLargeBold}"
               Text="Market" />
             <TextBlock
-              Margin="0,5,0,0"
+              Margin="0,8,0,0"
+              FontSize="16"
               Foreground="{DynamicResource SecondaryTextBrush}"
-              Style="{StaticResource TextBlockDefault}"
               Text="Discover coins, track performance, and find your next investment" />
           </StackPanel>
 
-          <StackPanel Grid.Column="1" Orientation="Horizontal" />
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <TextBlock
+              VerticalAlignment="Center"
+              Margin="0,0,16,0"
+              FontSize="14"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Text="{Binding ResultsText}" />
+            
+            <Button
+              Height="40"
+              Padding="16,0"
+              hc:BorderElement.CornerRadius="8"
+              Background="{StaticResource RugplayPrimaryBrush}"
+              BorderBrush="{StaticResource RugplayPrimaryBrush}"
+              Command="{Binding RefreshCommand}"
+              Foreground="White">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🔄" Margin="0,0,8,0" />
+                <TextBlock Text="Refresh" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
         </Grid>
       </Border>
 
-      <!--  API Status  -->
-      <Border Grid.Row="1" Padding="40,0,40,15">
-        <Border
-          Padding="12,8"
-          HorizontalAlignment="Left"
-          Background="#1a1a1a"
-          BorderBrush="#333333"
-          BorderThickness="1"
-          CornerRadius="6">
-          <StackPanel Orientation="Horizontal">
-            <Border
-              Width="8"
-              Height="8"
-              Margin="0,0,8,0"
-              Background="#00ff88"
-              CornerRadius="4" />
-            <TextBlock
-              FontSize="12"
-              Foreground="#cccccc"
-              Text="{Binding ApiStatusText}" />
-          </StackPanel>
-        </Border>
-      </Border>
-
       <!--  Search and Filters  -->
-      <Border Grid.Row="2" Padding="40,0,40,30">
+      <Border Grid.Row="1" Padding="0,0,0,24">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
 
-          <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-            <!--  Search Box  -->
-            <hc:SearchBar
-              Width="400"
-              Margin="0,0,10,0"
-              hc:BorderElement.CornerRadius="8"
-              hc:InfoElement.Placeholder="Search coins by name or symbol..."
-              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+          <hc:SearchBar
+            Grid.Column="0"
+            Width="400"
+            HorizontalAlignment="Left"
+            hc:BorderElement.CornerRadius="8"
+            hc:InfoElement.Placeholder="Search coins by name or symbol..."
+            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
-            <!--  Filters Button  -->
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
             <Button
               Height="32"
               Margin="0,0,10,0"
@@ -99,28 +96,28 @@
               BorderThickness="1"
               Command="{Binding ShowFiltersCommand}"
               Content="Filters" />
-
-            <Button
+            
+            <ComboBox
+              Width="120"
               Height="32"
               hc:BorderElement.CornerRadius="8"
-              Background="{DynamicResource RegionBrush}"
-              BorderBrush="{DynamicResource BorderBrush}"
-              Command="{Binding RefreshCommand}">
-              <StackPanel Orientation="Horizontal">
-                <Image
-                  Width="16"
-                  Height="16"
-                  VerticalAlignment="Center"
-                  Source="{StaticResource Refresh}" />
-              </StackPanel>
-            </Button>
-
+              SelectedIndex="{Binding SortBy}"
+              ToolTip="Sort by">
+              <ComboBoxItem Content="Market Cap" />
+              <ComboBoxItem Content="Price" />
+              <ComboBoxItem Content="24h Change" />
+              <ComboBoxItem Content="Volume" />
+              <ComboBoxItem Content="Name" />
+            </ComboBox>
           </StackPanel>
         </Grid>
       </Border>
 
       <!--  Loading Indicator  -->
-      <Grid Grid.Row="3" Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
+      <Grid 
+        Grid.Row="2" 
+        Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}"
+        Margin="0,0,0,24">
         <hc:LoadingCircle
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
@@ -128,39 +125,45 @@
           Style="{StaticResource LoadingCircleLarge}" />
       </Grid>
 
-      <!--  Market Data - Cards com altura fixa  -->
-      <Grid
-        Grid.Row="3"
-        Margin="40,0,40,30"
+      <!--  All Coins Grid with Pagination  -->
+      <Grid 
+        Grid.Row="3" 
         Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityReConverter}}">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <!--  Results Info  -->
-        <TextBlock
-          Grid.Row="0"
-          Margin="0,0,0,20"
-          FontSize="14"
-          Foreground="{DynamicResource SecondaryTextBrush}"
-          Text="{Binding ResultsText}" />
-
-        <!--  Coins Grid Cards com dimensões fixas  -->
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding FilteredCoins}">
+        
+        <ItemsControl ItemsSource="{Binding FilteredCoins}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <UniformGrid Columns="3" />
+              <UniformGrid Columns="4" />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate>
+              <!--  Compact Coin Card for Market Grid  -->
               <Border
-                Width="320"
-                Height="180"
-                Style="{StaticResource CoinCardBoard}"
+                Margin="6"
+                Padding="20"
+                Background="{DynamicResource CardBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Cursor="Hand"
                 MouseLeftButtonUp="CoinCard_Click"
                 Tag="{Binding}">
+                <Border.Style>
+                  <Style TargetType="Border">
+                    <Style.Triggers>
+                      <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+                        <Setter Property="Effect">
+                          <Setter.Value>
+                            <DropShadowEffect Color="#000000" BlurRadius="6" ShadowDepth="1" Opacity="0.2"/>
+                          </Setter.Value>
+                        </Setter>
+                      </Trigger>
+                    </Style.Triggers>
+                  </Style>
+                </Border.Style>
+
                 <Grid>
                   <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -168,165 +171,116 @@
                     <RowDefinition Height="*" />
                   </Grid.RowDefinitions>
 
-                  <!--  Coin Info com Rank  -->
-                  <StackPanel Grid.Row="0" Margin="0,0,0,12">
-                    <StackPanel Orientation="Horizontal">
-                      <!--  Gravatar do HandyControl  -->
-                      <hc:Gravatar
-                        Width="40"
-                        Height="40"
-                        Margin="0,0,8,0"
+                  <!--  Header with Icon and Change  -->
+                  <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Coin Icon  -->
+                    <Border
+                      Grid.Column="0"
+                      Width="20"
+                      Height="20"
+                      Margin="0,0,8,0"
+                      Background="{StaticResource RugplayPrimaryBrush}"
+                      CornerRadius="10">
+                      <TextBlock
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        hc:BorderElement.CornerRadius="40"
-                        Background="{DynamicResource DarkOpacityBrush}"
-                        Id="{Binding Symbol}" />
+                        FontSize="8"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="{Binding Symbol}" />
+                    </Border>
 
-                      <!--  Nome, Symbol e Rank na mesma área  -->
-                      <StackPanel VerticalAlignment="Center">
-                        <!--  Nome e Rank na mesma linha  -->
-                        <StackPanel Margin="0,0,0,2" Orientation="Horizontal">
-                          <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="14"
-                            FontWeight="Medium"
-                            Text="{Binding Name}"
-                            TextTrimming="CharacterEllipsis" />
-
-                          <!--  Rank Badge  -->
-                          <Border
-                            Margin="6,0,0,0"
-                            Padding="4,1"
-                            VerticalAlignment="Center"
-                            Background="#333333"
-                            CornerRadius="6">
-                            <TextBlock
-                              FontSize="9"
-                              FontWeight="Bold"
-                              Foreground="{DynamicResource SecondaryTextBrush}"
-                              Text="{Binding Rank}" />
-                          </Border>
-                        </StackPanel>
-
-                        <!--  Symbol  -->
-                        <TextBlock
-                          FontSize="10"
-                          Foreground="{DynamicResource SecondaryTextBrush}"
-                          Text="{Binding Symbol}" />
-                      </StackPanel>
+                    <!--  Name & Symbol  -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                      <TextBlock
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Text="{Binding Name}"
+                        TextTrimming="CharacterEllipsis" />
+                      <TextBlock
+                        FontSize="11"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        Text="{Binding Symbol}" />
                     </StackPanel>
-                  </StackPanel>
 
-                  <!--  Price  -->
-                  <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                    <!--  Rank Badge  -->
+                    <Border
+                      Grid.Column="2"
+                      Padding="4,2"
+                      VerticalAlignment="Top"
+                      Background="#333333"
+                      CornerRadius="4">
+                      <TextBlock
+                        FontSize="9"
+                        FontWeight="Bold"
+                        Foreground="{DynamicResource SecondaryTextBrush}"
+                        Text="{Binding Rank}" />
+                    </Border>
+                  </Grid>
+
+                  <!--  Price and Change  -->
+                  <Grid Grid.Row="1" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
                     <TextBlock
-                      FontSize="20"
+                      Grid.Column="0"
+                      FontSize="18"
                       FontWeight="Bold"
                       Foreground="White"
                       Text="{Binding Price}" />
 
-                    <!--  24h Change com HOT/WILD Badge  -->
-                    <StackPanel Orientation="Horizontal">
-                      <!--  Badge de % de mudança  -->
-                      <Border
-                        Padding="4,2"
-                        HorizontalAlignment="Left"
-                        CornerRadius="3">
-                        <Border.Style>
-                          <Style TargetType="Border">
-                            <Style.Triggers>
-                              <DataTrigger Binding="{Binding IsPositiveChange}" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource SuccessBrush}" />
-                              </DataTrigger>
-                              <DataTrigger Binding="{Binding IsPositiveChange}" Value="False">
-                                <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
-                              </DataTrigger>
-                            </Style.Triggers>
-                          </Style>
-                        </Border.Style>
+                    <!--  24h Change Badge  -->
+                    <Border
+                      Grid.Column="1"
+                      Padding="6,3"
+                      VerticalAlignment="Center"
+                      CornerRadius="3">
+                      <Border.Style>
+                        <Style TargetType="Border">
+                          <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsPositiveChange}" Value="True">
+                              <Setter Property="Background" Value="#16a34a" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsPositiveChange}" Value="False">
+                              <Setter Property="Background" Value="#dc2626" />
+                            </DataTrigger>
+                          </Style.Triggers>
+                        </Style>
+                      </Border.Style>
+                      <TextBlock
+                        FontSize="10"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        Text="{Binding Change24h}" />
+                    </Border>
+                  </Grid>
 
-                        <TextBlock
-                          FontSize="11"
-                          FontWeight="Medium"
-                          Foreground="{DynamicResource PrimaryTextBrush}"
-                          Text="{Binding Change24h}">
-                          <TextBlock.Style>
-                            <Style BasedOn="{StaticResource TextBlockDefault}" TargetType="TextBlock">
-                              <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsPositiveChange}" Value="True">
-                                  <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsPositiveChange}" Value="False">
-                                  <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
-                                </DataTrigger>
-                              </Style.Triggers>
-                            </Style>
-                          </TextBlock.Style>
-                        </TextBlock>
-                      </Border>
-
-                      <!--  Hot/Wild Badge ao lado  -->
-                      <Border
-                        Margin="6,0,0,0"
-                        Padding="4,2"
-                        CornerRadius="3"
-                        Visibility="{Binding HasBadge, Converter={StaticResource Boolean2VisibilityConverter}}">
-                        <Border.Style>
-                          <Style BasedOn="{StaticResource BorderRegion}" TargetType="Border">
-                            <Style.Triggers>
-                              <DataTrigger Binding="{Binding IsHot}" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource SecondaryBrush}" />
-                              </DataTrigger>
-                              <DataTrigger Binding="{Binding IsWild}" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource DangerBrush}" />
-                              </DataTrigger>
-                            </Style.Triggers>
-                          </Style>
-                        </Border.Style>
-                        <StackPanel Orientation="Horizontal">
-                          <Image
-                            Width="8"
-                            Height="8"
-                            VerticalAlignment="Center">
-                            <Image.Style>
-                              <Style TargetType="Image">
-                                <Style.Triggers>
-                                  <DataTrigger Binding="{Binding IsHot}" Value="True">
-                                    <Setter Property="Source" Value="{StaticResource ChartLine}" />
-                                  </DataTrigger>
-                                  <DataTrigger Binding="{Binding IsWild}" Value="True">
-                                    <Setter Property="Source" Value="{StaticResource Rocket}" />
-                                  </DataTrigger>
-                                </Style.Triggers>
-                              </Style>
-                            </Image.Style>
-                          </Image>
-                          <TextBlock
-                            Margin="3,0,0,0"
-                            FontSize="9"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Text="{Binding BadgeText}" />
-                        </StackPanel>
-                      </Border>
-                    </StackPanel>
-                  </StackPanel>
-
-                  <!--  Market Data  -->
-                  <StackPanel Grid.Row="2" VerticalAlignment="Top">
+                  <!--  Market Stats  -->
+                  <StackPanel Grid.Row="2">
                     <!--  Market Cap  -->
-                    <Grid Margin="0,0,0,6">
+                    <Grid Margin="0,0,0,4">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                       </Grid.ColumnDefinitions>
                       <TextBlock
                         Grid.Column="0"
-                        FontSize="11"
+                        FontSize="10"
                         Foreground="{DynamicResource SecondaryTextBrush}"
                         Text="Market Cap" />
                       <TextBlock
                         Grid.Column="1"
-                        FontSize="11"
+                        FontSize="10"
                         FontWeight="Medium"
                         Foreground="White"
                         Text="{Binding MarketCap}" />
@@ -340,18 +294,17 @@
                       </Grid.ColumnDefinitions>
                       <TextBlock
                         Grid.Column="0"
-                        FontSize="11"
+                        FontSize="10"
                         Foreground="{DynamicResource SecondaryTextBrush}"
-                        Text="Volume (24h)" />
+                        Text="Volume" />
                       <TextBlock
                         Grid.Column="1"
-                        FontSize="11"
+                        FontSize="10"
                         FontWeight="Medium"
                         Foreground="White"
                         Text="{Binding Volume24hFormatted}" />
                     </Grid>
                   </StackPanel>
-
                 </Grid>
               </Border>
             </DataTemplate>
@@ -359,10 +312,10 @@
         </ItemsControl>
       </Grid>
 
-      <!--  Paginação do HandyControl  -->
+      <!--  Pagination  -->
       <hc:Pagination
         Grid.Row="4"
-        Margin="40,20,40,40"
+        Margin="0,32,0,0"
         HorizontalAlignment="Center"
         MaxPageCount="{Binding TotalPages}"
         PageIndex="{Binding CurrentPage, Mode=TwoWay}" />

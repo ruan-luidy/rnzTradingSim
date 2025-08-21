@@ -206,7 +206,7 @@
               <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
-                  <DataTrigger Binding="{Binding SelectedView}" Value="PortfolioView">
+                  <DataTrigger Binding="{Binding SelectedView}" Value="SimplePortfolioView">
                     <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
                   </DataTrigger>
                   <Trigger Property="IsMouseOver" Value="True">
@@ -226,108 +226,25 @@
             </StackPanel>
           </Button>
 
-          <!--  Treemap  -->
+          <!--  Test Notifications (DEBUG)  -->
           <Button
             Height="32"
-            Margin="15,0,15,10"
+            Margin="15,10,15,0"
             Padding="20,0"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             hc:BorderElement.CornerRadius="8"
+            Background="#ff4444"
+            BorderBrush="#ff6666"
             BorderThickness="0"
-            Command="{Binding NavigateToTreemapCommand}"
+            Command="{Binding TestNotificationsCommand}"
             FontSize="14">
-            <Button.Style>
-              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding SelectedView}" Value="TreemapView">
-                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
-                  </DataTrigger>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
-                  </Trigger>
-                </Style.Triggers>
-              </Style>
-            </Button.Style>
             <StackPanel Orientation="Horizontal">
-              <Image
-                Width="16"
-                Height="16"
-                Margin="0,0,12,0"
+              <TextBlock
+                Margin="0,0,8,0"
                 VerticalAlignment="Center"
-                Source="{StaticResource ChartColumn}" />
-              <TextBlock VerticalAlignment="Center" Text="Treemap" />
-            </StackPanel>
-          </Button>
-
-          <!--  Notifications  -->
-          <Button
-            Height="32"
-            Margin="15,0,15,10"
-            Padding="20,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            hc:BorderElement.CornerRadius="8"
-            BorderThickness="0"
-            Command="{Binding NavigateToNotificationsCommand}"
-            FontSize="14">
-            <Button.Style>
-              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding SelectedView}" Value="NotificationsView">
-                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
-                  </DataTrigger>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
-                  </Trigger>
-                </Style.Triggers>
-              </Style>
-            </Button.Style>
-            <StackPanel Orientation="Horizontal">
-              <Image
-                Width="16"
-                Height="16"
-                Margin="0,0,12,0"
-                VerticalAlignment="Center"
-                Source="{StaticResource Bell}" />
-              <TextBlock VerticalAlignment="Center" Text="Notifications" />
-            </StackPanel>
-          </Button>
-
-          <!--  About  -->
-          <Button
-            Height="32"
-            Margin="15,0,15,0"
-            Padding="20,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            hc:BorderElement.CornerRadius="8"
-            BorderThickness="0"
-            Command="{Binding NavigateToAboutCommand}"
-            FontSize="14">
-            <Button.Style>
-              <Style BasedOn="{StaticResource ButtonDefault}" TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding SelectedView}" Value="AboutView">
-                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
-                  </DataTrigger>
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource DarkMaskBrush}" />
-                  </Trigger>
-                </Style.Triggers>
-              </Style>
-            </Button.Style>
-            <StackPanel Orientation="Horizontal">
-              <Image
-                Width="16"
-                Height="16"
-                Margin="0,0,12,0"
-                VerticalAlignment="Center"
-                Source="{StaticResource Info}" />
-              <TextBlock VerticalAlignment="Center" Text="About" />
+                Text="🧪" />
+              <TextBlock VerticalAlignment="Center" Text="Test Notifications" />
             </StackPanel>
           </Button>
 
@@ -673,6 +590,13 @@
                   </Setter.Value>
                 </Setter>
               </DataTrigger>
+              <DataTrigger Binding="{Binding SelectedView}" Value="SimplePortfolioView">
+                <Setter Property="Content">
+                  <Setter.Value>
+                    <views:SimplePortfolioView />
+                  </Setter.Value>
+                </Setter>
+              </DataTrigger>
               <DataTrigger Binding="{Binding SelectedView}" Value="CoinDetailView">
                 <Setter Property="Content">
                   <Setter.Value>
@@ -680,10 +604,25 @@
                   </Setter.Value>
                 </Setter>
               </DataTrigger>
+              <DataTrigger Binding="{Binding SelectedView}" Value="CreateCoinView">
+                <Setter Property="Content">
+                  <Setter.Value>
+                    <views:CoinCreationView />
+                  </Setter.Value>
+                </Setter>
+              </DataTrigger>
             </Style.Triggers>
           </Style>
         </ContentControl.Style>
       </ContentControl>
+
+      <!--  Notifications Container  -->
+      <StackPanel
+        x:Name="NotificationsContainer"
+        Margin="0,20,20,0"
+        HorizontalAlignment="Right"
+        VerticalAlignment="Top"
+        Panel.ZIndex="999" />
     </Grid>
 
   </Grid>

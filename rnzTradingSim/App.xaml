@@ -27,6 +27,13 @@
       <converters:PercentageConverter x:Key="PercentageConverter" />
       <converters:FullCurrencyConverter x:Key="FullCurrencyConverter" />
       <converters:HalfValueConverter x:Key="HalfValueConverter" />
+      
+      <!--  Basic Converters  -->
+      <converters:Boolean2VisibilityConverter x:Key="Boolean2VisibilityConverter" />
+      <converters:Boolean2VisibilityReConverter x:Key="Boolean2VisibilityReConverter" />
+      <converters:Boolean2BooleanReConverter x:Key="Boolean2BooleanReConverter" />
+      <converters:String2VisibilityConverter x:Key="String2VisibilityConverter" />
+      <converters:String2BooleanConverter x:Key="String2BooleanConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

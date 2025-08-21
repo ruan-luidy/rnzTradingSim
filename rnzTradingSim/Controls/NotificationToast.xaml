@@ -1,0 +1,41 @@
+<UserControl x:Class="rnzTradingSim.Controls.NotificationToast"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Border x:Name="ToastBorder"
+            Background="#1a1a1a"
+            BorderBrush="#333333"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="16,12"
+            MinWidth="300"
+            MaxWidth="500"
+            Opacity="0"
+            Margin="20">
+        
+        <Border.Effect>
+            <DropShadowEffect Color="Black" 
+                            Opacity="0.3" 
+                            ShadowDepth="4" 
+                            BlurRadius="16"/>
+        </Border.Effect>
+        
+        <StackPanel Orientation="Horizontal">
+            <!-- Icon -->
+            <TextBlock x:Name="IconText" 
+                       Text="ℹ️"
+                       FontSize="18" 
+                       VerticalAlignment="Center"
+                       Margin="0,0,12,0"/>
+            
+            <!-- Message -->
+            <TextBlock x:Name="MessageText"
+                       Text="Notification message"
+                       Foreground="White"
+                       FontSize="14"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"
+                       MaxWidth="400"/>
+        </StackPanel>
+    </Border>
+</UserControl>
