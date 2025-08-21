@@ -5,7 +5,8 @@
       "Bash(rm:*)",
       "Bash(dotnet build)",
       "Bash(dotnet build:*)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(dotnet add package:*)"
     ],
     "deny": [],
     "ask": []

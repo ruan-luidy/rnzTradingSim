@@ -182,4 +182,85 @@
     </Setter>
   </Style>
 
+  <!--  Timeframe Radio Button Style  -->
+  <Style x:Key="TimeframeRadioButton" TargetType="RadioButton">
+    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="12,6" />
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="4"
+            Padding="{TemplateBinding Padding}">
+            <ContentPresenter
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter Property="Background" Value="{StaticResource RugplayPrimaryBrush}" />
+              <Setter Property="Foreground" Value="White" />
+              <Setter Property="BorderBrush" Value="{StaticResource RugplayPrimaryBrush}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter Property="Background" Value="{DynamicResource SecondaryRegionBrush}" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!--  Trade Toggle Button Style  -->
+  <Style x:Key="TradeToggleButton" TargetType="RadioButton">
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="Background" Value="{DynamicResource RegionBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="0,12" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="6"
+            Padding="{TemplateBinding Padding}">
+            <ContentPresenter
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter Property="Background" Value="#16a34a" />
+              <Setter Property="BorderBrush" Value="#16a34a" />
+            </Trigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding Content, RelativeSource={RelativeSource Self}}" Value="Sell" />
+                <Condition Binding="{Binding IsChecked, RelativeSource={RelativeSource Self}}" Value="True" />
+              </MultiDataTrigger.Conditions>
+              <Setter Property="Background" Value="#ef4444" />
+              <Setter Property="BorderBrush" Value="#ef4444" />
+            </MultiDataTrigger>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter Property="Opacity" Value="0.8" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
 </ResourceDictionary>

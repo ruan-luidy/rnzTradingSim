@@ -360,6 +360,18 @@ namespace rnzTradingSim.Services
         .AsNoTracking()
         .ToListAsync();
     }
+
+    public async Task<List<Trade>> GetRecentTradesForCoinAsync(string coinId, int limit = 20)
+    {
+      return await _context.Trades
+        .Where(t => t.CoinId == coinId)
+        .OrderByDescending(t => t.Timestamp)
+        .Take(limit)
+        .Include(t => t.Player)
+        .Include(t => t.Coin)
+        .AsNoTracking()
+        .ToListAsync();
+    }
     
     public void Dispose()
     {

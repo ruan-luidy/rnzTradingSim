@@ -5,16 +5,17 @@
   xmlns:controls="clr-namespace:rnzTradingSim.Controls"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:hc="https://handyorg.github.io/handycontrol"
+  xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:vm="clr-namespace:rnzTradingSim.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:CoinDetailViewModel}"
-  d:DesignHeight="800"
-  d:DesignWidth="1200"
+  d:DesignHeight="900"
+  d:DesignWidth="1400"
   Background="{StaticResource DarkBackgroundBrush}"
   mc:Ignorable="d">
 
   <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-    <Grid Margin="40">
+    <Grid Margin="24">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
@@ -22,8 +23,8 @@
       </Grid.RowDefinitions>
 
       <!--  Loading Indicator  -->
-      <Grid
-        Grid.Row="0"
+      <Grid 
+        Grid.Row="0" 
         Grid.RowSpan="3"
         Background="{DynamicResource DarkOpacityBrush}"
         Visibility="{Binding IsLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
@@ -34,461 +35,607 @@
           Style="{StaticResource LoadingCircleLarge}" />
       </Grid>
 
-      <!--  Header  -->
-      <Border
-        Grid.Row="0"
-        Margin="0,0,0,20"
-        Style="{StaticResource InfoBoard}">
+      <!--  Header with Coin Info  -->
+      <Border Grid.Row="0" Margin="0,0,0,32">
         <Grid>
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
+          
+          <!--  Coin Info and Price  -->
+          <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+              <controls:CoinIcon
+                Margin="0,0,16,0"
+                CoinSymbol="{Binding CurrentCoin.Symbol}"
+                IconSize="48" />
 
-          <!--  Coin Info  -->
-          <StackPanel Grid.Column="0" Orientation="Horizontal">
-            <controls:CoinIcon
-              Margin="0,0,20,0"
-              CoinSymbol="{Binding CurrentCoin.Symbol}"
-              IconSize="60" />
-
-            <StackPanel VerticalAlignment="Center">
-              <TextBlock Style="{StaticResource BoardHeaderText}" Text="{Binding CurrentCoin.Name}" />
-              <StackPanel Orientation="Horizontal">
-                <TextBlock Style="{StaticResource BoardSubheaderText}" Text="{Binding CurrentCoin.Symbol}" />
-                <Border
-                  Margin="12,0,0,0"
-                  Padding="6,2"
-                  Background="#333"
-                  CornerRadius="4">
+              <StackPanel VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
                   <TextBlock
-                    FontSize="10"
+                    FontSize="24"
                     FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding CurrentCoin.Name}" />
+                  <TextBlock
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="16"
                     Foreground="{DynamicResource SecondaryTextBrush}"
-                    Text="Rank #1" />
-                </Border>
+                    Text="{Binding CurrentCoin.Symbol, StringFormat=*{0}}" />
+                </StackPanel>
+                
+                <!--  Status Badges  -->
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                  <Border
+                    Padding="8,4"
+                    Background="#16a34a"
+                    CornerRadius="4">
+                    <TextBlock
+                      FontSize="12"
+                      FontWeight="Medium"
+                      Foreground="White"
+                      Text="LIVE" />
+                  </Border>
+                  
+                  <Border
+                    Margin="8,0,0,0"
+                    Padding="8,4"
+                    Background="{DynamicResource SecondaryRegionBrush}"
+                    CornerRadius="4"
+                    Visibility="{Binding IsRugged, Converter={StaticResource Boolean2VisibilityConverter}}">
+                    <TextBlock
+                      FontSize="12"
+                      FontWeight="Medium"
+                      Foreground="#ef4444"
+                      Text="RUGGED" />
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </StackPanel>
+
+            <!--  Price Info  -->
+            <StackPanel>
+              <TextBlock
+                FontSize="36"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="{Binding FormattedPrice}" />
+              <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                <TextBlock
+                  FontSize="16"
+                  FontWeight="Medium"
+                  Text="{Binding FormattedPriceChange}">
+                  <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsPriceUp}" Value="True">
+                          <Setter Property="Foreground" Value="#16a34a" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsPriceUp}" Value="False">
+                          <Setter Property="Foreground" Value="#ef4444" />
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+                <TextBlock
+                  Margin="8,0,0,0"
+                  FontSize="14"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
+                  Text="24h" />
               </StackPanel>
             </StackPanel>
           </StackPanel>
 
-          <!--  Price Info  -->
-          <StackPanel
-            Grid.Column="1"
-            Margin="40,0"
-            VerticalAlignment="Center">
-            <TextBlock Style="{StaticResource BoardValueText}" Text="{Binding FormattedPrice}" />
+          <!--  Action Buttons  -->
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
+            <Button
+              Height="40"
+              Margin="0,0,12,0"
+              Padding="16,0"
+              hc:BorderElement.CornerRadius="8"
+              Background="{DynamicResource RegionBrush}"
+              BorderBrush="{DynamicResource BorderBrush}"
+              BorderThickness="1"
+              Command="{Binding RefreshDataCommand}"
+              Foreground="White">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🔄" Margin="0,0,8,0" />
+                <TextBlock Text="Refresh" />
+              </StackPanel>
+            </Button>
+
+            <Button
+              Height="40"
+              Padding="16,0"
+              hc:BorderElement.CornerRadius="8"
+              Background="#ef4444"
+              BorderBrush="#ef4444"
+              Command="{Binding RugPullCommand}"
+              Foreground="White"
+              Visibility="{Binding CanRugPull, Converter={StaticResource Boolean2VisibilityConverter}}">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="💀" Margin="0,0,8,0" />
+                <TextBlock Text="RUG PULL" FontWeight="Bold" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!--  Stats Cards  -->
+      <Grid Grid.Row="1" Margin="0,0,0,32">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Market Cap  -->
+        <Border
+          Grid.Column="0"
+          Margin="0,0,8,0"
+          Padding="24,16"
+          Background="{DynamicResource CardBackgroundBrush}"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1"
+          CornerRadius="8">
+          <StackPanel>
             <TextBlock
-              FontSize="16"
-              FontWeight="SemiBold"
+              FontSize="14"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Text="Market Cap" />
+            <TextBlock
+              Margin="0,4,0,0"
+              FontSize="20"
+              FontWeight="Bold"
+              Foreground="White"
+              Text="{Binding FormattedMarketCap}" />
+          </StackPanel>
+        </Border>
+
+        <!--  Volume 24h  -->
+        <Border
+          Grid.Column="1"
+          Margin="8,0"
+          Padding="24,16"
+          Background="{DynamicResource CardBackgroundBrush}"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1"
+          CornerRadius="8">
+          <StackPanel>
+            <TextBlock
+              FontSize="14"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Text="Volume 24h" />
+            <TextBlock
+              Margin="0,4,0,0"
+              FontSize="20"
+              FontWeight="Bold"
+              Foreground="White"
+              Text="{Binding FormattedVolume}" />
+          </StackPanel>
+        </Border>
+
+        <!--  Circulating Supply  -->
+        <Border
+          Grid.Column="2"
+          Margin="8,0"
+          Padding="24,16"
+          Background="{DynamicResource CardBackgroundBrush}"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1"
+          CornerRadius="8">
+          <StackPanel>
+            <TextBlock
+              FontSize="14"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Text="Circulating Supply" />
+            <TextBlock
+              Margin="0,4,0,0"
+              FontSize="20"
+              FontWeight="Bold"
+              Foreground="White"
+              Text="{Binding CurrentCoin.CirculatingSupply, StringFormat=N0}" />
+          </StackPanel>
+        </Border>
+
+        <!--  24h Change  -->
+        <Border
+          Grid.Column="3"
+          Margin="8,0,0,0"
+          Padding="24,16"
+          Background="{DynamicResource CardBackgroundBrush}"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1"
+          CornerRadius="8">
+          <StackPanel>
+            <TextBlock
+              FontSize="14"
+              Foreground="{DynamicResource SecondaryTextBrush}"
+              Text="24h Change" />
+            <TextBlock
+              Margin="0,4,0,0"
+              FontSize="20"
+              FontWeight="Bold"
               Text="{Binding FormattedPriceChange}">
               <TextBlock.Style>
                 <Style TargetType="TextBlock">
                   <Style.Triggers>
                     <DataTrigger Binding="{Binding IsPriceUp}" Value="True">
-                      <Setter Property="Foreground" Value="#10B981" />
+                      <Setter Property="Foreground" Value="#16a34a" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding IsPriceUp}" Value="False">
-                      <Setter Property="Foreground" Value="#EF4444" />
+                      <Setter Property="Foreground" Value="#ef4444" />
                     </DataTrigger>
                   </Style.Triggers>
                 </Style>
               </TextBlock.Style>
             </TextBlock>
           </StackPanel>
+        </Border>
+      </Grid>
 
-          <!--  Action Buttons  -->
-          <StackPanel Grid.Column="2" Orientation="Horizontal">
-            <Button
-              Margin="0,0,12,0"
-              Command="{Binding RefreshDataCommand}"
-              Content="Refresh"
-              Style="{StaticResource RugplayButton}" />
-
-            <Button
-              Command="{Binding RugPullCommand}"
-              Content="RUG PULL"
-              Style="{StaticResource SellButton}"
-              Visibility="{Binding CanRugPull, Converter={StaticResource Boolean2VisibilityConverter}}" />
-          </StackPanel>
-        </Grid>
-      </Border>
-
-      <!--  Rug Warning  -->
-      <Border
-        Grid.Row="1"
-        Margin="0,0,0,20"
-        Style="{StaticResource RugWarningBorder}"
-        Visibility="{Binding IsRugged, Converter={StaticResource Boolean2VisibilityConverter}}">
-        <StackPanel Orientation="Horizontal">
-          <TextBlock
-            Margin="0,0,12,0"
-            FontSize="20"
-            Text="⚠️" />
-          <StackPanel>
-            <TextBlock
-              FontSize="16"
-              FontWeight="Bold"
-              Foreground="#EF4444"
-              Text="THIS COIN HAS BEEN RUGGED!" />
-            <TextBlock
-              FontSize="12"
-              Foreground="#666"
-              Text="All liquidity has been stolen. Trading is disabled." />
-          </StackPanel>
-        </StackPanel>
-      </Border>
-
-      <!--  Main Content  -->
+      <!--  Main Content Grid  -->
       <Grid Grid.Row="2">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="1*" />
-          <ColumnDefinition Width="1*" />
+          <ColumnDefinition Width="2*" />
           <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
-        <!--  Market Stats  -->
+        <!--  Chart Section  -->
         <Border
           Grid.Column="0"
-          Margin="0,0,10,0"
-          Style="{StaticResource InfoBoard}">
-          <StackPanel>
-            <TextBlock Style="{StaticResource BoardHeaderText}" Text="Market Stats" />
+          Margin="0,0,16,0"
+          Background="{DynamicResource CardBackgroundBrush}"
+          BorderBrush="{DynamicResource BorderBrush}"
+          BorderThickness="1"
+          CornerRadius="8">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <!--  Market Cap  -->
-            <Grid Margin="0,0,0,16">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Market Cap" />
-              <TextBlock
-                Grid.Column="1"
-                FontWeight="SemiBold"
-                Text="{Binding FormattedMarketCap}" />
-            </Grid>
-
-            <!--  Volume 24h  -->
-            <Grid Margin="0,0,0,16">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Volume (24h)" />
-              <TextBlock
-                Grid.Column="1"
-                FontWeight="SemiBold"
-                Text="{Binding FormattedVolume}" />
-            </Grid>
-
-            <!--  Total Supply  -->
-            <Grid Margin="0,0,0,16">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Total Supply" />
-              <TextBlock
-                Grid.Column="1"
-                FontWeight="SemiBold"
-                Text="{Binding CurrentCoin.TotalSupply, StringFormat=N0}" />
-            </Grid>
-
-            <!--  Circulating Supply  -->
-            <Grid Margin="0,0,0,16">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Circulating" />
-              <TextBlock
-                Grid.Column="1"
-                FontWeight="SemiBold"
-                Text="{Binding CurrentCoin.CirculatingSupply, StringFormat=N0}" />
-            </Grid>
-
-            <!--  Your Holdings  -->
-            <Border
-              Margin="0,16,0,0"
-              Padding="16"
-              Background="{DynamicResource SecondRegionBrush}"
-              CornerRadius="8">
-              <StackPanel>
-                <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Your Holdings" />
-                <TextBlock
-                  FontSize="18"
-                  FontWeight="Bold"
-                  Foreground="{DynamicResource PrimaryBrush}"
-                  Text="{Binding FormattedHoldings}" />
-                <TextBlock
-                  FontSize="14"
-                  Foreground="{DynamicResource SecondaryTextBrush}"
-                  Text="{Binding FormattedHoldingsValue}" />
-                <TextBlock
-                  Margin="0,4,0,0"
-                  FontSize="12"
-                  Foreground="#a1a1aa"
-                  Text="{Binding FormattedPnL}" />
-              </StackPanel>
-            </Border>
-          </StackPanel>
-        </Border>
-
-        <!--  Trading Panel  -->
-        <Border
-          Grid.Column="1"
-          Margin="5,0"
-          Style="{StaticResource TradingBoard}">
-          <StackPanel>
-            <TextBlock Style="{StaticResource BoardHeaderText}" Text="Trade" />
-
-            <!--  Buy/Sell Toggle  -->
-            <ToggleButton Margin="0,0,0,20" IsChecked="{Binding IsSellMode}">
-              <ToggleButton.Style>
-                <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="ToggleButton">
-                  <Setter Property="Content" Value="BUY" />
-                  <Setter Property="Background" Value="{StaticResource BuyGreenBrush}" />
-                  <Setter Property="Foreground" Value="White" />
-                  <Setter Property="FontWeight" Value="Bold" />
-                  <Setter Property="Padding" Value="20,12" />
-                  <Setter Property="BorderThickness" Value="0" />
-                  <Setter Property="FontSize" Value="14" />
-                  <Setter Property="Template">
-                    <Setter.Value>
-                      <ControlTemplate TargetType="ToggleButton">
-                        <Border
-                          Padding="{TemplateBinding Padding}"
-                          Background="{TemplateBinding Background}"
-                          CornerRadius="8">
-                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                      </ControlTemplate>
-                    </Setter.Value>
-                  </Setter>
-                  <Style.Triggers>
-                    <Trigger Property="IsChecked" Value="True">
-                      <Setter Property="Content" Value="SELL" />
-                      <Setter Property="Background" Value="{StaticResource SellRedBrush}" />
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="True">
-                      <Setter Property="Opacity" Value="0.8" />
-                    </Trigger>
-                  </Style.Triggers>
-                </Style>
-              </ToggleButton.Style>
-            </ToggleButton>
-
-            <!--  Balance Display  -->
-            <Grid Margin="0,0,0,16">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Available:" />
-              <TextBlock Grid.Column="1" FontWeight="SemiBold">
-                <TextBlock.Style>
-                  <Style TargetType="TextBlock">
-                    <Style.Triggers>
-                      <DataTrigger Binding="{Binding TradingMode}" Value="Buy">
-                        <Setter Property="Text" Value="{Binding FormattedBalance}" />
-                      </DataTrigger>
-                      <DataTrigger Binding="{Binding TradingMode}" Value="Sell">
-                        <Setter Property="Text" Value="{Binding FormattedHoldings}" />
-                      </DataTrigger>
-                    </Style.Triggers>
-                  </Style>
-                </TextBlock.Style>
-              </TextBlock>
-            </Grid>
-
-            <!--  Amount Input  -->
-            <StackPanel Margin="0,0,0,16">
-              <TextBlock Style="{StaticResource BoardSubheaderText}" Text="Amount" />
+            <!--  Chart Header  -->
+            <Border Grid.Row="0" Padding="24,20">
               <Grid>
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <hc:NumericUpDown
+                
+                <TextBlock
                   Grid.Column="0"
-                  DecimalPlaces="8"
-                  IsEnabled="{Binding CanTrade}"
-                  Minimum="0"
-                  Value="{Binding TradeAmount, Mode=TwoWay}" />
-                <Button
-                  Grid.Column="1"
-                  Margin="8,0,0,0"
-                  Padding="8,4"
-                  Content="MAX"
-                  FontSize="10">
-                  <Button.Style>
-                    <Style BasedOn="{StaticResource RugplayButton}" TargetType="Button">
-                      <Style.Triggers>
-                        <DataTrigger Binding="{Binding TradingMode}" Value="Buy">
-                          <Setter Property="Command" Value="{Binding SetMaxBuyCommand}" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding TradingMode}" Value="Sell">
-                          <Setter Property="Command" Value="{Binding SetMaxSellCommand}" />
-                        </DataTrigger>
-                      </Style.Triggers>
-                    </Style>
-                  </Button.Style>
-                </Button>
+                  FontSize="18"
+                  FontWeight="SemiBold"
+                  Foreground="White"
+                  Text="Price Chart" />
+
+                <!--  Timeframe Selector  -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                  <RadioButton Content="1m" Style="{StaticResource TimeframeRadioButton}" IsChecked="True" />
+                  <RadioButton Content="5m" Style="{StaticResource TimeframeRadioButton}" Margin="8,0,0,0" />
+                  <RadioButton Content="15m" Style="{StaticResource TimeframeRadioButton}" Margin="8,0,0,0" />
+                  <RadioButton Content="1h" Style="{StaticResource TimeframeRadioButton}" Margin="8,0,0,0" />
+                  <RadioButton Content="4h" Style="{StaticResource TimeframeRadioButton}" Margin="8,0,0,0" />
+                  <RadioButton Content="1d" Style="{StaticResource TimeframeRadioButton}" Margin="8,0,0,0" />
+                </StackPanel>
               </Grid>
-            </StackPanel>
+            </Border>
 
-            <!--  Trade Preview  -->
-            <Border
-              Margin="0,0,0,16"
-              Padding="12"
-              Background="{DynamicResource SecondRegionBrush}"
-              CornerRadius="6">
-              <StackPanel>
-                <Grid Margin="0,0,0,8">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <TextBlock FontSize="12" Text="You get:" />
-                  <TextBlock
-                    Grid.Column="1"
-                    FontSize="12"
-                    FontWeight="SemiBold">
-                    <TextBlock.Style>
-                      <Style TargetType="TextBlock">
-                        <Style.Triggers>
-                          <DataTrigger Binding="{Binding TradingMode}" Value="Buy">
-                            <Setter Property="Text" Value="{Binding EstimatedTokensFormatted}" />
-                          </DataTrigger>
-                          <DataTrigger Binding="{Binding TradingMode}" Value="Sell">
-                            <Setter Property="Text" Value="{Binding EstimatedUsdFormatted}" />
-                          </DataTrigger>
-                        </Style.Triggers>
-                      </Style>
-                    </TextBlock.Style>
-                  </TextBlock>
+            <!--  Chart Container  -->
+            <Border Grid.Row="1" Margin="24,0,24,24">
+              <Grid>
+                <lvc:CartesianChart 
+                  Series="{Binding ChartSeries}"
+                  XAxes="{Binding XAxes}"
+                  YAxes="{Binding YAxes}"
+                  ZoomMode="X"
+                  Background="Transparent"
+                  Height="400" />
+                
+                <!--  Chart Loading  -->
+                <Grid Visibility="{Binding IsChartLoading, Converter={StaticResource Boolean2VisibilityConverter}}">
+                  <Border Background="{DynamicResource DarkOpacityBrush}" />
+                  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <hc:LoadingCircle IsRunning="{Binding IsChartLoading}" />
+                    <TextBlock
+                      Margin="0,12,0,0"
+                      FontSize="14"
+                      Foreground="{DynamicResource SecondaryTextBrush}"
+                      Text="Loading chart data..." />
+                  </StackPanel>
                 </Grid>
+              </Grid>
+            </Border>
+          </Grid>
+        </Border>
 
+        <!--  Right Panel  -->
+        <Grid Grid.Column="1">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+
+          <!--  Trading Panel  -->
+          <Border
+            Grid.Row="0"
+            Margin="0,0,0,16"
+            Background="{DynamicResource CardBackgroundBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel Margin="24">
+              <TextBlock
+                FontSize="18"
+                FontWeight="SemiBold"
+                Foreground="White"
+                Text="Trade" />
+
+              <!--  Buy/Sell Toggle  -->
+              <Grid Margin="0,20,0,20">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <RadioButton
+                  Grid.Column="0"
+                  Content="Buy"
+                  GroupName="TradeMode"
+                  IsChecked="{Binding IsBuyMode}"
+                  Style="{StaticResource TradeToggleButton}" />
+                <RadioButton
+                  Grid.Column="1"
+                  Content="Sell"
+                  GroupName="TradeMode"
+                  IsChecked="{Binding IsSellMode}"
+                  Style="{StaticResource TradeToggleButton}" />
+              </Grid>
+
+              <!--  Balance Display  -->
+              <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                  FontSize="14"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
+                  Text="Available:" />
+                <TextBlock
+                  Grid.Column="1"
+                  FontSize="14"
+                  FontWeight="Medium"
+                  Foreground="White"
+                  Text="{Binding FormattedAvailableBalance}" />
+              </Grid>
+
+              <!--  Amount Input  -->
+              <StackPanel Margin="0,0,0,16">
+                <TextBlock
+                  Margin="0,0,0,8"
+                  FontSize="14"
+                  Foreground="{DynamicResource SecondaryTextBrush}"
+                  Text="Amount" />
                 <Grid>
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                   </Grid.ColumnDefinitions>
-                  <TextBlock FontSize="12" Text="Price Impact:" />
-                  <TextBlock
+                  <TextBox
+                    Grid.Column="0"
+                    Padding="12,8"
+                    Background="{DynamicResource RegionBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    Foreground="White"
+                    Text="{Binding TradeAmount, Mode=TwoWay}" />
+                  <Button
                     Grid.Column="1"
+                    Width="60"
+                    Margin="8,0,0,0"
+                    Padding="8"
+                    hc:BorderElement.CornerRadius="4"
+                    Background="{DynamicResource SecondaryRegionBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    Command="{Binding SetMaxAmountCommand}"
+                    Content="MAX"
                     FontSize="12"
-                    FontWeight="SemiBold"
-                    Foreground="#F59E0B"
-                    Text="{Binding PriceImpactFormatted}" />
+                    FontWeight="Bold"
+                    Foreground="White" />
                 </Grid>
               </StackPanel>
-            </Border>
 
-            <!--  Trade Button  -->
-            <Button
-              Padding="0,12"
-              Command="{Binding ExecuteTradeCommand}"
-              IsEnabled="{Binding CanTrade}">
-              <Button.Style>
-                <Style BasedOn="{StaticResource RugplayButton}" TargetType="Button">
-                  <Style.Triggers>
-                    <DataTrigger Binding="{Binding TradingMode}" Value="Buy">
-                      <Setter Property="Content" Value="BUY" />
-                      <Setter Property="Background" Value="{StaticResource BuyGreenBrush}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding TradingMode}" Value="Sell">
-                      <Setter Property="Content" Value="SELL" />
-                      <Setter Property="Background" Value="{StaticResource SellRedBrush}" />
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </Button.Style>
-            </Button>
+              <!--  Estimation Preview  -->
+              <Border
+                Margin="0,0,0,20"
+                Padding="16"
+                Background="{DynamicResource SecondaryRegionBrush}"
+                CornerRadius="6">
+                <StackPanel>
+                  <Grid Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                      FontSize="14"
+                      Foreground="{DynamicResource SecondaryTextBrush}"
+                      Text="You get:" />
+                    <TextBlock
+                      Grid.Column="1"
+                      FontSize="14"
+                      FontWeight="Medium"
+                      Foreground="White"
+                      Text="{Binding EstimatedReceiveFormatted}" />
+                  </Grid>
+                  
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                      FontSize="14"
+                      Foreground="{DynamicResource SecondaryTextBrush}"
+                      Text="Price Impact:" />
+                    <TextBlock
+                      Grid.Column="1"
+                      FontSize="14"
+                      FontWeight="Medium"
+                      Foreground="#f59e0b"
+                      Text="{Binding PriceImpactFormatted}" />
+                  </Grid>
+                </StackPanel>
+              </Border>
 
-            <!--  Trade Result  -->
-            <TextBlock
-              Margin="0,12,0,0"
-              FontSize="12"
-              Text="{Binding LastTradeResult}"
-              TextWrapping="Wrap"
-              Visibility="{Binding LastTradeResult, Converter={StaticResource String2VisibilityConverter}}" />
-          </StackPanel>
-        </Border>
+              <!--  Trade Button  -->
+              <Button
+                Padding="0,16"
+                Command="{Binding ExecuteTradeCommand}"
+                IsEnabled="{Binding CanTrade}">
+                <Button.Style>
+                  <Style BasedOn="{StaticResource RugplayButton}" TargetType="Button">
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding IsBuyMode}" Value="True">
+                        <Setter Property="Content" Value="BUY" />
+                        <Setter Property="Background" Value="#16a34a" />
+                        <Setter Property="BorderBrush" Value="#16a34a" />
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding IsSellMode}" Value="True">
+                        <Setter Property="Content" Value="SELL" />
+                        <Setter Property="Background" Value="#ef4444" />
+                        <Setter Property="BorderBrush" Value="#ef4444" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </Button.Style>
+              </Button>
 
-        <!--  Recent Trades  -->
-        <Border
-          Grid.Column="2"
-          Margin="10,0,0,0"
-          Style="{StaticResource InfoBoard}">
-          <StackPanel>
-            <TextBlock Style="{StaticResource BoardHeaderText}" Text="Recent Trades" />
+              <!--  Your Holdings  -->
+              <Border
+                Margin="0,20,0,0"
+                Padding="16"
+                Background="{DynamicResource RegionBrush}"
+                CornerRadius="6">
+                <StackPanel>
+                  <TextBlock
+                    FontSize="14"
+                    Foreground="{DynamicResource SecondaryTextBrush}"
+                    Text="Your Holdings" />
+                  <TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="{Binding FormattedHoldings}" />
+                  <TextBlock
+                    FontSize="14"
+                    Foreground="{DynamicResource SecondaryTextBrush}"
+                    Text="{Binding FormattedHoldingsValue}" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Border>
 
-            <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
-              <ItemsControl ItemsSource="{Binding RecentTrades}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <Border
-                      Margin="0,0,0,8"
-                      Padding="12"
-                      Background="{DynamicResource SecondRegionBrush}"
-                      CornerRadius="6">
-                      <Grid>
-                        <Grid.ColumnDefinitions>
-                          <ColumnDefinition Width="Auto" />
-                          <ColumnDefinition Width="*" />
-                          <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+          <!--  Recent Trades  -->
+          <Border
+            Grid.Row="1"
+            Background="{DynamicResource CardBackgroundBrush}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+              </Grid.RowDefinitions>
 
-                        <Border
-                          Grid.Column="0"
-                          Width="6"
-                          Height="6"
-                          Margin="0,0,8,0"
-                          VerticalAlignment="Center"
-                          CornerRadius="3">
-                          <Border.Style>
-                            <Style TargetType="Border">
-                              <Style.Triggers>
-                                <DataTrigger Binding="{Binding Type}" Value="Buy">
-                                  <Setter Property="Background" Value="#10B981" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Type}" Value="Sell">
-                                  <Setter Property="Background" Value="#EF4444" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Type}" Value="RugPull">
-                                  <Setter Property="Background" Value="#8B5CF6" />
-                                </DataTrigger>
-                              </Style.Triggers>
-                            </Style>
-                          </Border.Style>
-                        </Border>
+              <!--  Header  -->
+              <Border Grid.Row="0" Padding="24,20">
+                <TextBlock
+                  FontSize="18"
+                  FontWeight="SemiBold"
+                  Foreground="White"
+                  Text="Recent Trades" />
+              </Border>
 
-                        <StackPanel Grid.Column="1">
+              <!--  Trades List  -->
+              <ScrollViewer Grid.Row="1" Padding="24,0,24,24" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding RecentTrades}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border
+                        Margin="0,0,0,8"
+                        Padding="16,12"
+                        Background="{DynamicResource SecondaryRegionBrush}"
+                        CornerRadius="6">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                          </Grid.ColumnDefinitions>
+
+                          <!--  Trade Type Indicator  -->
+                          <Border
+                            Grid.Column="0"
+                            Width="8"
+                            Height="8"
+                            Margin="0,0,12,0"
+                            VerticalAlignment="Center"
+                            CornerRadius="4">
+                            <Border.Style>
+                              <Style TargetType="Border">
+                                <Style.Triggers>
+                                  <DataTrigger Binding="{Binding Type}" Value="Buy">
+                                    <Setter Property="Background" Value="#16a34a" />
+                                  </DataTrigger>
+                                  <DataTrigger Binding="{Binding Type}" Value="Sell">
+                                    <Setter Property="Background" Value="#ef4444" />
+                                  </DataTrigger>
+                                </Style.Triggers>
+                              </Style>
+                            </Border.Style>
+                          </Border>
+
+                          <!--  Trade Details  -->
+                          <StackPanel Grid.Column="1">
+                            <TextBlock
+                              FontSize="14"
+                              FontWeight="Medium"
+                              Foreground="White"
+                              Text="{Binding GetDescription}" />
+                            <TextBlock
+                              FontSize="12"
+                              Foreground="{DynamicResource SecondaryTextBrush}"
+                              Text="{Binding Timestamp, StringFormat=HH:mm:ss}" />
+                          </StackPanel>
+
+                          <!--  Amount  -->
                           <TextBlock
-                            FontSize="11"
-                            FontWeight="SemiBold"
-                            Text="{Binding GetDescription}" />
-                          <TextBlock
-                            FontSize="9"
-                            Foreground="{DynamicResource SecondaryTextBrush}"
-                            Text="{Binding Timestamp, StringFormat=HH:mm:ss}" />
-                        </StackPanel>
-
-                        <TextBlock
-                          Grid.Column="2"
-                          VerticalAlignment="Center"
-                          FontSize="10"
-                          FontWeight="SemiBold"
-                          Text="{Binding UsdAmount, StringFormat=C2}" />
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
-          </StackPanel>
-        </Border>
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Foreground="White"
+                            Text="{Binding UsdAmount, StringFormat=C2}" />
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Grid>
+          </Border>
+        </Grid>
       </Grid>
     </Grid>
   </ScrollViewer>

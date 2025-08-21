@@ -15,7 +15,7 @@ namespace rnzTradingSim.Views
     {
       if (DataContext is CoinDetailViewModel viewModel)
       {
-        await viewModel.LoadCoinAsync(coinId);
+        await viewModel.LoadCoinDataAsync(coinId);
       }
     }
   }

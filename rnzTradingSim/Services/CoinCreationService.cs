@@ -171,6 +171,31 @@ namespace rnzTradingSim.Services
       Dispose(true);
       GC.SuppressFinalize(this);
     }
+
+    public async Task<bool> RugPullAsync(string coinId)
+    {
+      try
+      {
+        var coin = await _context.UserCoins.FindAsync(coinId);
+        if (coin == null) return false;
+
+        // Check if the current player is the creator
+        var currentPlayer = _playerService.GetCurrentPlayer();
+        if (coin.CreatorId.ToString() != currentPlayer.Id.ToString()) return false;
+
+        // Mark the coin as rugged
+        coin.IsRugged = true;
+        coin.CurrentPrice = 0; // Set price to 0 to simulate rug pull
+
+        await _context.SaveChangesAsync();
+        return true;
+      }
+      catch (Exception ex)
+      {
+        LoggingService.Error($"Error rugging coin {coinId}", ex);
+        return false;
+      }
+    }
     
     protected virtual void Dispose(bool disposing)
     {

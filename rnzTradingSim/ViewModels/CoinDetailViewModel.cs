@@ -1,16 +1,24 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.Defaults;
 using rnzTradingSim.Models;
 using rnzTradingSim.Services;
+using rnzTradingSim.Helpers;
+using SkiaSharp;
 using System.Collections.ObjectModel;
 
 namespace rnzTradingSim.ViewModels
 {
-  public partial class CoinDetailViewModel : ObservableObject
+  public partial class CoinDetailViewModel : ObservableObject, IDisposable
   {
     private readonly TradingService _tradingService;
     private readonly PlayerService _playerService;
     private readonly CoinCreationService _coinCreationService;
+    private readonly Data.TradingDbContext _db;
+    private bool _disposed = false;
 
     [ObservableProperty]
     private string coinId = string.Empty;
@@ -26,6 +34,9 @@ namespace rnzTradingSim.ViewModels
 
     [ObservableProperty]
     private bool isLoading = false;
+
+    [ObservableProperty]
+    private bool isChartLoading = false;
 
     [ObservableProperty]
     private string tradingMode = "Buy"; // Buy or Sell
@@ -48,202 +59,205 @@ namespace rnzTradingSim.ViewModels
     [ObservableProperty]
     private ObservableCollection<Trade> recentTrades = new();
 
-    // Computed property for UI binding
-    public bool IsSellMode 
-    { 
-      get => TradingMode == "Sell";
-      set => TradingMode = value ? "Sell" : "Buy";
-    }
+    // Chart properties
+    [ObservableProperty]
+    private ISeries[] chartSeries = Array.Empty<ISeries>();
+
+    [ObservableProperty]
+    private Axis[] xAxes = Array.Empty<Axis>();
+
+    [ObservableProperty]
+    private Axis[] yAxes = Array.Empty<Axis>();
+
+    [ObservableProperty]
+    private string selectedTimeframe = "1m";
+
+    // Trading properties
+    [ObservableProperty]
+    private bool isBuyMode = true;
+
+    [ObservableProperty]
+    private bool isSellMode = false;
 
     public CoinDetailViewModel()
     {
-      var context = new rnzTradingSim.Data.TradingDbContext();
-      _playerService = new PlayerService();
-      _tradingService = new TradingService(context, _playerService);
-      _coinCreationService = new CoinCreationService(context, _playerService);
-
-      LoadPlayerData();
+      try
+      {
+        _db = new Data.TradingDbContext();
+        _playerService = new PlayerService();
+        _tradingService = new TradingService(_db, _playerService);
+        _coinCreationService = new CoinCreationService(_db, _playerService);
+        
+        InitializeChart();
+        LoggingService.Info("CoinDetailViewModel initialized successfully");
+      }
+      catch (Exception ex)
+      {
+        LoggingService.Error("Error initializing CoinDetailViewModel", ex);
+      }
     }
 
-    public async Task LoadCoinAsync(string coinId)
+    public async Task LoadCoinDataAsync(string coinId)
     {
+      if (_disposed) return;
+
       CoinId = coinId;
       IsLoading = true;
 
       try
       {
         // Load coin data
-        CurrentCoin = await _coinCreationService.GetCoinAsync(coinId);
-        
-        if (CurrentCoin == null)
+        var coin = await _db.UserCoins.FindAsync(coinId);
+        if (coin != null)
         {
-          LastTradeResult = "Coin not found";
-          return;
+          CurrentCoin = coin;
+          
+          // Load player data
+          var player = _playerService.GetCurrentPlayer();
+          PlayerBalance = player.Balance;
+
+          // Load user portfolio for this coin
+          UserPortfolio = await _tradingService.GetPortfolioAsync(player.Id, coinId);
+
+          // Load recent trades
+          await LoadRecentTradesAsync();
+
+          // Load chart data
+          await LoadChartDataAsync();
+
+          LoggingService.Info($"Loaded coin data for {coin.Symbol}");
         }
+      }
+      catch (Exception ex)
+      {
+        LoggingService.Error($"Error loading coin data for {coinId}", ex);
+      }
+      finally
+      {
+        IsLoading = false;
+      }
+    }
 
-        // Load user portfolio for this coin
-        var player = _playerService.GetCurrentPlayer();
-        UserPortfolio = await _tradingService.GetPortfolioAsync(player.Id, coinId);
+    private void InitializeChart()
+    {
+      // Configure X-axis (time)
+      XAxes = new[]
+      {
+        new Axis
+        {
+          Name = "Time",
+          TextSize = 12,
+          LabelsPaint = new SolidColorPaint(SKColors.Gray),
+          SeparatorsPaint = new SolidColorPaint(SKColors.DarkGray) { StrokeThickness = 1 },
+          ShowSeparatorLines = true
+        }
+      };
 
-        // Load recent trades
-        var trades = await _tradingService.GetRecentTradesAsync(coinId, 20);
+      // Configure Y-axis (price)
+      YAxes = new[]
+      {
+        new Axis
+        {
+          Name = "Price (USD)",
+          Position = LiveChartsCore.Measure.AxisPosition.Start,
+          TextSize = 12,
+          LabelsPaint = new SolidColorPaint(SKColors.Gray),
+          SeparatorsPaint = new SolidColorPaint(SKColors.DarkGray) { StrokeThickness = 1 },
+          ShowSeparatorLines = true,
+          Labeler = value => value.ToString("C8")
+        }
+      };
+    }
+
+    private async Task LoadChartDataAsync()
+    {
+      if (CurrentCoin == null) return;
+
+      IsChartLoading = true;
+
+      try
+      {
+        await Task.Delay(200); // Simulate loading
+
+        // Generate sample candlestick data
+        var candlesticks = GenerateSampleCandlestickData();
+
+        ChartSeries = new ISeries[]
+        {
+          new CandlesticksSeries<FinancialPoint>
+          {
+            Values = candlesticks,
+            Name = $"{CurrentCoin.Symbol} Price",
+            UpFill = new SolidColorPaint(SKColor.Parse("#16a34a")),
+            UpStroke = new SolidColorPaint(SKColor.Parse("#16a34a")) { StrokeThickness = 2 },
+            DownFill = new SolidColorPaint(SKColor.Parse("#ef4444")),
+            DownStroke = new SolidColorPaint(SKColor.Parse("#ef4444")) { StrokeThickness = 2 }
+          }
+        };
+
+        LoggingService.Info($"Loaded chart data for {CurrentCoin.Symbol}");
+      }
+      catch (Exception ex)
+      {
+        LoggingService.Error($"Error loading chart data for {CurrentCoin?.Symbol}", ex);
+      }
+      finally
+      {
+        IsChartLoading = false;
+      }
+    }
+
+    private List<FinancialPoint> GenerateSampleCandlestickData()
+    {
+      if (CurrentCoin == null) return new List<FinancialPoint>();
+
+      var data = new List<FinancialPoint>();
+      var basePrice = (double)CurrentCoin.CurrentPrice;
+      var random = new Random(CurrentCoin.Symbol.GetHashCode());
+      var currentTime = DateTime.Now.AddHours(-24);
+
+      for (int i = 0; i < 100; i++)
+      {
+        var open = basePrice + (random.NextDouble() - 0.5) * basePrice * 0.1;
+        var volatility = random.NextDouble() * 0.05; // 5% max volatility
+        
+        var high = open + random.NextDouble() * open * volatility;
+        var low = open - random.NextDouble() * open * volatility;
+        var close = low + random.NextDouble() * (high - low);
+
+        basePrice = close; // Next candle starts where this one ended
+
+        data.Add(new FinancialPoint
+        {
+          Date = currentTime.AddMinutes(i * 15),
+          High = high,
+          Open = open,
+          Close = close,
+          Low = low
+        });
+      }
+
+      return data;
+    }
+
+    private async Task LoadRecentTradesAsync()
+    {
+      if (CurrentCoin == null) return;
+
+      try
+      {
+        var trades = await _tradingService.GetRecentTradesForCoinAsync(CurrentCoin.Id, 20);
         RecentTrades.Clear();
         foreach (var trade in trades)
         {
           RecentTrades.Add(trade);
         }
 
-        UpdateTradeEstimates();
+        LoggingService.Info($"Loaded {trades.Count} recent trades for {CurrentCoin.Symbol}");
       }
       catch (Exception ex)
       {
-        LastTradeResult = $"Error loading coin: {ex.Message}";
-        LoggingService.Error("Error loading coin details", ex);
-      }
-      finally
-      {
-        IsLoading = false;
-      }
-    }
-
-    partial void OnTradeAmountChanged(string value)
-    {
-      UpdateTradeEstimates();
-    }
-
-    partial void OnTradingModeChanged(string value)
-    {
-      UpdateTradeEstimates();
-      OnPropertyChanged(nameof(IsSellMode));
-    }
-
-    private void UpdateTradeEstimates()
-    {
-      if (CurrentCoin == null || !decimal.TryParse(TradeAmount, out var amount) || amount <= 0)
-      {
-        EstimatedTokens = 0;
-        EstimatedUsd = 0;
-        PriceImpact = 0;
-        return;
-      }
-
-      try
-      {
-        if (TradingMode == "Buy")
-        {
-          // Calculating tokens out for USD in
-          var (tokensOut, newPrice) = CurrentCoin.SimulateBuy(amount);
-          EstimatedTokens = tokensOut;
-          EstimatedUsd = amount;
-          PriceImpact = CurrentCoin.CalculatePriceImpact(amount, true);
-        }
-        else
-        {
-          // Calculating USD out for tokens in
-          var (usdOut, newPrice) = CurrentCoin.SimulateSell(amount);
-          EstimatedTokens = amount;
-          EstimatedUsd = usdOut;
-          PriceImpact = CurrentCoin.CalculatePriceImpact(amount, false);
-        }
-      }
-      catch
-      {
-        EstimatedTokens = 0;
-        EstimatedUsd = 0;
-        PriceImpact = 0;
-      }
-    }
-
-    [RelayCommand]
-    private async Task ExecuteTradeAsync()
-    {
-      if (CurrentCoin == null || !decimal.TryParse(TradeAmount, out var amount) || amount <= 0)
-      {
-        LastTradeResult = "Invalid trade amount";
-        return;
-      }
-
-      IsLoading = true;
-      LastTradeResult = "";
-
-      try
-      {
-        if (TradingMode == "Buy")
-        {
-          var result = await _tradingService.BuyTokenAsync(CoinId, amount);
-          LastTradeResult = result.message;
-          
-          if (result.success)
-          {
-            TradeAmount = "0";
-            await RefreshDataAsync();
-          }
-        }
-        else
-        {
-          var result = await _tradingService.SellTokenAsync(CoinId, amount);
-          LastTradeResult = result.message;
-          
-          if (result.success)
-          {
-            TradeAmount = "0";
-            await RefreshDataAsync();
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        LastTradeResult = $"Trade failed: {ex.Message}";
-        LoggingService.Error("Trade execution failed", ex);
-      }
-      finally
-      {
-        IsLoading = false;
-      }
-    }
-
-    [RelayCommand]
-    private async Task RugPullAsync()
-    {
-      if (CurrentCoin == null)
-        return;
-
-      var player = _playerService.GetCurrentPlayer();
-      if (CurrentCoin.CreatorId != player.Id.ToString())
-      {
-        LastTradeResult = "You can only rug pull your own coins";
-        return;
-      }
-
-      var confirmation = HandyControl.Controls.MessageBox.Show(
-        $"Are you sure you want to RUG PULL {CurrentCoin.Symbol}?\n\nThis will steal ${CurrentCoin.PoolBaseAmount:N2} and destroy the coin!",
-        "Confirm Rug Pull",
-        System.Windows.MessageBoxButton.YesNo,
-        System.Windows.MessageBoxImage.Warning);
-
-      if (confirmation != System.Windows.MessageBoxResult.Yes)
-        return;
-
-      IsLoading = true;
-
-      try
-      {
-        var result = await _tradingService.RugPullAsync(CoinId);
-        LastTradeResult = result.message;
-        
-        if (result.success)
-        {
-          await RefreshDataAsync();
-        }
-      }
-      catch (Exception ex)
-      {
-        LastTradeResult = $"Rug pull failed: {ex.Message}";
-        LoggingService.Error("Rug pull failed", ex);
-      }
-      finally
-      {
-        IsLoading = false;
+        LoggingService.Error($"Error loading recent trades for {CurrentCoin?.Symbol}", ex);
       }
     }
 
@@ -252,66 +266,192 @@ namespace rnzTradingSim.ViewModels
     {
       if (!string.IsNullOrEmpty(CoinId))
       {
-        await LoadCoinAsync(CoinId);
-      }
-      LoadPlayerData();
-    }
-
-    [RelayCommand]
-    private void SetMaxBuy()
-    {
-      TradeAmount = PlayerBalance.ToString("0.00");
-    }
-
-    [RelayCommand]
-    private void SetMaxSell()
-    {
-      if (UserPortfolio?.TokenBalance > 0)
-      {
-        TradeAmount = UserPortfolio.TokenBalance.ToString("0.00000000");
+        await LoadCoinDataAsync(CoinId);
       }
     }
 
     [RelayCommand]
-    private void SwitchTradingMode()
+    private async Task ExecuteTradeAsync()
     {
-      TradingMode = TradingMode == "Buy" ? "Sell" : "Buy";
-      TradeAmount = "0";
-    }
+      if (CurrentCoin == null || string.IsNullOrEmpty(TradeAmount)) return;
 
-    private void LoadPlayerData()
-    {
       try
       {
+        var amount = decimal.Parse(TradeAmount);
+        if (amount <= 0) return;
+
         var player = _playerService.GetCurrentPlayer();
-        PlayerBalance = player.Balance;
+        bool success = false;
+
+        if (IsBuyMode)
+        {
+          var result = await _tradingService.BuyTokenAsync(CurrentCoin.Id, amount);
+          success = result.success;
+          if (success)
+          {
+            LastTradeResult = $"Successfully bought {amount:C2} worth of {CurrentCoin.Symbol}";
+            NotificationService.NotifyTradingSuccess($"Bought {CurrentCoin.Symbol} for {amount:C2}");
+          }
+        }
+        else
+        {
+          // For sell, amount is in tokens
+          var result = await _tradingService.SellTokenAsync(CurrentCoin.Id, amount);
+          success = result.success;
+          if (success)
+          {
+            LastTradeResult = $"Successfully sold {amount:N8} {CurrentCoin.Symbol}";
+            NotificationService.NotifyTradingSuccess($"Sold {amount:N8} {CurrentCoin.Symbol}");
+          }
+        }
+
+        if (success)
+        {
+          // Refresh data after successful trade
+          await LoadCoinDataAsync(CoinId);
+          TradeAmount = "0";
+        }
+        else
+        {
+          LastTradeResult = "Trade failed. Please check your balance and try again.";
+        }
       }
       catch (Exception ex)
       {
-        LoggingService.Error("Error loading player data", ex);
+        LastTradeResult = $"Error: {ex.Message}";
+        LoggingService.Error("Error executing trade", ex);
       }
     }
 
-    // Computed properties for UI
-    public string FormattedPrice => CurrentCoin?.CurrentPrice.ToString("C8") ?? "$0";
-    public string FormattedMarketCap => CurrentCoin?.MarketCap.ToString("C0") ?? "$0";
-    public string FormattedVolume => CurrentCoin?.Volume24h.ToString("C0") ?? "$0";
-    public string FormattedPriceChange => CurrentCoin?.PriceChange24h.ToString("P2") ?? "0%";
+    [RelayCommand]
+    private void SetMaxAmount()
+    {
+      if (CurrentCoin == null) return;
+
+      if (IsBuyMode)
+      {
+        TradeAmount = PlayerBalance.ToString("F2");
+      }
+      else if (UserPortfolio != null)
+      {
+        TradeAmount = UserPortfolio.TokenBalance.ToString("F8");
+      }
+    }
+
+    [RelayCommand]
+    private async Task RugPullAsync()
+    {
+      if (CurrentCoin == null) return;
+
+      try
+      {
+        var success = await _coinCreationService.RugPullAsync(CurrentCoin.Id);
+        if (success)
+        {
+          LastTradeResult = $"💀 {CurrentCoin.Symbol} has been rugged! All liquidity stolen.";
+          NotificationService.NotifyRugPull(CurrentCoin.Symbol, CurrentCoin.Name, 100m, (int)CurrentCoin.TotalSupply);
+          await LoadCoinDataAsync(CoinId);
+        }
+      }
+      catch (Exception ex)
+      {
+        LastTradeResult = $"Rug pull failed: {ex.Message}";
+        LoggingService.Error("Error executing rug pull", ex);
+      }
+    }
+
+    // Computed properties
+    public string FormattedPrice => CurrentCoin?.CurrentPrice.ToString("C8") ?? "$0.00000000";
+    public string FormattedPriceChange => CurrentCoin?.PriceChange24h.ToString("+0.00%;-0.00%;0.00%") ?? "0.00%";
     public bool IsPriceUp => CurrentCoin?.PriceChange24h >= 0;
-    public string FormattedBalance => PlayerBalance.ToString("C2");
-    public string FormattedHoldings => UserPortfolio?.TokenBalance.ToString("N8") ?? "0";
+    public string FormattedMarketCap => (CurrentCoin?.CurrentPrice * CurrentCoin?.CirculatingSupply ?? 0).FormatAbbreviated();
+    public string FormattedVolume => CurrentCoin?.Volume24h.FormatAbbreviated() ?? "$0";
+    public string FormattedHoldings => UserPortfolio?.TokenBalance.ToString("N8") ?? "0.00000000";
     public string FormattedHoldingsValue => UserPortfolio != null && CurrentCoin != null 
       ? (UserPortfolio.TokenBalance * CurrentCoin.CurrentPrice).ToString("C2") 
-      : "$0";
-    public string FormattedPnL => UserPortfolio?.UnrealizedPnL.ToString("C2") ?? "$0";
-    public bool HasHoldings => UserPortfolio?.TokenBalance > 0;
-    public bool CanRugPull => CurrentCoin != null && 
-                             CurrentCoin.CreatorId == _playerService.GetCurrentPlayer().Id.ToString() &&
-                             !CurrentCoin.IsRugged;
+      : "$0.00";
+    public string FormattedAvailableBalance => IsBuyMode 
+      ? PlayerBalance.ToString("C2") 
+      : FormattedHoldings;
+    public string EstimatedReceiveFormatted => IsBuyMode 
+      ? EstimatedTokens.ToString("N8") 
+      : EstimatedUsd.ToString("C2");
+    public string PriceImpactFormatted => $"{PriceImpact:F2}%";
+    public bool CanTrade => CurrentCoin != null && !IsRugged && decimal.TryParse(TradeAmount, out var amount) && amount > 0;
     public bool IsRugged => CurrentCoin?.IsRugged ?? false;
-    public string EstimatedTokensFormatted => EstimatedTokens.ToString("N8");
-    public string EstimatedUsdFormatted => EstimatedUsd.ToString("C2");
-    public string PriceImpactFormatted => PriceImpact.ToString("P2");
-    public bool CanTrade => CurrentCoin != null && !CurrentCoin.IsRugged;
+    public bool CanRugPull => CurrentCoin?.CreatorId.ToString() == _playerService.GetCurrentPlayer().Id.ToString() && !IsRugged;
+
+    // Update trading mode
+    partial void OnIsBuyModeChanged(bool value)
+    {
+      if (value) IsSellMode = false;
+      CalculateTradeEstimates();
+    }
+
+    partial void OnIsSellModeChanged(bool value)
+    {
+      if (value) IsBuyMode = false;
+      CalculateTradeEstimates();
+    }
+
+    partial void OnTradeAmountChanged(string value)
+    {
+      CalculateTradeEstimates();
+    }
+
+    private void CalculateTradeEstimates()
+    {
+      if (CurrentCoin == null || !decimal.TryParse(TradeAmount, out var amount) || amount <= 0)
+      {
+        EstimatedTokens = 0;
+        EstimatedUsd = 0;
+        PriceImpact = 0;
+        return;
+      }
+
+      if (IsBuyMode)
+      {
+        // Buying: amount is USD, estimate tokens received
+        EstimatedTokens = amount / CurrentCoin.CurrentPrice;
+        EstimatedUsd = amount;
+        PriceImpact = Math.Min(amount / 10000m, 15m); // Simple price impact calculation
+      }
+      else
+      {
+        // Selling: amount is tokens, estimate USD received
+        EstimatedUsd = amount * CurrentCoin.CurrentPrice;
+        EstimatedTokens = amount;
+        PriceImpact = Math.Min(EstimatedUsd / 10000m, 15m);
+      }
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!_disposed && disposing)
+      {
+        try
+        {
+          _disposed = true;
+          _db?.Dispose();
+          RecentTrades?.Clear();
+          LoggingService.Info("CoinDetailViewModel disposed successfully");
+        }
+        catch (Exception ex)
+        {
+          LoggingService.Error("Error disposing CoinDetailViewModel", ex);
+        }
+      }
+    }
+
+    ~CoinDetailViewModel()
+    {
+      Dispose(false);
+    }
   }
 }
