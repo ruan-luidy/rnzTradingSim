@@ -12,7 +12,6 @@
   Width="1400"
   Height="800"
   d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-  Background="{StaticResource DarkBackgroundBrush}"
   Style="{StaticResource WindowWin10}"
   WindowStartupLocation="CenterScreen"
   mc:Ignorable="d">
@@ -26,7 +25,6 @@
     <!--  Left Sidebar  -->
     <Border
       Grid.Column="0"
-      Background="{StaticResource CardBackgroundBrush}"
       BorderBrush="{StaticResource BorderBrush}"
       BorderThickness="0,0,1,0"
       CornerRadius="0">

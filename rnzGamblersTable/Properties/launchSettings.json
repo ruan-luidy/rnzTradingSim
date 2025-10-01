@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "rnzGamblersTable (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "rnzGamblersTable (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
