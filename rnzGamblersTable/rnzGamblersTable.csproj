@@ -37,14 +37,13 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.241112-preview1" />
-		<PackageReference Include="Flurl.Http" Version="4.0.2" />
-		<PackageReference Include="Microsoft.Windows.CSWinRT" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="PowerStatus" Version="1.0.3" />
-		<PackageReference Include="System.Management" Version="9.0.0" />
+		<PackageReference Include="DevWinUI" Version="9.1.0" />
+		<PackageReference Include="DevWinUI.Controls" Version="9.1.0" />
+		<PackageReference Include="FluentIcons.WinUI" Version="1.1.311" />
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.250916003" />
+		<PackageReference Include="WinUIEx" Version="2.8.0" />
 	</ItemGroup>
 
 	<!--
